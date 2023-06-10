@@ -33,7 +33,7 @@ fn get_code_snippet_question(title_slug: &str) -> String {
     code_snippets_res
         .code_snippets
         .into_iter()
-        .find_map(|cs| (cs.lang == "Rust").then(|| cs.code))
+        .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
         .unwrap()
 }
 
