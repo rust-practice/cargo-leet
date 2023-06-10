@@ -23,9 +23,7 @@ impl TreeNode {
             right: None,
         }
     }
-    fn wrapped_node(val: i32) -> Option<Rc<RefCell<Self>>> {
-        Some(Rc::new(RefCell::new(Self::new(val))))
-    }
+
     fn wrapped_node_maybe(val: Option<i32>) -> Option<Rc<RefCell<Self>>> {
         val.map(|x| Rc::new(RefCell::new(Self::new(x))))
     }

@@ -42,12 +42,6 @@ impl Debug for ListHead {
     }
 }
 
-impl ListHead {
-    fn new(head: Option<Box<ListNode>>) -> Self {
-        ListHead { head }
-    }
-}
-
 impl From<ListHead> for Option<Box<ListNode>> {
     fn from(value: ListHead) -> Self {
         value.head
