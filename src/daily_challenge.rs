@@ -16,7 +16,7 @@ pub fn get_daily_challenge_slug() -> String {
                     question {
                         titleSlug
                     }
-                }  
+                }
             }"#,
             "variables":{},
             "operationName":"questionOfToday"
