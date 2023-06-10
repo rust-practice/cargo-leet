@@ -1,8 +1,6 @@
-mod code_snippet;
-mod daily_challenge;
-mod write_file;
-
 use std::error::Error;
+
+use cargo_leet::{code_snippet, daily_challenge, write_file};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let mut args = std::env::args();
