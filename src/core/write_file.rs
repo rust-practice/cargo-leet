@@ -15,10 +15,7 @@ fn update_lib(slug_snake: &str) -> anyhow::Result<()> {
 
 pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> {
     let slug_snake = title_slug.to_case(Case::Snake);
-    let path = PathBuf::from(format!(
-        "{}/../src/{slug_snake}.rs",
-        env!("CARGO_MANIFEST_DIR")
-    ));
+    let path = PathBuf::from(format!("src/{slug_snake}.rs"));
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -33,7 +30,6 @@ pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> 
     Command::new("cargo")
         .arg("fmt")
         .arg("--all")
-        .current_dir(format!("{}/../", env!("CARGO_MANIFEST_DIR")))
         .spawn()?
         .wait()?;
     Ok(())
