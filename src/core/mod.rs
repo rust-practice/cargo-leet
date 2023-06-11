@@ -1,29 +1,21 @@
-use std::{env, path::Path};
-
-use anyhow::{bail, Context};
-
-use crate::cli::Cli;
-
 mod code_snippet;
 mod daily_challenge;
+mod generation;
 mod write_file;
+
+use self::generation::do_generate;
+use crate::cli::Cli;
+use anyhow::{bail, Context};
+use std::{env, path::Path};
 
 pub fn run(cli: &Cli) -> anyhow::Result<()> {
     cli.update_current_working_dir()?;
 
     working_directory_validation()?;
 
-    // let mut args = std::env::args();
-    // let title_slug = if args.len() == 1 {
-    //     daily_challenge::get_daily_challenge_slug()
-    // } else if args.len() != 2 {
-    //     return Err("Usage: binary SLUG".into());
-    // } else {
-    //     args.nth(1).unwrap()
-    // };
-    // let code_snippet = code_snippet::generate_code_snippet(&title_slug);
-    // write_file::write_file(&title_slug, code_snippet)?;
-    Ok(())
+    match &cli.command {
+        crate::cli::Commands::Generate(args) => do_generate(args),
+    }
 }
 
 fn working_directory_validation() -> anyhow::Result<()> {

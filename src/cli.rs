@@ -51,11 +51,11 @@ pub enum Commands {
 pub struct GenerateArgs {
     /// Question slug or url
     #[arg(short, long)]
-    problem: Option<String>,
+    pub problem: Option<String>,
 
     /// Set using question of the day
     #[arg(long, short)]
-    daily_challenge: bool,
+    pub daily_challenge: bool,
 }
 
 /// Exists to provide better help messages variants copied from LevelFilter as that's the type
