@@ -15,7 +15,7 @@ struct CodeSnippet {
 }
 
 fn get_code_snippet_question(title_slug: &str) -> String {
-    let code_snippets_res = ureq::get("https://leetcode.com/graphql/")
+    let code_snippets_res = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
             "query": r#"query questionEditorData($titleSlug: String!) {
                     question(titleSlug: $titleSlug) {
