@@ -1,8 +1,7 @@
 use crate::config::Config;
+use log::info;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
-
-// TODO: Add logging to all functions
 
 #[flat_path]
 #[derive(Deserialize)]
@@ -18,6 +17,7 @@ struct CodeSnippet {
 
 fn get_code_snippet_question(title_slug: &str) -> String {
     // TODO: Change return type to be a Result
+    info!("Going to get code for {title_slug}");
     let code_snippets_res = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
             "query": r#"query questionEditorData($titleSlug: String!) {
@@ -41,7 +41,8 @@ fn get_code_snippet_question(title_slug: &str) -> String {
         .unwrap()
 }
 
-fn get_test_cases(_title_slug: &str, is_design: bool) -> String {
+fn get_test_cases(title_slug: &str, is_design: bool) -> String {
+    info!("Going to get tests for {title_slug}");
     let tests = if is_design {
         r#"
             use rstest::rstest;
@@ -63,6 +64,7 @@ fn get_test_cases(_title_slug: &str, is_design: bool) -> String {
 }
 
 pub fn generate_code_snippet(title_slug: &str) -> String {
+    info!("Building code snippet for {title_slug}");
     // add URL
     let mut code_snippet = format!(
         "//! Solution for {}{title_slug}\n",

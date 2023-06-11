@@ -1,4 +1,6 @@
+use anyhow::Context;
 use convert_case::{Case, Casing};
+use log::{info, warn};
 use std::{
     fs::{remove_file, OpenOptions},
     io::Write,
@@ -15,25 +17,29 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
 }
 
 pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> {
+    info!("Writing code to disk for {title_slug}");
     let slug_snake = title_slug.to_case(Case::Snake);
-    // TODO: Find way to specify desired new file name from a config
-    let path = PathBuf::from(format!("src/{slug_snake}.rs"));
+    let module_name = slug_snake; // TODO: Find way to specify desired new file name from a config
+    info!("Module name is: {module_name}");
+    let path = PathBuf::from(format!("src/{module_name}.rs"));
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(path.clone())?;
     file.write_all(code_snippet.as_bytes())?;
-    let output = update_lib(&slug_snake);
-    if output.is_err() {
+    let lib_update_status = update_lib(&module_name);
+    if lib_update_status.is_err() {
+        warn!("Cleaning up after updating lib.rs failed");
         // clean up
         remove_file(path)?;
-        output?;
+        lib_update_status?;
     }
-    // TODO: Check if there is a simpler way to do this
+
+    info!("Going to run rustfmt on files");
     Command::new("cargo")
         .arg("fmt")
         .arg("--all")
-        .spawn()?
-        .wait()?;
+        .output()
+        .context("Error running rustfmt")?;
     Ok(())
 }

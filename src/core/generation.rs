@@ -8,8 +8,6 @@ use crate::{
     core::{code_snippet, daily_challenge, write_file},
 };
 
-// TODO: Add logging to all functions
-
 pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {
     assert!(
         args.daily_challenge ^ args.problem.is_some(),
@@ -34,7 +32,9 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
     } else {
         // Daily problem
         debug_assert!(args.daily_challenge);
-        Cow::Owned(daily_challenge::get_daily_challenge_slug())
+        let slug = daily_challenge::get_daily_challenge_slug();
+        info!("Slug for daily problem is: '{slug}'");
+        Cow::Owned(slug)
     };
 
     let code_snippet = code_snippet::generate_code_snippet(&title_slug);
@@ -53,7 +53,6 @@ fn url_to_slug(url: &str) -> anyhow::Result<String> {
     }
     let split_url: Vec<_> = url.split('/').collect();
     let split_prefix: Vec<_> = Config::LEETCODE_PROBLEM_URL.split('/').collect();
-    dbg!(&split_url, &split_prefix);
     debug_assert!(split_prefix.len() < split_url.len());
     Ok(split_url[split_prefix.len() - 1].to_string())
 }
