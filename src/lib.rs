@@ -1,4 +1,5 @@
 mod cli;
+mod config;
 mod core;
 mod leetcode_env;
 mod log;
