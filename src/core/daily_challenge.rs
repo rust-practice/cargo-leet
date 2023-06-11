@@ -9,6 +9,7 @@ struct DailyChallengeResponse {
 }
 
 pub fn get_daily_challenge_slug() -> String {
+    // TODO: Change return type to anyhow and add context for each error
     let daily_challenge_response = ureq::get("https://leetcode.com/graphql/")
         .send_json(ureq::json!({
             "query": r#"query questionOfToday {
