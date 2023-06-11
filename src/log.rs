@@ -8,7 +8,7 @@ use log4rs::{
 
 pub fn init_logging(log_level: LevelFilter) -> anyhow::Result<()> {
     let stdout = ConsoleAppender::builder()
-        .encoder(Box::new(PatternEncoder::new("{h({l} - {m})}{n}")))
+        .encoder(Box::new(PatternEncoder::new("{h({M} {l} - {m})}{n}")))
         .build();
 
     let config = log4rs::Config::builder()
