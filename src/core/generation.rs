@@ -17,7 +17,6 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
 
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         // Problem specified
-        // TODO: Parse url if given instead of slug
         if specific_problem.contains('/') {
             // Working with a url
             info!("Using '{specific_problem}' as a url");
