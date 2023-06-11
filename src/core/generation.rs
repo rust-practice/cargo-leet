@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 
 use anyhow::bail;
-use log::debug;
+use log::info;
 
 use crate::{
     config::Config,
@@ -22,13 +22,13 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
         // TODO: Parse url if given instead of slug
         if specific_problem.contains('/') {
             // Working with a url
-            debug!("Using '{specific_problem}' as a url");
+            info!("Using '{specific_problem}' as a url");
             let slug = url_to_slug(specific_problem)?;
-            debug!("Extracted slug '{slug}' from url");
+            info!("Extracted slug '{slug}' from url");
             Cow::Owned(slug)
         } else {
             // This is expected to be a valid slug
-            debug!("Using '{specific_problem}' as a slug");
+            info!("Using '{specific_problem}' as a slug");
             Cow::Borrowed(specific_problem)
         }
     } else {
