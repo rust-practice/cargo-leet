@@ -64,7 +64,10 @@ fn get_test_cases(_title_slug: &str, is_design: bool) -> String {
 
 pub fn generate_code_snippet(title_slug: &str) -> String {
     // add URL
-    let mut code_snippet = format!("//! Solution for {}{title_slug}\n", Config::LEETCODE_URL);
+    let mut code_snippet = format!(
+        "//! Solution for {}{title_slug}\n",
+        Config::LEETCODE_PROBLEM_URL
+    );
 
     // get code snippet
     let code = get_code_snippet_question(title_slug);
