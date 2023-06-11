@@ -2,7 +2,7 @@ use std::env;
 
 use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
-use log::{debug, trace, LevelFilter};
+use log::{info, LevelFilter};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -22,20 +22,20 @@ pub struct Cli {
 impl Cli {
     /// Changes the current working directory to path if one is given
     pub fn update_current_working_dir(&self) -> anyhow::Result<()> {
-        trace!(
+        info!(
             "Before attempting update current dir, it is: {}",
             env::current_dir()?.display()
         );
         if let Some(path) = &self.path {
-            debug!("Going to update working directory to to '{path}'");
+            info!("Going to update working directory to to '{path}'");
             std::env::set_current_dir(path)
                 .with_context(|| format!("Failed to set current dir to: '{path}'"))?;
-            trace!(
+            info!(
                 "After updating current dir, it is: '{}'",
                 env::current_dir()?.display()
             );
         } else {
-            debug!("No user supplied path found. No change")
+            info!("No user supplied path found. No change")
         }
         Ok(())
     }
