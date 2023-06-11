@@ -100,6 +100,6 @@ mod tests {
         // Source: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html#testing
         // My understanding it reports most development errors without additional effort
         use clap::CommandFactory;
-        Cli::command().debug_assert()
+        CargoCli::command().debug_assert()
     }
 }
