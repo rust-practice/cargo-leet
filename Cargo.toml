@@ -1,5 +1,6 @@
 [package]
 name = "cargo-leet"
+description = "Utility program to help with working on leetcode locally"
 version = "0.1.0"
 edition = "2021"
 
