@@ -3,6 +3,14 @@
  A program that given the link to a leetcode problem,
  creates a local file where you can develop your solution and then post it back to leetcode.
 
+ ## ScreenShots
+
+ ### `cargo leet`
+ ![ScreenShot](assets/help_scr_shot_top.png)
+
+ ### `cargo leet generate --help`
+ ![ScreenShot](assets/help_scr_shot_generate.png)
+
 ## Installation
 
 NB: Installing from another source overwrites if it is already installed
