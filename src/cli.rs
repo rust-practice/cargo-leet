@@ -1,4 +1,5 @@
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
+use log::LevelFilter;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -9,6 +10,10 @@ pub struct Cli {
     /// Specify the path to the project root (If not provided uses current working directory)
     #[arg(long, short, value_name = "FOLDER")]
     path: Option<String>,
+
+    /// Set logging level to use
+    #[arg(long, short, value_enum, default_value_t = LogLevel::Error)]
+    pub log_level: LogLevel,
 }
 
 impl Cli {
@@ -36,6 +41,32 @@ pub struct GenerateArgs {
     /// Set using question of the day
     #[arg(long, short)]
     daily_challenge: bool,
+}
+
+/// Exists to provide better help messages variants copied from LevelFilter as that's the type
+/// that is actually needed
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
+pub enum LogLevel {
+    /// Nothing emitted in this mode
+    Off,
+    Error,
+    Warn,
+    Info,
+    Debug,
+    Trace,
+}
+
+impl From<LogLevel> for LevelFilter {
+    fn from(value: LogLevel) -> Self {
+        match value {
+            LogLevel::Off => LevelFilter::Off,
+            LogLevel::Error => LevelFilter::Error,
+            LogLevel::Warn => LevelFilter::Warn,
+            LogLevel::Info => LevelFilter::Info,
+            LogLevel::Debug => LevelFilter::Debug,
+            LogLevel::Trace => LevelFilter::Trace,
+        }
+    }
 }
 
 #[cfg(test)]

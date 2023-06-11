@@ -1,12 +1,15 @@
+mod cli;
+mod core;
 mod leetcode_env;
+mod log;
 
-pub mod cli;
-
+// For use in external code
 pub use leetcode_env::list::ListHead;
 pub use leetcode_env::list::ListNode;
 pub use leetcode_env::tree::TreeNode;
 pub use leetcode_env::tree::TreeRoot;
 
-mod core;
-
+// For use in main.rs
 pub use crate::core::run;
+pub use crate::log::init_logging;
+pub use cli::Cli;
