@@ -6,6 +6,8 @@ use std::{
     process::Command,
 };
 
+// TODO: Add logging to all functions
+
 fn update_lib(slug_snake: &str) -> anyhow::Result<()> {
     let lib_path = PathBuf::from(format!("{}/../src/lib.rs", env!("CARGO_MANIFEST_DIR")));
     let mut lib = OpenOptions::new().append(true).open(lib_path)?;
@@ -15,6 +17,7 @@ fn update_lib(slug_snake: &str) -> anyhow::Result<()> {
 
 pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> {
     let slug_snake = title_slug.to_case(Case::Snake);
+    // TODO: Find way to specify desired new file name from a config
     let path = PathBuf::from(format!("src/{slug_snake}.rs"));
     let mut file = OpenOptions::new()
         .write(true)
@@ -27,6 +30,7 @@ pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> 
         remove_file(path)?;
         output?;
     }
+    // TODO: Check if there is a simpler way to do this
     Command::new("cargo")
         .arg("fmt")
         .arg("--all")

@@ -2,6 +2,8 @@ use std::borrow::Cow;
 
 use crate::core::{code_snippet, daily_challenge, write_file};
 
+// TODO: Add logging to all functions
+
 pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {
     assert!(
         args.daily_challenge ^ args.problem.is_some(),
@@ -10,7 +12,7 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
 
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         // Problem specified
-        // TODO: Parse url if specified
+        // TODO: Parse url if given instead of slug
         Cow::Borrowed(specific_problem)
     } else {
         // Daily problem
