@@ -4,7 +4,14 @@ use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use log::{info, LevelFilter};
 
-#[derive(Parser, Debug)]
+// Taken from example https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/
+#[derive(Parser)]
+#[command(name = "cargo")]
+#[command(bin_name = "cargo")]
+pub enum CargoCli {
+    Leet(Cli),
+}
+#[derive(Args, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
     #[command(subcommand)]
