@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+anyhow = "1.0.71"
 convert_case = "0.6"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_flat_path = "0.1.2"
