@@ -7,6 +7,8 @@ edition = "2021"
 anyhow = "1.0.71"
 clap = { version = "4.3.3", features = ["derive", "cargo"] }
 convert_case = "0.6"
+log = "0.4.19"
+log4rs = "1.2.0"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_flat_path = "0.1.2"
 ureq = { version = "2.6", features = ["json"] }
