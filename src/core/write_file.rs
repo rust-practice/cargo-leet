@@ -6,12 +6,11 @@ use std::{
     process::Command,
 };
 
-// TODO: Add logging to all functions
-
-fn update_lib(slug_snake: &str) -> anyhow::Result<()> {
-    let lib_path = PathBuf::from(format!("{}/../src/lib.rs", env!("CARGO_MANIFEST_DIR")));
+fn update_lib(module_name: &str) -> anyhow::Result<()> {
+    info!("Adding {module_name} to libs.rs");
+    let lib_path = PathBuf::from("src/lib.rs");
     let mut lib = OpenOptions::new().append(true).open(lib_path)?;
-    let _ = lib.write(format!("pub mod {slug_snake};").as_bytes())?;
+    let _ = lib.write(format!("pub mod {module_name};").as_bytes())?;
     Ok(())
 }
 
