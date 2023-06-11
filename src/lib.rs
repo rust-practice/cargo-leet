@@ -1,5 +1,7 @@
 mod leetcode_env;
 
+pub mod cli;
+
 pub use leetcode_env::list::ListHead;
 pub use leetcode_env::list::ListNode;
 pub use leetcode_env::tree::TreeNode;

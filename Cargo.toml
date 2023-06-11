@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.71"
+clap = { version = "4.3.3", features = ["derive", "cargo"] }
 convert_case = "0.6"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_flat_path = "0.1.2"
