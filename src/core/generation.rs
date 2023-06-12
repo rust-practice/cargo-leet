@@ -9,12 +9,6 @@ use crate::{
 };
 
 pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {
-    assert!(
-        args.daily_challenge ^ args.problem.is_some(),
-        // This shouldn't happen, should be enforced by clap
-        "Invalid state. Must either be daily challenge or specific problem but not both or none"
-    );
-
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         // Problem specified
         if specific_problem.contains('/') {
@@ -30,7 +24,6 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
         }
     } else {
         // Daily problem
-        debug_assert!(args.daily_challenge);
         let slug = daily_challenge::get_daily_challenge_slug();
         info!("Slug for daily problem is: '{slug}'");
         Cow::Owned(slug)
