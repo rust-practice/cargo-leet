@@ -5,7 +5,7 @@ use log::info;
 
 use crate::{
     config::Config,
-    core::{code_snippet, daily_challenge, write_file},
+    core::helpers::{code_snippet, daily_challenge, write_file},
 };
 
 pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {

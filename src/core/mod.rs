@@ -1,9 +1,7 @@
-mod code_snippet;
-mod daily_challenge;
-mod generation;
-mod write_file;
+mod generate;
+mod helpers;
 
-use self::generation::do_generate;
+use self::generate::do_generate;
 use crate::cli::Cli;
 use anyhow::{bail, Context};
 use std::{env, path::Path};
