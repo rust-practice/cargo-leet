@@ -1,3 +1,4 @@
+use anyhow::Context;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
@@ -8,8 +9,7 @@ struct DailyChallengeResponse {
     title_slug: String,
 }
 
-pub fn get_daily_challenge_slug() -> String {
-    // TODO: Change return type to anyhow and add context for each error
+pub fn get_daily_challenge_slug() -> anyhow::Result<String> {
     let daily_challenge_response = ureq::get("https://leetcode.com/graphql/")
         .send_json(ureq::json!({
             "query": r#"query questionOfToday {
@@ -22,8 +22,8 @@ pub fn get_daily_challenge_slug() -> String {
             "variables":{},
             "operationName":"questionOfToday"
         }))
-        .unwrap()
+        .context("Get request for daily challenge failed")?
         .into_json::<DailyChallengeResponse>()
-        .unwrap();
-    daily_challenge_response.title_slug
+        .context("Failed to convert response for daily challenge from json")?;
+    Ok(daily_challenge_response.title_slug)
 }
