@@ -54,15 +54,10 @@ pub enum Commands {
 }
 
 #[derive(Args, Debug)]
-#[group(required = true, multiple = false)]
 pub struct GenerateArgs {
-    /// Question slug or url
+    /// Question slug or url (If none specified then daily challenge is used)
     #[arg(short, long)]
     pub problem: Option<String>,
-
-    /// Set using question of the day
-    #[arg(long, short)]
-    pub daily_challenge: bool,
 }
 
 /// Exists to provide better help messages variants copied from LevelFilter as that's the type
