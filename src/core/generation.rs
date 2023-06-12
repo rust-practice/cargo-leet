@@ -24,12 +24,12 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
         }
     } else {
         // Daily problem
-        let slug = daily_challenge::get_daily_challenge_slug();
+        let slug = daily_challenge::get_daily_challenge_slug()?;
         info!("Slug for daily problem is: '{slug}'");
         Cow::Owned(slug)
     };
 
-    let code_snippet = code_snippet::generate_code_snippet(&title_slug);
+    let code_snippet = code_snippet::generate_code_snippet(&title_slug)?;
     write_file::write_file(&title_slug, code_snippet)?;
     Ok(())
 }
