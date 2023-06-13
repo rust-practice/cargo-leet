@@ -11,7 +11,7 @@ use crate::{
 pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         // Problem specified
-        if specific_problem.contains('/') {
+        if is_url(specific_problem) {
             // Working with a url
             info!("Using '{specific_problem}' as a url");
             let slug = url_to_slug(specific_problem)?;
@@ -32,6 +32,11 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
     let code_snippet = code_snippet::generate_code_snippet(&title_slug)?;
     write_file::write_file(&title_slug, code_snippet).context("Failed to write files")?;
     Ok(())
+}
+
+/// Quick and dirty test to see if this is a url
+fn is_url(value: &str) -> bool {
+    value.contains('/')
 }
 
 fn url_to_slug(url: &str) -> anyhow::Result<String> {
