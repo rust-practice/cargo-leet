@@ -83,8 +83,8 @@ pub fn generate_code_snippet(title_slug: &str) -> anyhow::Result<String> {
     code_snippet.push_str("\n\n");
 
     // handle non design snippets
-    let is_design = code.starts_with("impl Solution {");
-    if is_design {
+    let is_design = !code.starts_with("impl Solution {");
+    if !is_design {
         code_snippet.push_str("\npub struct Solution;\n")
     }
 
