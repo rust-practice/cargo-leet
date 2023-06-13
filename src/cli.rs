@@ -57,6 +57,9 @@ pub enum Commands {
 pub struct GenerateArgs {
     /// Question slug or url (If none specified then daily challenge is used)
     pub problem: Option<String>,
+    /// If set the module name generated includes the number for the problem
+    #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
+    pub should_include_problem_number: bool,
 }
 
 /// Exists to provide better help messages variants copied from LevelFilter as that's the type
