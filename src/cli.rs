@@ -56,7 +56,6 @@ pub enum Commands {
 #[derive(Args, Debug)]
 pub struct GenerateArgs {
     /// Question slug or url (If none specified then daily challenge is used)
-    #[arg(short, long)]
     pub problem: Option<String>,
 }
 
