@@ -1,6 +1,6 @@
 use std::borrow::Cow;
 
-use anyhow::bail;
+use anyhow::{bail, Context};
 use log::info;
 
 use crate::{
@@ -30,7 +30,7 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
     };
 
     let code_snippet = code_snippet::generate_code_snippet(&title_slug)?;
-    write_file::write_file(&title_slug, code_snippet)?;
+    write_file::write_file(&title_slug, code_snippet).context("Failed to write files")?;
     Ok(())
 }
 
