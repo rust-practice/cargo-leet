@@ -29,7 +29,8 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
         Cow::Owned(slug)
     };
 
-    let code_snippet = code_snippet::generate_code_snippet(&title_slug)?;
+    let code_snippet = code_snippet::generate_code_snippet(&title_slug)
+        .context("Failed to generate code snippet")?;
     write_file::write_file(&title_slug, code_snippet).context("Failed to write files")?;
     Ok(())
 }
