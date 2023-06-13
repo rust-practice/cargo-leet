@@ -1,6 +1,6 @@
 use anyhow::Context;
 use convert_case::{Case, Casing};
-use log::{info, warn};
+use log::{error, info};
 use std::{
     fs::{remove_file, OpenOptions},
     io::Write,
@@ -25,14 +25,21 @@ pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> 
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
-        .open(path.clone())?;
-    file.write_all(code_snippet.as_bytes())?;
+        .open(&path)
+        .with_context(|| format!("Failed to create '{}'", path.display()))?;
+    file.write_all(code_snippet.as_bytes())
+        .with_context(|| format!("Failed writing to '{}'", path.display()))?;
     let lib_update_status = update_lib(&module_name);
     if lib_update_status.is_err() {
-        warn!("Cleaning up after updating lib.rs failed");
+        error!("Failed to update lib.rs: Performing cleanup of partially completed command");
         // clean up
-        remove_file(path)?;
-        lib_update_status?;
+        remove_file(&path).with_context(|| {
+            format!(
+                "Failed to remove '{}' during cleanup after failing to update lib.rs",
+                path.display()
+            )
+        })?;
+        lib_update_status.context("Failed to update lib.rs")?;
     }
 
     info!("Going to run rustfmt on files");
