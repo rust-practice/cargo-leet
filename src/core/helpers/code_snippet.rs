@@ -79,6 +79,9 @@ pub fn generate_code_snippet(title_slug: &str) -> anyhow::Result<String> {
     let code = get_code_snippet_question(title_slug)?;
     code_snippet.push_str(&code);
 
+    // Add 2 empty lines between code and "other stuff (like tests and struct definition"
+    code_snippet.push_str("\n\n");
+
     // handle non design snippets
     let is_design = code.starts_with("impl Solution {");
     if is_design {
