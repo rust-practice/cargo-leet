@@ -2,6 +2,8 @@ use anyhow::Context;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
+use crate::config::Config;
+
 #[flat_path]
 #[derive(Deserialize)]
 struct DailyChallengeResponse {
@@ -10,7 +12,7 @@ struct DailyChallengeResponse {
 }
 
 pub fn get_daily_challenge_slug() -> anyhow::Result<String> {
-    let daily_challenge_response = ureq::get("https://leetcode.com/graphql/")
+    let daily_challenge_response = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
             "query": r#"query questionOfToday {
                 activeDailyCodingChallengeQuestion {
