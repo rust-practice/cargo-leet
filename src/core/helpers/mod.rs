@@ -1,3 +1,3 @@
 pub(crate) mod code_snippet;
 pub(crate) mod daily_challenge;
-pub(crate) mod write_file;
+pub(crate) mod write_to_disk;
