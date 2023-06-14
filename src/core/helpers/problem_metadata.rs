@@ -41,7 +41,7 @@ impl ProblemMetadata {
     pub fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
         info!("Going to get tests");
         // TODO implement generation of test cases
-        let tests = if problem_code.is_design() {
+        let tests = if !problem_code.is_design() {
             r#"
 use rstest::rstest;
 "#
