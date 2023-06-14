@@ -79,7 +79,7 @@ pub fn create_module_code(
     // Set module name
     let module_name = if args.should_include_problem_number {
         info!("Including problem number in module name");
-        unimplemented!("Haven't retrieved the data yet")
+        todo!("Haven't retrieved the data yet")
     } else {
         info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)
