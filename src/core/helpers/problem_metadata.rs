@@ -4,7 +4,7 @@ use log::info;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
-use super::problem_code::ProblemCode;
+use super::problem_code::{FunctionInfo, ProblemCode};
 
 /// This struct is only used because there are two fields that we are interested in that start with the same path and flat_path does not support that yet
 #[flat_path]
@@ -40,14 +40,19 @@ impl ProblemMetadata {
 
     pub fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
         info!("Going to get tests");
-        // TODO implement generation of test cases
+
+        let fn_info = problem_code
+            .get_fn_info()
+            .context("Failed to get function info")?;
+
         let tests = if !problem_code.is_design() {
-            r#"
-use rstest::rstest;
-"#
-            .to_string()
+            info!("This is NOT a design problem");
+            self.get_test_cases_is_not_design(fn_info)
+                .context("Failed to get test cases for non-design problem")?
         } else {
-            "".to_string()
+            info!("This is a design problem");
+            self.get_test_cases_is_design(fn_info)
+                .context("Failed to get test cases for design problem")?
         };
 
         Ok(format!(
@@ -59,6 +64,39 @@ mod tests {{
 }}
 "#
         ))
+    }
+
+    fn get_test_cases_is_not_design(&self, fn_info: FunctionInfo) -> anyhow::Result<String> {
+        let mut result = "use rstest::rstest;
+
+    #[rstest]
+"
+        .to_string();
+
+        // Add test cases
+        for raw_str in self.example_test_case_list.iter() {
+            let test_case = fn_info.get_test_case(raw_str);
+            result.push_str(&format!("  #[case({})]\n", test_case))
+        }
+
+        // Add test case function body
+        let test_fn = format!(
+            "   fn case({}) {{
+        let mut actual = Solution::{}({});
+        assert_eq!(actual, expected);
+    }}",
+            fn_info.get_args_with_case()?,
+            fn_info.name,
+            fn_info.get_args_names()?
+        );
+        result.push_str(&test_fn);
+
+        Ok(result)
+    }
+
+    fn get_test_cases_is_design(&self, fn_info: FunctionInfo) -> anyhow::Result<String> {
+        let mut result = "".to_string();
+        Ok(result)
     }
 }
 
