@@ -33,7 +33,7 @@ pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<String> 
         }))
         .context("Get request for code_snippet failed")?
         .into_json::<CodeSnippetResponse>()
-        .context("Failed to convert codes_snippet response from json")?;
+        .context("Failed to convert response from json to codes_snippet")?;
 
     match code_snippets_res
         .code_snippets
@@ -43,27 +43,4 @@ pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<String> 
         Some(result) => Ok(result),
         None => bail!("Rust not supported for this problem"),
     }
-}
-
-pub fn get_test_cases(title_slug: &str, is_design: bool) -> anyhow::Result<String> {
-    // TODO Move this to an impl on problem_meta_data
-    info!("Going to get tests for {title_slug}");
-    let tests = if is_design {
-        r#"
-            use rstest::rstest;
-        "#
-        .to_string()
-    } else {
-        // TODO: Get test cases for design problems
-        "".to_string()
-    };
-    Ok(format!(
-        r#"
-        #[cfg(test)]
-        mod tests {{
-            use super::*;
-            {tests}
-        }}
-    "#
-    ))
 }
