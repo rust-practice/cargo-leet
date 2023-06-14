@@ -1,5 +1,4 @@
 use anyhow::Context;
-use convert_case::{Case, Casing};
 use log::{error, info};
 use std::{
     fs::{remove_file, OpenOptions},
@@ -16,20 +15,17 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn write_file(title_slug: &str, code_snippet: String) -> anyhow::Result<()> {
-    info!("Writing code to disk for {title_slug}");
-    let slug_snake = title_slug.to_case(Case::Snake);
-    let module_name = slug_snake; // TODO: Find way to specify desired new file name from a config
-    info!("Module name is: {module_name}");
+pub fn write_file(module_name: &str, module_code: String) -> anyhow::Result<()> {
+    info!("Writing code to disk for module {module_name}");
     let path = PathBuf::from(format!("src/{module_name}.rs"));
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(&path)
         .with_context(|| format!("Failed to create '{}'", path.display()))?;
-    file.write_all(code_snippet.as_bytes())
+    file.write_all(module_code.as_bytes())
         .with_context(|| format!("Failed writing to '{}'", path.display()))?;
-    let lib_update_status = update_lib(&module_name);
+    let lib_update_status = update_lib(module_name);
     if lib_update_status.is_err() {
         error!("Failed to update lib.rs: Performing cleanup of partially completed command");
         // clean up

@@ -1,11 +1,14 @@
-use std::borrow::Cow;
-
 use anyhow::{bail, Context};
+use convert_case::{Case, Casing};
 use log::info;
+use std::borrow::Cow;
 
 use crate::{
     config::Config,
-    core::helpers::{code_snippet, daily_challenge, write_file},
+    core::helpers::{
+        code_snippet::{get_code_snippet_for_problem, get_test_cases},
+        daily_challenge, write_to_disk,
+    },
 };
 
 pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {
@@ -29,10 +32,53 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
         Cow::Owned(slug)
     };
 
-    let code_snippet = code_snippet::generate_code_snippet(&title_slug)
-        .context("Failed to generate code snippet")?;
-    write_file::write_file(&title_slug, code_snippet).context("Failed to write files")?;
+    let (module_name, module_code) = create_module_code(title_slug, args)
+        .context("Failed to generate the name and module code")?;
+    write_to_disk::write_file(&module_name, module_code).context("Failed to write to disk")?;
     Ok(())
+}
+
+/// Gets the code and other data from leetcode and generates the suitable code for the module and the name of the module
+/// Returns the module name and the module code
+///
+/// NB: Did not return `Cow` because `module_name` is always a modified version of the input
+pub fn create_module_code(
+    title_slug: Cow<String>,
+    args: &crate::cli::GenerateArgs,
+) -> anyhow::Result<(String, String)> {
+    info!("Building module contents for {title_slug}");
+
+    // Add problem URL
+    let mut code_snippet = format!(
+        "//! Solution for {}{title_slug}\n",
+        Config::LEETCODE_PROBLEM_URL
+    );
+
+    // Get code snippet
+    let code = get_code_snippet_for_problem(&title_slug)?;
+    code_snippet.push_str(&code);
+
+    // Add 2 empty lines between code and "other stuff (like tests and struct definition"
+    code_snippet.push_str("\n\n");
+
+    // Handle non design snippets
+    let is_design = !code.starts_with("impl Solution {");
+    if !is_design {
+        code_snippet.push_str("\npub struct Solution;\n")
+    }
+
+    // Add tests
+    let test = get_test_cases(&title_slug, is_design)?;
+    code_snippet.push_str(&test);
+
+    // Set module name
+    let module_name = if args.should_include_problem_number {
+        unimplemented!("Haven't retrieved the data yet")
+    } else {
+        title_slug.to_case(Case::Snake)
+    };
+
+    Ok((module_name, code_snippet))
 }
 
 /// Quick and dirty test to see if this is a url
