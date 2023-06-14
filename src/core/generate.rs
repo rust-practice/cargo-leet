@@ -35,6 +35,7 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
     let (module_name, module_code) = create_module_code(title_slug, args)
         .context("Failed to generate the name and module code")?;
     write_to_disk::write_file(&module_name, module_code).context("Failed to write to disk")?;
+    println!("Generated module: {module_name}");
     Ok(())
 }
 
