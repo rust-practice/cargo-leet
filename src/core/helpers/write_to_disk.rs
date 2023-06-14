@@ -38,11 +38,12 @@ pub fn write_file(module_name: &str, module_code: String) -> anyhow::Result<()> 
         lib_update_status.context("Failed to update lib.rs")?;
     }
 
-    info!("Going to run rustfmt on files");
-    Command::new("cargo")
-        .arg("fmt")
-        .arg("--all")
-        .output()
-        .context("Error running rustfmt")?;
+    // TODO Enable rustfmt
+    // info!("Going to run rustfmt on files");
+    // Command::new("cargo")
+    //     .arg("fmt")
+    //     .arg("--all")
+    //     .output()
+    //     .context("Error running rustfmt")?;
     Ok(())
 }
