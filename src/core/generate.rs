@@ -7,7 +7,9 @@ use crate::{
     config::Config,
     core::helpers::{
         code_snippet::{get_code_snippet_for_problem, get_test_cases},
-        daily_challenge, write_to_disk,
+        daily_challenge,
+        problem_metadata::get_problem_metadata,
+        write_to_disk,
     },
 };
 
@@ -48,6 +50,9 @@ pub fn create_module_code(
 ) -> anyhow::Result<(String, String)> {
     info!("Building module contents for {title_slug}");
 
+    let meta_data =
+        get_problem_metadata(&title_slug).context("Failed to retrieve problem meta data")?;
+
     // Add problem URL
     let mut code_snippet = format!(
         "//! Solution for {}{title_slug}\n",
@@ -73,8 +78,10 @@ pub fn create_module_code(
 
     // Set module name
     let module_name = if args.should_include_problem_number {
+        info!("Including problem number in module name");
         unimplemented!("Haven't retrieved the data yet")
     } else {
+        info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)
     };
 
