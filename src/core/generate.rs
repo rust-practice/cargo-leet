@@ -58,20 +58,19 @@ pub fn create_module_code(
     );
 
     // Get code snippet
-    let code = get_code_snippet_for_problem(&title_slug)?;
-    code_snippet.push_str(&code);
+    let problem_code = get_code_snippet_for_problem(&title_slug)?;
+    code_snippet.push_str(problem_code.as_ref());
 
     // Add 2 empty lines between code and "other stuff (like tests and struct definition"
     code_snippet.push_str("\n\n");
 
-    // Handle non design snippets
-    let is_design = !code.starts_with("impl Solution {");
-    if !is_design {
+    // Add struct for non design questions
+    if !problem_code.is_design() {
         code_snippet.push_str("\npub struct Solution;\n")
     }
 
     // Add tests
-    let tests = meta_data.get_test_cases(&code, is_design)?;
+    let tests = meta_data.get_test_cases(&problem_code)?;
     code_snippet.push_str(&tests);
 
     // Set module name
