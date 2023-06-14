@@ -1,3 +1,4 @@
+use super::problem_code::ProblemCode;
 use crate::config::Config;
 use anyhow::{bail, Context};
 use log::info;
@@ -16,7 +17,7 @@ pub struct CodeSnippet {
     code: String,
 }
 
-pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<String> {
+pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemCode> {
     info!("Going to get code for {title_slug}");
     let code_snippets_res = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
@@ -40,7 +41,7 @@ pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<String> 
         .into_iter()
         .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
     {
-        Some(result) => Ok(result),
+        Some(result) => Ok(result.into()),
         None => bail!("Rust not supported for this problem"),
     }
 }

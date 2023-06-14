@@ -4,6 +4,8 @@ use log::info;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
+use super::problem_code::ProblemCode;
+
 /// This struct is only used because there are two fields that we are interested in that start with the same path and flat_path does not support that yet
 #[flat_path]
 #[derive(Deserialize, Debug)]
@@ -36,10 +38,10 @@ impl ProblemMetadata {
         Ok(result)
     }
 
-    pub fn get_test_cases(&self, problem_code: &str, is_design: bool) -> anyhow::Result<String> {
+    pub fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
         info!("Going to get tests");
         // TODO implement generation of test cases
-        let tests = if is_design {
+        let tests = if problem_code.is_design() {
             r#"
 use rstest::rstest;
 "#
