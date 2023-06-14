@@ -6,10 +6,8 @@ use std::borrow::Cow;
 use crate::{
     config::Config,
     core::helpers::{
-        code_snippet::{get_code_snippet_for_problem, get_test_cases},
-        daily_challenge,
-        problem_metadata::get_problem_metadata,
-        write_to_disk,
+        code_snippet::get_code_snippet_for_problem, daily_challenge,
+        problem_metadata::get_problem_metadata, write_to_disk,
     },
 };
 
@@ -73,13 +71,17 @@ pub fn create_module_code(
     }
 
     // Add tests
-    let test = get_test_cases(&title_slug, is_design)?;
-    code_snippet.push_str(&test);
+    let tests = meta_data.get_test_cases(&code, is_design)?;
+    code_snippet.push_str(&tests);
 
     // Set module name
     let module_name = if args.should_include_problem_number {
         info!("Including problem number in module name");
-        todo!("Haven't retrieved the data yet")
+        format!(
+            "_{}_{}",
+            meta_data.get_id()?,
+            title_slug.to_case(Case::Snake)
+        )
     } else {
         info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)
