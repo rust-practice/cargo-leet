@@ -1,19 +1,41 @@
 use std::fmt::Display;
 
 use anyhow::{bail, Context};
+use log::info;
 use regex::Regex;
 
 pub struct ProblemCode {
     code: String,
-    pub fn_info: FunctionInfo,
+    pub type_: ProblemType,
+}
+
+pub enum ProblemType {
+    NonDesign(FunctionInfo),
+    Design,
+}
+
+impl ProblemType {
+    /// Returns `true` if the problem type is [`NonDesign`].
+    ///
+    /// [`NonDesign`]: ProblemType::NonDesign
+    #[must_use]
+    pub fn is_non_design(&self) -> bool {
+        matches!(self, Self::NonDesign(..))
+    }
 }
 
 impl TryFrom<String> for ProblemCode {
     type Error = anyhow::Error;
 
     fn try_from(code: String) -> Result<Self, Self::Error> {
-        let fn_info = Self::get_fn_info(&code).context("Failed to get function info")?;
-        Ok(Self { code, fn_info })
+        let type_ = if Self::is_design(&code) {
+            info!("Problem Type is Design");
+            ProblemType::Design
+        } else {
+            info!("Problem Type is NonDesign");
+            ProblemType::NonDesign(Self::get_fn_info(&code).context("Failed to get function info")?)
+        };
+        Ok(Self { code, type_ })
     }
 }
 
@@ -24,8 +46,8 @@ impl AsRef<str> for ProblemCode {
 }
 
 impl ProblemCode {
-    pub fn is_design(&self) -> bool {
-        !self.code.contains("impl Solution {")
+    fn is_design(code: &str) -> bool {
+        !code.contains("impl Solution {")
     }
 
     fn get_fn_info(code: &str) -> anyhow::Result<FunctionInfo> {
@@ -66,11 +88,19 @@ impl ProblemCode {
     }
 
     pub fn has_tree(&self) -> bool {
-        self.fn_info.has_tree()
+        if let ProblemType::NonDesign(fn_info) = &self.type_ {
+            fn_info.has_tree()
+        } else {
+            false
+        }
     }
 
     pub fn has_list(&self) -> bool {
-        self.fn_info.has_list()
+        if let ProblemType::NonDesign(fn_info) = &self.type_ {
+            fn_info.has_list()
+        } else {
+            false
+        }
     }
 }
 

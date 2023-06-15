@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::{config::Config, core::helpers::problem_code::ProblemType};
 use anyhow::Context;
 use log::info;
 use serde::Deserialize;
@@ -43,20 +43,23 @@ impl ProblemMetadata {
 
         let mut imports = String::new();
 
-        let tests = if !problem_code.is_design() {
-            info!("This is NOT a design problem");
-            if problem_code.has_tree() {
-                imports.push_str("use cargo_leet::TreeRoot;\n");
+        let tests = match &problem_code.type_ {
+            ProblemType::NonDesign(fn_info) => {
+                info!("This is NOT a design problem");
+                if problem_code.has_tree() {
+                    imports.push_str("use cargo_leet::TreeRoot;\n");
+                }
+                if problem_code.has_list() {
+                    imports.push_str("use cargo_leet::ListHead;\n");
+                }
+                self.get_test_cases_is_not_design(fn_info)
+                    .context("Failed to get test cases for non-design problem")?
             }
-            if problem_code.has_list() {
-                imports.push_str("use cargo_leet::ListHead;\n");
+            ProblemType::Design => {
+                info!("This is a design problem");
+                self.get_test_cases_is_design()
+                    .context("Failed to get test cases for design problem")?
             }
-            self.get_test_cases_is_not_design(&problem_code.fn_info)
-                .context("Failed to get test cases for non-design problem")?
-        } else {
-            info!("This is a design problem");
-            self.get_test_cases_is_design(&problem_code.fn_info)
-                .context("Failed to get test cases for design problem")?
         };
 
         Ok(format!(
@@ -102,7 +105,7 @@ mod tests {{
         Ok(result)
     }
 
-    fn get_test_cases_is_design(&self, _fn_info: &FunctionInfo) -> anyhow::Result<String> {
+    fn get_test_cases_is_design(&self) -> anyhow::Result<String> {
         // TODO Create the test cases for design problems
         Ok("".to_string())
     }
