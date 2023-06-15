@@ -84,8 +84,14 @@ impl FunctionInfo {
         result
     }
 
-    pub fn get_args_names(&self) -> anyhow::Result<String> {
-        todo!()
+    pub fn get_args_names(&self) -> String {
+        let names: Vec<_> = self
+            .fn_args
+            .args
+            .iter()
+            .map(|arg| arg.identifier.clone())
+            .collect();
+        names.join(", ")
     }
 
     pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
