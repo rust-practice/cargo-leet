@@ -131,7 +131,7 @@ impl FunctionInfo {
 
         // Include return type
         if self.return_type.is_some() {
-            result.push_str(", todo!(\"return type\")");
+            result.push_str(", todo!(\"Expected Result\")");
         }
 
         Ok(result)
