@@ -73,8 +73,15 @@ pub struct FunctionInfo {
 }
 
 impl FunctionInfo {
-    pub fn get_args_with_case(&self) -> anyhow::Result<String> {
-        todo!()
+    pub fn get_args_with_case(&self) -> String {
+        let mut result = String::from("#[case] ");
+        for c in self.fn_args.raw_str.chars() {
+            match c {
+                ',' => result.push_str(", #[case] "),
+                _ => result.push(c),
+            }
+        }
+        result
     }
 
     pub fn get_args_names(&self) -> anyhow::Result<String> {
