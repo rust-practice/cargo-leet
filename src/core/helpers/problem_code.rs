@@ -1,3 +1,6 @@
+use anyhow::{bail, Context};
+use regex::Regex;
+
 pub struct ProblemCode {
     code: String,
 }
@@ -26,7 +29,39 @@ impl ProblemCode {
     }
 
     pub fn get_fn_info(&self) -> anyhow::Result<FunctionInfo> {
-        todo!()
+        let re = Regex::new(r#"pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
+        let caps = if let Some(caps) = re.captures(&self.code) {
+            caps
+        } else {
+            bail!("Regex failed to match");
+        };
+
+        let name = if let Some(name) = caps.get(1) {
+            name.as_str().to_string()
+        } else {
+            bail!("Function name not found in code")
+        };
+
+        let args = FunctionArgs::new(if let Some(args) = caps.get(2) {
+            args.as_str().to_string()
+        } else {
+            bail!("Function arguments not matched")
+        });
+
+        let return_type: Option<FunctionArgType> = match caps.get(3) {
+            Some(s) => Some(
+                s.as_str()
+                    .try_into()
+                    .context("Failed to convert return type")?,
+            ),
+            None => None,
+        };
+
+        Ok(FunctionInfo {
+            name,
+            args,
+            return_type,
+        })
     }
 }
 
@@ -69,4 +104,21 @@ pub enum FunctionArgType {
     FATString,
     FATList,
     FATTree,
+}
+
+impl TryFrom<&str> for FunctionArgType {
+    type Error = anyhow::Error;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        use FunctionArgType::*;
+        Ok(match value {
+            "i32" => FATi32,
+            "Vec<i32>" => FATVeci32,
+            "Vec<Vec<i32>>" => FATVecVeci32,
+            "String" => FATString,
+            "Option<Box<ListNode>>" => FATList,
+            "Option<Rc<RefCell<TreeNode>>>" => FATTree,
+            _ => bail!("Unknown type: '{value}'"),
+        })
+    }
 }

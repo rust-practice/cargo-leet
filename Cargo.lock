@@ -99,6 +99,7 @@ dependencies = [
  "convert_case",
  "env_logger",
  "log",
+ "regex",
  "serde",
  "serde_flat_path",
  "ureq",
