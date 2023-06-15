@@ -96,9 +96,9 @@ mod tests {{
         Ok(result)
     }
 
-    fn get_test_cases_is_design(&self, fn_info: FunctionInfo) -> anyhow::Result<String> {
-        let mut result = "".to_string();
-        Ok(result)
+    fn get_test_cases_is_design(&self, _fn_info: FunctionInfo) -> anyhow::Result<String> {
+        // TODO Create the test cases for design problems
+        Ok("".to_string())
     }
 }
 
