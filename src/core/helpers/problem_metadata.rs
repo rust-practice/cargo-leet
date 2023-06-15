@@ -45,7 +45,6 @@ impl ProblemMetadata {
 
         let tests = match &problem_code.type_ {
             ProblemType::NonDesign(fn_info) => {
-                info!("This is NOT a design problem");
                 if problem_code.has_tree() {
                     imports.push_str("use cargo_leet::TreeRoot;\n");
                 }
@@ -55,11 +54,9 @@ impl ProblemMetadata {
                 self.get_test_cases_is_not_design(fn_info)
                     .context("Failed to get test cases for non-design problem")?
             }
-            ProblemType::Design => {
-                info!("This is a design problem");
-                self.get_test_cases_is_design()
-                    .context("Failed to get test cases for design problem")?
-            }
+            ProblemType::Design => self
+                .get_test_cases_is_design()
+                .context("Failed to get test cases for design problem")?,
         };
 
         Ok(format!(
