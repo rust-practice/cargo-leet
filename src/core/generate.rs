@@ -66,7 +66,7 @@ pub fn create_module_code(
     code_snippet.push_str("\n\n");
 
     // Add struct for non design questions
-    if !problem_code.is_design() {
+    if problem_code.type_.is_non_design() {
         code_snippet.push_str("\nstruct Solution;\n")
     }
 
