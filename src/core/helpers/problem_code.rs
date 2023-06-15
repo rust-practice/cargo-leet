@@ -259,7 +259,7 @@ impl FunctionArgType {
             FunctionArgType::FATString => line.to_string(),
             FunctionArgType::FATList => {
                 Self::does_pass_basic_vec_tests(line)?;
-                format!("ListHead::from(\"{line}\").into()")
+                format!("ListHead::from(vec!{line}).into()")
             }
             FunctionArgType::FATTree => {
                 Self::does_pass_basic_vec_tests(line)?;
