@@ -31,8 +31,8 @@ impl ProblemCode {
     }
 
     pub fn get_fn_info(&self) -> anyhow::Result<FunctionInfo> {
-        let re = Regex::new(r#"pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
-        let caps = if let Some(caps) = re.captures(&self.code) {
+        let re = Regex::new(r#"\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
+        let caps = if let Some(caps) = re.captures(dbg!(&self.code)) {
             caps
         } else {
             bail!("Regex failed to match");
