@@ -67,7 +67,15 @@ pub fn create_module_code(
 
     // Add struct for non design questions
     if !problem_code.is_design() {
-        code_snippet.push_str("\npub struct Solution;\n")
+        code_snippet.push_str("\nstruct Solution;\n")
+    }
+
+    // Add leet code types
+    if problem_code.has_tree() {
+        code_snippet.push_str("use cargo_leet::TreeNode;\n");
+    }
+    if problem_code.has_list() {
+        code_snippet.push_str("use cargo_leet::ListNode;\n");
     }
 
     // Add tests

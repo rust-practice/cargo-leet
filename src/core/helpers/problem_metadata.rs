@@ -41,17 +41,21 @@ impl ProblemMetadata {
     pub fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
         info!("Going to get tests");
 
-        let fn_info = problem_code
-            .get_fn_info()
-            .context("Failed to get function info")?;
+        let mut imports = String::new();
 
         let tests = if !problem_code.is_design() {
             info!("This is NOT a design problem");
-            self.get_test_cases_is_not_design(fn_info)
+            if problem_code.has_tree() {
+                imports.push_str("use cargo_leet::TreeRoot;\n");
+            }
+            if problem_code.has_list() {
+                imports.push_str("use cargo_leet::ListHead;\n");
+            }
+            self.get_test_cases_is_not_design(&problem_code.fn_info)
                 .context("Failed to get test cases for non-design problem")?
         } else {
             info!("This is a design problem");
-            self.get_test_cases_is_design(fn_info)
+            self.get_test_cases_is_design(&problem_code.fn_info)
                 .context("Failed to get test cases for design problem")?
         };
 
@@ -60,13 +64,15 @@ impl ProblemMetadata {
 #[cfg(test)]
 mod tests {{
     use super::*;
+    {imports}
+
     {tests}
 }}
 "#
         ))
     }
 
-    fn get_test_cases_is_not_design(&self, fn_info: FunctionInfo) -> anyhow::Result<String> {
+    fn get_test_cases_is_not_design(&self, fn_info: &FunctionInfo) -> anyhow::Result<String> {
         let mut result = "use rstest::rstest;
 
     #[rstest]
@@ -96,7 +102,7 @@ mod tests {{
         Ok(result)
     }
 
-    fn get_test_cases_is_design(&self, _fn_info: FunctionInfo) -> anyhow::Result<String> {
+    fn get_test_cases_is_design(&self, _fn_info: &FunctionInfo) -> anyhow::Result<String> {
         // TODO Create the test cases for design problems
         Ok("".to_string())
     }

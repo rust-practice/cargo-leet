@@ -5,17 +5,15 @@ use regex::Regex;
 
 pub struct ProblemCode {
     code: String,
+    pub fn_info: FunctionInfo,
 }
 
-impl From<String> for ProblemCode {
-    fn from(value: String) -> Self {
-        Self { code: value }
-    }
-}
+impl TryFrom<String> for ProblemCode {
+    type Error = anyhow::Error;
 
-impl From<ProblemCode> for String {
-    fn from(value: ProblemCode) -> Self {
-        value.code
+    fn try_from(code: String) -> Result<Self, Self::Error> {
+        let fn_info = Self::get_fn_info(&code).context("Failed to get function info")?;
+        Ok(Self { code, fn_info })
     }
 }
 
@@ -30,9 +28,9 @@ impl ProblemCode {
         !self.code.contains("impl Solution {")
     }
 
-    pub fn get_fn_info(&self) -> anyhow::Result<FunctionInfo> {
+    fn get_fn_info(code: &str) -> anyhow::Result<FunctionInfo> {
         let re = Regex::new(r#"\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
-        let caps = if let Some(caps) = re.captures(dbg!(&self.code)) {
+        let caps = if let Some(caps) = re.captures(code) {
             caps
         } else {
             bail!("Regex failed to match");
@@ -65,6 +63,14 @@ impl ProblemCode {
             fn_args: args,
             return_type,
         })
+    }
+
+    pub fn has_tree(&self) -> bool {
+        self.fn_info.has_tree()
+    }
+
+    pub fn has_list(&self) -> bool {
+        self.fn_info.has_list()
     }
 }
 
@@ -100,7 +106,7 @@ impl FunctionInfo {
         names.join(", ")
     }
 
-    pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
+    pub fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
         let mut result = String::new();
         let n = self.fn_args.len();
         let lines: Vec<_> = example_test_case_raw.lines().collect();
@@ -135,6 +141,14 @@ impl FunctionInfo {
         }
 
         Ok(result)
+    }
+
+    pub fn has_tree(&self) -> bool {
+        self.fn_args.args.iter().any(|arg| arg.arg_type.is_tree())
+    }
+
+    pub fn has_list(&self) -> bool {
+        self.fn_args.args.iter().any(|arg| arg.arg_type.is_list())
     }
 }
 
@@ -215,13 +229,11 @@ impl FunctionArgType {
             FunctionArgType::FATString => line.to_string(),
             FunctionArgType::FATList => {
                 Self::does_pass_basic_vec_tests(line)?;
-                // TODO finish converting input into correct type
-                format!("\"{line}\"")
+                format!("ListHead::from(\"{line}\").into()")
             }
             FunctionArgType::FATTree => {
                 Self::does_pass_basic_vec_tests(line)?;
-                // TODO finish converting input into correct type
-                format!("\"{line}\"")
+                format!("TreeRoot::from(\"{line}\").into()")
             }
         })
     }
@@ -231,6 +243,14 @@ impl FunctionArgType {
             bail!("Expecting something that can be represented as a vec but got '{s}'");
         }
         Ok(())
+    }
+
+    fn is_tree(&self) -> bool {
+        matches!(self, FunctionArgType::FATTree)
+    }
+
+    fn is_list(&self) -> bool {
+        matches!(self, FunctionArgType::FATList)
     }
 }
 
