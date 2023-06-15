@@ -8,7 +8,7 @@
  ### `cargo leet`
  ![ScreenShot](assets/help_scr_shot_top.png)
 
- ### `cargo leet generate --help` (Changing, screenshot not updated yet)
+ ### `cargo leet generate --help`
  ![ScreenShot](assets/help_scr_shot_generate.png)
 
 ## Installation
