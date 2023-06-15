@@ -87,7 +87,7 @@ mod tests {{
         let mut actual = Solution::{}({});
         assert_eq!(actual, expected);
     }}",
-            fn_info.get_args_with_case()?,
+            fn_info.get_args_with_case(),
             fn_info.name,
             fn_info.get_args_names()?
         );
