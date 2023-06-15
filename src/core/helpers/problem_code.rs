@@ -46,7 +46,8 @@ impl ProblemCode {
             args.as_str().to_string()
         } else {
             bail!("Function arguments not matched")
-        });
+        })
+        .context("Failed to parse function arguments")?;
 
         let return_type: Option<FunctionArgType> = match caps.get(3) {
             Some(s) => Some(
@@ -85,18 +86,44 @@ impl FunctionInfo {
     }
 }
 
+#[derive(Debug)]
+pub struct FunctionArg {
+    pub identifier: String,
+    pub arg_type: FunctionArgType,
+}
+
+#[derive(Debug)]
 pub struct FunctionArgs {
     raw_str: String,
-    pub args: Vec<FunctionArgType>,
+    pub args: Vec<FunctionArg>,
 }
 
 impl FunctionArgs {
-    pub fn new(raw_string: String) -> Self {
-        todo!()
+    pub fn new(raw_str: String) -> anyhow::Result<Self> {
+        let re = Regex::new(r#"([a-z_0-9]*?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
+        let caps: Vec<_> = re.captures_iter(&raw_str).collect();
+        let mut args: Vec<FunctionArg> = vec![];
+        for cap in caps {
+            let identifier = cap.get(1).expect("Required to match").as_str().to_string();
+            let arg_type = cap
+                .get(2)
+                .expect("Required to match")
+                .as_str()
+                .try_into()
+                .context("Failed to get argument type")?;
+
+            args.push(FunctionArg {
+                identifier,
+                arg_type,
+            })
+        }
+
+        Ok(Self { raw_str, args })
     }
 }
 
 /// Function Arg Type (FAT)
+#[derive(Debug)]
 pub enum FunctionArgType {
     FATi32,
     FATVeci32,
@@ -111,7 +138,7 @@ impl TryFrom<&str> for FunctionArgType {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         use FunctionArgType::*;
-        Ok(match value {
+        Ok(match value.trim() {
             "i32" => FATi32,
             "Vec<i32>" => FATVeci32,
             "Vec<Vec<i32>>" => FATVecVeci32,
