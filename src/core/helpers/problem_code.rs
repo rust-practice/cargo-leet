@@ -27,7 +27,7 @@ impl AsRef<str> for ProblemCode {
 
 impl ProblemCode {
     pub fn is_design(&self) -> bool {
-        !self.code.starts_with("impl Solution {")
+        !self.code.contains("impl Solution {")
     }
 
     pub fn get_fn_info(&self) -> anyhow::Result<FunctionInfo> {
