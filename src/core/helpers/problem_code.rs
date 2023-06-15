@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use anyhow::{bail, Context};
 use regex::Regex;
 
@@ -80,6 +82,10 @@ impl FunctionInfo {
                 ',' => result.push_str(", #[case] "),
                 _ => result.push(c),
             }
+        }
+
+        if let Some(return_type) = self.return_type.as_ref() {
+            result.push_str(&format!(", #[case] expected: {return_type}"))
         }
         result
     }
@@ -182,6 +188,7 @@ pub enum FunctionArgType {
     FATList,
     FATTree,
 }
+
 impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
@@ -224,6 +231,21 @@ impl FunctionArgType {
             bail!("Expecting something that can be represented as a vec but got '{s}'");
         }
         Ok(())
+    }
+}
+
+impl Display for FunctionArgType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            FunctionArgType::FATi32 => "i32",
+            FunctionArgType::FATVeci32 => "Vec<i32>",
+            FunctionArgType::FATVecVeci32 => "Vec<Vec<i32>>",
+            FunctionArgType::FATString => "String",
+            FunctionArgType::FATList => "Option<Box<ListNode>>",
+            FunctionArgType::FATTree => "Option<Rc<RefCell<TreeNode>>>",
+        };
+
+        write!(f, "{s}")
     }
 }
 
