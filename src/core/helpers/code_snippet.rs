@@ -41,7 +41,7 @@ pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemC
         .into_iter()
         .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
     {
-        Some(result) => Ok(result.into()),
+        Some(result) => Ok(result.try_into()?),
         None => bail!("Rust not supported for this problem"),
     }
 }
