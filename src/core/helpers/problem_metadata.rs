@@ -78,13 +78,13 @@ mod tests {{
             let test_case = fn_info
                 .get_test_case(example_test_case_raw)
                 .context("Failed to convert downloaded test case into macro of input")?;
-            result.push_str(&format!("  #[case({})]\n", test_case))
+            result.push_str(&format!("    #[case({})]\n", test_case))
         }
 
         // Add test case function body
         let test_fn = format!(
-            "   fn case({}) {{
-        let mut actual = Solution::{}({});
+            "    fn case({}) {{
+        let actual = Solution::{}({});
         assert_eq!(actual, expected);
     }}",
             fn_info.get_args_with_case(),
