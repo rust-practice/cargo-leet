@@ -14,6 +14,7 @@ clap = { version = "4.3.3", features = ["derive", "cargo"] }
 convert_case = "0.6"
 env_logger = "0.10.0"
 log = "0.4.18"
+regex = "1.8.4"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_flat_path = "0.1.2"
 ureq = { version = "2.6", features = ["json"] }
