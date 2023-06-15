@@ -60,7 +60,7 @@ impl ProblemCode {
 
         Ok(FunctionInfo {
             name,
-            args,
+            fn_args: args,
             return_type,
         })
     }
@@ -68,7 +68,7 @@ impl ProblemCode {
 
 pub struct FunctionInfo {
     pub name: String,
-    pub args: FunctionArgs,
+    pub fn_args: FunctionArgs,
     pub return_type: Option<FunctionArgType>,
 }
 
@@ -81,8 +81,41 @@ impl FunctionInfo {
         todo!()
     }
 
-    pub(crate) fn get_test_case(&self, raw_str: &str) -> String {
-        todo!()
+    pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
+        let mut result = String::new();
+        let n = self.fn_args.len();
+        let lines: Vec<_> = example_test_case_raw.lines().collect();
+
+        if lines.len() != self.fn_args.len() {
+            bail!(
+                "Expected number of augments ({}) to match the number of lines download ({})",
+                self.fn_args.len(),
+                lines.len()
+            )
+        }
+
+        for (i, (&line, arg_type)) in lines
+            .iter()
+            .zip(self.fn_args.args.iter().map(|arg| &arg.arg_type))
+            .enumerate()
+        {
+            result.push_str(
+                &arg_type
+                    .apply(line)
+                    .context("Failed to apply type information to the example from leetcode")?,
+            );
+
+            if i < n - 1 {
+                result.push_str(", ");
+            }
+        }
+
+        // Include return type
+        if self.return_type.is_some() {
+            result.push_str(", todo!(\"return type\")");
+        }
+
+        Ok(result)
     }
 }
 
@@ -120,6 +153,10 @@ impl FunctionArgs {
 
         Ok(Self { raw_str, args })
     }
+
+    fn len(&self) -> usize {
+        self.args.len()
+    }
 }
 
 /// Function Arg Type (FAT)
@@ -131,6 +168,50 @@ pub enum FunctionArgType {
     FATString,
     FATList,
     FATTree,
+}
+impl FunctionArgType {
+    /// Applies any special changes needed to the value based on the type
+    fn apply(&self, line: &str) -> anyhow::Result<String> {
+        Ok(match self {
+            FunctionArgType::FATi32 => {
+                let _: i32 = line.parse()?;
+                line.to_string()
+            }
+            FunctionArgType::FATVeci32 => {
+                Self::does_pass_basic_vec_tests(line)?;
+                format!("vec!{line}")
+            }
+            FunctionArgType::FATVecVeci32 => {
+                Self::does_pass_basic_vec_tests(line)?;
+                let mut result = String::new();
+                for c in line.chars() {
+                    match c {
+                        '[' => result.push_str("vec!["),
+                        _ => result.push(c),
+                    }
+                }
+                result
+            }
+            FunctionArgType::FATString => line.to_string(),
+            FunctionArgType::FATList => {
+                Self::does_pass_basic_vec_tests(line)?;
+                // TODO finish converting input into correct type
+                format!("\"{line}\"")
+            }
+            FunctionArgType::FATTree => {
+                Self::does_pass_basic_vec_tests(line)?;
+                // TODO finish converting input into correct type
+                format!("\"{line}\"")
+            }
+        })
+    }
+
+    fn does_pass_basic_vec_tests(s: &str) -> anyhow::Result<()> {
+        if !s.starts_with('[') || !s.ends_with(']') {
+            bail!("Expecting something that can be represented as a vec but got '{s}'");
+        }
+        Ok(())
+    }
 }
 
 impl TryFrom<&str> for FunctionArgType {

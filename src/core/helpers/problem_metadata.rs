@@ -74,8 +74,10 @@ mod tests {{
         .to_string();
 
         // Add test cases
-        for raw_str in self.example_test_case_list.iter() {
-            let test_case = fn_info.get_test_case(raw_str);
+        for example_test_case_raw in self.example_test_case_list.iter() {
+            let test_case = fn_info
+                .get_test_case(example_test_case_raw)
+                .context("Failed to convert downloaded test case into macro of input")?;
             result.push_str(&format!("  #[case({})]\n", test_case))
         }
 
