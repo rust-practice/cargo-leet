@@ -1,5 +1,5 @@
 use super::problem_code::ProblemCode;
-use crate::config::Config;
+use crate::tool::config::Config;
 use anyhow::{bail, Context};
 use log::info;
 use serde::Deserialize;
