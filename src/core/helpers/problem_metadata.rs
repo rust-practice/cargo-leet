@@ -19,6 +19,8 @@ struct QuestionWrapper {
 pub struct ProblemMetadata {
     #[serde(rename = "questionFrontendId")]
     id: String,
+    #[serde(rename = "questionTitle")]
+    title: String,
     #[serde(rename = "exampleTestcaseList")]
     example_test_case_list: Vec<String>,
 }
@@ -36,6 +38,10 @@ impl ProblemMetadata {
             .parse()
             .with_context(|| format!("ID is not a valid u16. Got: {}", self.id))?;
         Ok(result)
+    }
+
+    pub fn get_num_and_title(&self) -> anyhow::Result<String> {
+        Ok(format!("{}. {}", self.get_id()?, self.title))
     }
 
     pub fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
@@ -115,6 +121,7 @@ pub fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMetadata>
             "query": r#"query consolePanelConfig($titleSlug: String!) {
             question(titleSlug: $titleSlug) {
                 questionFrontendId
+                questionTitle
                 exampleTestcaseList
             }
         }"#,
