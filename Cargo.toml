@@ -26,13 +26,13 @@ default = ["tool"]
 leet_env = []
 # Items used when running as a binary
 tool = [
-    "dep:anyhow",
-    "dep:convert_case",
-    "dep:env_logger",
-    "dep:log",
-    "dep:regex",
-    "dep:serde_flat_path",
-    "dep:clap",
-    "dep:serde",
-    "dep:ureq",
+    "anyhow",
+    "convert_case",
+    "env_logger",
+    "log",
+    "regex",
+    "serde_flat_path",
+    "clap",
+    "serde",
+    "ureq",
 ]
