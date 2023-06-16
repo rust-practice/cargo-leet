@@ -58,6 +58,17 @@ pub fn create_module_code(
         Config::LEETCODE_PROBLEM_URL
     );
 
+    // Add problem number and title
+    code_snippet.push_str(&format!(
+        "//! {}\n",
+        meta_data
+            .get_num_and_title()
+            .context("Failed to get problem number and title")?
+    ));
+
+    // Add blank line between docstring and code
+    code_snippet.push('\n');
+
     // Get code snippet
     let problem_code = get_code_snippet_for_problem(&title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
