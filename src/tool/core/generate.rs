@@ -3,7 +3,8 @@ use convert_case::{Case, Casing};
 use log::info;
 use std::borrow::Cow;
 
-use crate::{
+use crate::tool::{
+    cli,
     config::Config,
     core::helpers::{
         code_snippet::get_code_snippet_for_problem, daily_challenge,
@@ -11,7 +12,7 @@ use crate::{
     },
 };
 
-pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()> {
+pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         // Problem specified
         if is_url(specific_problem) {
@@ -45,7 +46,7 @@ pub(crate) fn do_generate(args: &crate::cli::GenerateArgs) -> anyhow::Result<()>
 /// NB: Did not return `Cow` because `module_name` is always a modified version of the input
 pub fn create_module_code(
     title_slug: Cow<String>,
-    args: &crate::cli::GenerateArgs,
+    args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {
     info!("Building module contents for {title_slug}");
 

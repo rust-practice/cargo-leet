@@ -2,7 +2,7 @@ mod generate;
 mod helpers;
 
 use self::generate::do_generate;
-use crate::cli::Cli;
+use crate::tool::cli::{self, Cli};
 use anyhow::{bail, Context};
 use std::{env, path::Path};
 
@@ -12,7 +12,7 @@ pub fn run(cli: &Cli) -> anyhow::Result<()> {
     working_directory_validation()?;
 
     match &cli.command {
-        crate::cli::Commands::Generate(args) => do_generate(args),
+        cli::Commands::Generate(args) => do_generate(args),
     }
 }
 

@@ -1,4 +1,4 @@
-use crate::{config::Config, core::helpers::problem_code::ProblemType};
+use crate::tool::{config::Config, core::helpers::problem_code::ProblemType};
 use anyhow::Context;
 use log::info;
 use serde::Deserialize;

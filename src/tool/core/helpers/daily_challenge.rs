@@ -2,7 +2,7 @@ use anyhow::Context;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
-use crate::config::Config;
+use crate::tool::config::Config;
 
 #[flat_path]
 #[derive(Deserialize)]
