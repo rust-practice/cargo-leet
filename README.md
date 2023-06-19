@@ -13,7 +13,7 @@
 
 ## Installation
 
-NB: Installing from another source overwrites if it is already installed
+NB: If cargo-leet is already installed you do the install it will just replace it even it it was previously installed from a different source. For example if you install it from a clone then run the command to install from git it will replace the existing version that is installed (they will not both be installed).
 
 ### From GitHub
 
