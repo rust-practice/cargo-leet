@@ -1,3 +1,4 @@
+# See defaults at https://github.com/EmbarkStudios/cargo-deny/blob/main/deny.template.toml
 [advisories]
 yanked = "deny"
 
