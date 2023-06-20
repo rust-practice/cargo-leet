@@ -14,18 +14,8 @@ use crate::tool::{
 
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
-        // Problem specified
-        if is_url(specific_problem) {
-            // Working with a url
-            info!("Using '{specific_problem}' as a url");
-            let slug = url_to_slug(specific_problem)?;
-            info!("Extracted slug '{slug}' from url");
-            Cow::Owned(slug)
-        } else {
-            // This is expected to be a valid slug
-            info!("Using '{specific_problem}' as a slug");
-            Cow::Borrowed(specific_problem)
-        }
+        get_slug_from_args(specific_problem)
+            .with_context(|| format!("Expected URL or slug but got {specific_problem}"))?
     } else {
         // Daily problem
         let slug = daily_challenge::get_daily_challenge_slug()?;
@@ -38,6 +28,21 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     write_to_disk::write_file(&module_name, module_code).context("Failed to write to disk")?;
     println!("Generated module: {module_name}");
     Ok(())
+}
+
+fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, String>> {
+    Ok(if is_url(specific_problem) {
+        // Working with a url
+        info!("Using '{specific_problem}' as a url");
+        let slug = url_to_slug(specific_problem)?;
+        info!("Extracted slug '{slug}' from url");
+        Cow::Owned(slug)
+    } else {
+        // This is expected to be a valid slug
+        //TODO: Validate slug
+        info!("Using '{specific_problem}' as a slug");
+        Cow::Borrowed(specific_problem)
+    })
 }
 
 /// Gets the code and other data from leetcode and generates the suitable code for the module and the name of the module
