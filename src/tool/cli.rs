@@ -18,7 +18,7 @@ pub struct Cli {
     pub command: Commands,
 
     /// Specify the path to the project root (If not provided uses current working directory)
-    #[arg(long, short, value_name = "FOLDER")]
+    #[arg(long, short, value_name = "FOLDER")] // This is an example where I use it
     path: Option<String>,
 
     /// Set logging level to use
@@ -50,6 +50,7 @@ impl Cli {
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
+    #[clap(visible_alias = "gen", short_flag = 'g')]
     Generate(GenerateArgs),
 }
 
