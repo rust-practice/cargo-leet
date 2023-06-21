@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use anyhow::{bail, Context};
-use log::{error, info};
+use log::{error, info, warn};
 use regex::Regex;
 
 pub struct ProblemCode {
@@ -240,11 +240,15 @@ impl FunctionArgType {
     fn apply(&self, line: &str) -> anyhow::Result<String> {
         Ok(match self {
             FunctionArgType::FATi32 => {
-                let _: i32 = line.parse()?;
+                if let Err(e) = line.parse::<i32>() {
+                    warn!("In testing the test input \"{line}\" the parsing to i32 failed with error: {e}")
+                };
                 line.to_string()
             }
             FunctionArgType::FATi64 => {
-                let _: i64 = line.parse()?;
+                if let Err(e) = line.parse::<i32>() {
+                    warn!("In testing the test input \"{line}\" the parsing to i64 failed with error: {e}")
+                };
                 line.to_string()
             }
             FunctionArgType::FATVeci32 => {
