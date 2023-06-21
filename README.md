@@ -29,6 +29,12 @@ After cloning the repo run
 cargo install --path .
 ```
 
+or using alias from `.cargo/config.toml`
+
+```sh
+cargo i
+```
+
 ## Uninstallation
 
 ```sh
