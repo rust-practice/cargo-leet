@@ -116,6 +116,7 @@ pub fn create_module_code(
 }
 
 /// Quick and dirty test to see if this is a url
+/// Uses a character that is not allowed in slugs but must be in a url to decide between the two
 fn is_url(value: &str) -> bool {
     value.contains('/')
 }
