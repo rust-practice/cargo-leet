@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use anyhow::{bail, Context};
-use log::info;
+use log::{error, info};
 use regex::Regex;
 
 pub struct ProblemCode {
@@ -226,11 +226,13 @@ impl FunctionArgs {
 #[derive(Debug)]
 pub enum FunctionArgType {
     FATi32,
+    FATi64,
     FATVeci32,
     FATVecVeci32,
     FATString,
     FATList,
     FATTree,
+    FATOther { raw: String },
 }
 
 impl FunctionArgType {
@@ -239,6 +241,10 @@ impl FunctionArgType {
         Ok(match self {
             FunctionArgType::FATi32 => {
                 let _: i32 = line.parse()?;
+                line.to_string()
+            }
+            FunctionArgType::FATi64 => {
+                let _: i64 = line.parse()?;
                 line.to_string()
             }
             FunctionArgType::FATVeci32 => {
@@ -265,6 +271,7 @@ impl FunctionArgType {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("TreeRoot::from(\"{line}\").into()")
             }
+            FunctionArgType::FATOther { raw: _ } => line.to_string(), // Assume input is fine and pass on verbatim,
         })
     }
 
@@ -288,11 +295,13 @@ impl Display for FunctionArgType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = match self {
             FunctionArgType::FATi32 => "i32",
+            FunctionArgType::FATi64 => "i64",
             FunctionArgType::FATVeci32 => "Vec<i32>",
             FunctionArgType::FATVecVeci32 => "Vec<Vec<i32>>",
             FunctionArgType::FATString => "String",
             FunctionArgType::FATList => "Option<Box<ListNode>>",
             FunctionArgType::FATTree => "Option<Rc<RefCell<TreeNode>>>",
+            FunctionArgType::FATOther { raw } => raw,
         };
 
         write!(f, "{s}")
@@ -306,12 +315,18 @@ impl TryFrom<&str> for FunctionArgType {
         use FunctionArgType::*;
         Ok(match value.trim() {
             "i32" => FATi32,
+            "i64" => FATi64,
             "Vec<i32>" => FATVeci32,
             "Vec<Vec<i32>>" => FATVecVeci32,
             "String" => FATString,
             "Option<Box<ListNode>>" => FATList,
             "Option<Rc<RefCell<TreeNode>>>" => FATTree,
-            _ => bail!("Unknown type: '{value}'"),
+            trimmed_value => {
+                error!("Unknown type \"{trimmed_value}\" found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new");
+                FATOther {
+                    raw: trimmed_value.to_string(),
+                }
+            }
         })
     }
 }
