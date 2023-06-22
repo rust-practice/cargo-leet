@@ -227,7 +227,9 @@ impl FunctionArgs {
 pub enum FunctionArgType {
     I32,
     I64,
+    Bool,
     VecI32,
+    VecBool,
     VecVecI32,
     String_,
     List,
@@ -252,7 +254,7 @@ impl FunctionArgType {
                 };
                 line.to_string()
             }
-            VecI32 => {
+            VecI32 | VecBool => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("vec!{line}")
             }
@@ -267,7 +269,7 @@ impl FunctionArgType {
                 }
                 result
             }
-            String_ => line.to_string(),
+            String_ | Bool => line.to_string(),
             List => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("ListHead::from(vec!{line}).into()")
@@ -302,7 +304,9 @@ impl Display for FunctionArgType {
         let s = match self {
             I32 => "i32",
             I64 => "i64",
+            Bool => "bool",
             VecI32 => "Vec<i32>",
+            VecBool => "Vec<bool>",
             VecVecI32 => "Vec<Vec<i32>>",
             String_ => "String",
             List => "Option<Box<ListNode>>",
@@ -322,7 +326,9 @@ impl TryFrom<&str> for FunctionArgType {
         Ok(match value.trim() {
             "i32" => I32,
             "i64" => I64,
+            "bool" => Bool,
             "Vec<i32>" => VecI32,
+            "Vec<bool>" => VecBool,
             "Vec<Vec<i32>>" => VecVecI32,
             "String" => String_,
             "Option<Box<ListNode>>" => List,
