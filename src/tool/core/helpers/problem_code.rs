@@ -225,37 +225,38 @@ impl FunctionArgs {
 /// Function Arg Type (FAT)
 #[derive(Debug)]
 pub enum FunctionArgType {
-    FATi32,
-    FATi64,
-    FATVeci32,
-    FATVecVeci32,
-    FATString,
-    FATList,
-    FATTree,
-    FATOther { raw: String },
+    I32,
+    I64,
+    VecI32,
+    VecVecI32,
+    String_,
+    List,
+    Tree,
+    Other { raw: String },
 }
 
 impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
+        use FunctionArgType::*;
         Ok(match self {
-            FunctionArgType::FATi32 => {
+            I32 => {
                 if let Err(e) = line.parse::<i32>() {
                     warn!("In testing the test input \"{line}\" the parsing to i32 failed with error: {e}")
                 };
                 line.to_string()
             }
-            FunctionArgType::FATi64 => {
+            I64 => {
                 if let Err(e) = line.parse::<i32>() {
                     warn!("In testing the test input \"{line}\" the parsing to i64 failed with error: {e}")
                 };
                 line.to_string()
             }
-            FunctionArgType::FATVeci32 => {
+            VecI32 => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("vec!{line}")
             }
-            FunctionArgType::FATVecVeci32 => {
+            VecVecI32 => {
                 Self::does_pass_basic_vec_tests(line)?;
                 let mut result = String::new();
                 for c in line.chars() {
@@ -266,16 +267,16 @@ impl FunctionArgType {
                 }
                 result
             }
-            FunctionArgType::FATString => line.to_string(),
-            FunctionArgType::FATList => {
+            String_ => line.to_string(),
+            List => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("ListHead::from(vec!{line}).into()")
             }
-            FunctionArgType::FATTree => {
+            Tree => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("TreeRoot::from(\"{line}\").into()")
             }
-            FunctionArgType::FATOther { raw: _ } => line.to_string(), // Assume input is fine and pass on verbatim,
+            Other { raw: _ } => line.to_string(), // Assume input is fine and pass on verbatim,
         })
     }
 
@@ -287,25 +288,26 @@ impl FunctionArgType {
     }
 
     fn is_tree(&self) -> bool {
-        matches!(self, FunctionArgType::FATTree)
+        matches!(self, FunctionArgType::Tree)
     }
 
     fn is_list(&self) -> bool {
-        matches!(self, FunctionArgType::FATList)
+        matches!(self, FunctionArgType::List)
     }
 }
 
 impl Display for FunctionArgType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use FunctionArgType::*;
         let s = match self {
-            FunctionArgType::FATi32 => "i32",
-            FunctionArgType::FATi64 => "i64",
-            FunctionArgType::FATVeci32 => "Vec<i32>",
-            FunctionArgType::FATVecVeci32 => "Vec<Vec<i32>>",
-            FunctionArgType::FATString => "String",
-            FunctionArgType::FATList => "Option<Box<ListNode>>",
-            FunctionArgType::FATTree => "Option<Rc<RefCell<TreeNode>>>",
-            FunctionArgType::FATOther { raw } => raw,
+            I32 => "i32",
+            I64 => "i64",
+            VecI32 => "Vec<i32>",
+            VecVecI32 => "Vec<Vec<i32>>",
+            String_ => "String",
+            List => "Option<Box<ListNode>>",
+            Tree => "Option<Rc<RefCell<TreeNode>>>",
+            Other { raw } => raw,
         };
 
         write!(f, "{s}")
@@ -318,16 +320,16 @@ impl TryFrom<&str> for FunctionArgType {
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         use FunctionArgType::*;
         Ok(match value.trim() {
-            "i32" => FATi32,
-            "i64" => FATi64,
-            "Vec<i32>" => FATVeci32,
-            "Vec<Vec<i32>>" => FATVecVeci32,
-            "String" => FATString,
-            "Option<Box<ListNode>>" => FATList,
-            "Option<Rc<RefCell<TreeNode>>>" => FATTree,
+            "i32" => I32,
+            "i64" => I64,
+            "Vec<i32>" => VecI32,
+            "Vec<Vec<i32>>" => VecVecI32,
+            "String" => String_,
+            "Option<Box<ListNode>>" => List,
+            "Option<Rc<RefCell<TreeNode>>>" => Tree,
             trimmed_value => {
                 error!("Unknown type \"{trimmed_value}\" found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new");
-                FATOther {
+                Other {
                     raw: trimmed_value.to_string(),
                 }
             }
