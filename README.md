@@ -1,7 +1,7 @@
-## Leetcode local dev assistant
+## Leetcode local development assistant
 
- A program that given the link to a leetcode problem,
- creates a local file where you can develop your solution and then post it back to leetcode.
+ A program that given the link or slug to a leetcode problem,
+ creates a local file where you can develop and test your solution before post it back to leetcode.
 
  ## ScreenShots
 
