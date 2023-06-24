@@ -5,7 +5,7 @@
 
  ## ScreenShots
 
- ### `cargo leet (needs to be updated)`
+ ### `cargo leet`
  ![ScreenShot](assets/help_scr_shot_top.png)
 
  ### `cargo leet generate --help`
