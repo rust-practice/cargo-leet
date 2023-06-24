@@ -11,7 +11,18 @@
  ### `cargo leet generate --help`
  ![ScreenShot](assets/help_scr_shot_generate.png)
 
-## Installation
+ ## Using Library Support
+
+ Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary (automatically added if tool is used to generate the file).
+
+ ```toml
+ cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop", default-features = false, features = [
+    "leet_env",
+] }
+ ```
+
+
+## Tool Installation
 
 NB: If cargo-leet is already installed you do the install it will just replace it even it it was previously installed from a different source. For example if you install it from a clone then run the command to install from git it will replace the existing version that is installed (they will not both be installed).
 
@@ -35,7 +46,7 @@ or using alias from `.cargo/config.toml`
 cargo i
 ```
 
-## Uninstallation
+## Tool Uninstallation
 
 ```sh
 cargo uninstall cargo-leet
