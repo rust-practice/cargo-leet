@@ -1,17 +1,28 @@
-## Leetcode local dev assistant
+## Leetcode local development assistant
 
- A program that given the link to a leetcode problem,
- creates a local file where you can develop your solution and then post it back to leetcode.
+ A program that given the link or slug to a leetcode problem,
+ creates a local file where you can develop and test your solution before post it back to leetcode.
 
  ## ScreenShots
 
- ### `cargo leet (needs to be updated)`
+ ### `cargo leet`
  ![ScreenShot](assets/help_scr_shot_top.png)
 
  ### `cargo leet generate --help`
  ![ScreenShot](assets/help_scr_shot_generate.png)
 
-## Installation
+ ## Using Library Support
+
+ Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary (automatically added if tool is used to generate the file).
+
+ ```toml
+ cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop", default-features = false, features = [
+    "leet_env",
+] }
+ ```
+
+
+## Tool Installation
 
 NB: If cargo-leet is already installed you do the install it will just replace it even it it was previously installed from a different source. For example if you install it from a clone then run the command to install from git it will replace the existing version that is installed (they will not both be installed).
 
@@ -29,7 +40,13 @@ After cloning the repo run
 cargo install --path .
 ```
 
-## Uninstallation
+or using alias from `.cargo/config.toml`
+
+```sh
+cargo i
+```
+
+## Tool Uninstallation
 
 ```sh
 cargo uninstall cargo-leet
