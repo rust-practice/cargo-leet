@@ -16,9 +16,7 @@
  Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary (automatically added if tool is used to generate the file).
 
  ```toml
- cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop", default-features = false, features = [
-    "leet_env",
-] }
+ cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop" }
  ```
 
 
@@ -29,7 +27,7 @@ NB: If cargo-leet is already installed you do the install it will just replace i
 ### From GitHub
 
 ```sh
-cargo install --git https://github.com/rust-practice/cargo-leet.git --branch main
+cargo install --git https://github.com/rust-practice/cargo-leet.git --branch main --features=tool
 ```
 
 ### From Clone
@@ -37,7 +35,7 @@ cargo install --git https://github.com/rust-practice/cargo-leet.git --branch mai
 After cloning the repo run
 
 ```sh
-cargo install --path .
+cargo install --path . --features=tool
 ```
 
 or using alias from `.cargo/config.toml`

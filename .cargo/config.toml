@@ -1,2 +1,2 @@
 [alias]
-i = "install --path ."
+i = "install --path . --features=tool"
