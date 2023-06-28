@@ -46,7 +46,7 @@ cargo i
 
 ## Running Directly from source without install
 
-These commands allow you to run the tool directly from the source code without installation.
+These commands allow you to run the tool directly from the source code without installation. For more options see [generate help](#cargo-leet-generate---help)
 
 ```sh
 cargo run --features=tool -- leet gen
