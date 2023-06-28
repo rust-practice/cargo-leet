@@ -227,8 +227,10 @@ impl FunctionArgs {
 pub enum FunctionArgType {
     I32,
     I64,
+    F64,
     Bool,
     VecI32,
+    VecF64,
     VecBool,
     VecVecI32,
     String_,
@@ -254,7 +256,13 @@ impl FunctionArgType {
                 };
                 line.to_string()
             }
-            VecI32 | VecBool => {
+            F64 => {
+                if let Err(e) = line.parse::<f64>() {
+                    warn!("In testing the test input \"{line}\" the parsing to f64 failed with error: {e}")
+                };
+                line.to_string()
+            }
+            VecI32 | VecBool | VecF64 => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("vec!{line}")
             }
@@ -304,8 +312,10 @@ impl Display for FunctionArgType {
         let s = match self {
             I32 => "i32",
             I64 => "i64",
+            F64 => "f64",
             Bool => "bool",
             VecI32 => "Vec<i32>",
+            VecF64 => "Vec<f64>",
             VecBool => "Vec<bool>",
             VecVecI32 => "Vec<Vec<i32>>",
             String_ => "String",
@@ -326,8 +336,10 @@ impl TryFrom<&str> for FunctionArgType {
         Ok(match value.trim() {
             "i32" => I32,
             "i64" => I64,
+            "f64" => F64,
             "bool" => Bool,
             "Vec<i32>" => VecI32,
+            "Vec<f64>" => VecF64,
             "Vec<bool>" => VecBool,
             "Vec<Vec<i32>>" => VecVecI32,
             "String" => String_,
