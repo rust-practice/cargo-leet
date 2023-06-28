@@ -44,6 +44,20 @@ or using alias from `.cargo/config.toml`
 cargo i
 ```
 
+## Running Directly from source without install
+
+These commands allow you to run the tool directly from the source code without installation.
+
+```sh
+cargo run --features=tool -- leet gen
+```
+
+or using alias from `.cargo/config.toml`
+
+```sh
+cargo lg
+```
+
 ## Tool Uninstallation
 
 ```sh
