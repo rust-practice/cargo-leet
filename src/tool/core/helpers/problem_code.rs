@@ -249,7 +249,7 @@ impl FunctionArgType {
                 line.to_string()
             }
             I64 => {
-                if let Err(e) = line.parse::<i32>() {
+                if let Err(e) = line.parse::<i64>() {
                     warn!("In testing the test input \"{line}\" the parsing to i64 failed with error: {e}")
                 };
                 line.to_string()
