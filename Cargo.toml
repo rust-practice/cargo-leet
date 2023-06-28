@@ -20,8 +20,13 @@ serde = { version = "1.0.164", features = ["derive"], optional = true }
 ureq = { version = "2.6", features = ["json"], optional = true }
 
 
+[[bin]]
+name = "cargo-leet"
+path = "src/main.rs"
+required-features = ["tool"]
+
 [features]
-default = ["tool"]
+default = ["leet_env"]
 # Add support for leetcode's environment
 leet_env = []
 # Items used when running as a binary
