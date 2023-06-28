@@ -136,6 +136,15 @@ impl FunctionInfo {
         names.join(", ")
     }
 
+    pub fn get_solution_comparison_code(&self) -> String {
+        if let Some(FunctionArgType::F64) = &self.return_type {
+            "assert!((actual - expected).abs() < 1e-5, \"Assertion failed: actual {actual:.5} but expected {expected:.5}. Diff is more than 1e-5.\");"
+        } else {
+            "assert_eq!(actual, expected);"
+        }
+        .to_string()
+    }
+
     pub fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
         let mut result = String::new();
         let n = self.fn_args.len();

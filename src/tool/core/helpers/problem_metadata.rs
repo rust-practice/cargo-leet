@@ -97,11 +97,12 @@ mod tests {{
         let test_fn = format!(
             "    fn case({}) {{
         let actual = Solution::{}({});
-        assert_eq!(actual, expected);
-    }}", // TODO add support for same value within 5 decimal places
+        {}
+    }}",
             fn_info.get_args_with_case(),
             fn_info.name,
-            fn_info.get_args_names()
+            fn_info.get_args_names(),
+            fn_info.get_solution_comparison_code(),
         );
         result.push_str(&test_fn);
 
