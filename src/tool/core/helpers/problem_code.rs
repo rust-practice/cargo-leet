@@ -277,14 +277,7 @@ impl FunctionArgType {
             }
             VecVecI32 => {
                 Self::does_pass_basic_vec_tests(line)?;
-                let mut result = String::new();
-                for c in line.chars() {
-                    match c {
-                        '[' => result.push_str("vec!["),
-                        _ => result.push(c),
-                    }
-                }
-                result
+                line.replace('[', "vec![")
             }
             String_ | Bool => line.to_string(),
             List => {
