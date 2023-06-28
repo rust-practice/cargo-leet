@@ -80,7 +80,9 @@ pub fn create_module_code(
     code_snippet.push_str(problem_code.as_ref());
 
     // Add 2 empty lines between code and "other stuff (like tests and struct definition"
-    code_snippet.push_str("\n\n");
+    code_snippet.push_str(
+        "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
+    );
 
     // Add struct for non design questions
     if problem_code.type_.is_non_design() {
