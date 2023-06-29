@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use anyhow::{bail, Context};
-use log::{error, info, warn};
+use log::{info, warn};
 use regex::Regex;
 
 pub struct ProblemCode {
@@ -348,7 +348,7 @@ impl TryFrom<&str> for FunctionArgType {
             "Option<Box<ListNode>>" => List,
             "Option<Rc<RefCell<TreeNode>>>" => Tree,
             trimmed_value => {
-                error!("Unknown type \"{trimmed_value}\" found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new");
+                warn!("Unknown type \"{trimmed_value}\" found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new");
                 Other {
                     raw: trimmed_value.to_string(),
                 }
