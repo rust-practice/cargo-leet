@@ -242,6 +242,7 @@ pub enum FunctionArgType {
     VecF64,
     VecBool,
     VecVecI32,
+    VecString,
     String_,
     List,
     Tree,
@@ -274,6 +275,12 @@ impl FunctionArgType {
             VecI32 | VecBool | VecF64 => {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("vec!{line}")
+            }
+            VecString => {
+                Self::does_pass_basic_vec_tests(line)?;
+                let mut result = line.replace("\",", "\".into(),"); // Replace ones before end
+                result = result.replace("\"]", "\".into()]"); // Replace end
+                format!("vec!{result}")
             }
             VecVecI32 => {
                 Self::does_pass_basic_vec_tests(line)?;
@@ -320,6 +327,7 @@ impl Display for FunctionArgType {
             VecF64 => "Vec<f64>",
             VecBool => "Vec<bool>",
             VecVecI32 => "Vec<Vec<i32>>",
+            VecString => "Vec<String>",
             String_ => "String",
             List => "Option<Box<ListNode>>",
             Tree => "Option<Rc<RefCell<TreeNode>>>",
@@ -344,6 +352,7 @@ impl TryFrom<&str> for FunctionArgType {
             "Vec<f64>" => VecF64,
             "Vec<bool>" => VecBool,
             "Vec<Vec<i32>>" => VecVecI32,
+            "Vec<String>" => VecString,
             "String" => String_,
             "Option<Box<ListNode>>" => List,
             "Option<Rc<RefCell<TreeNode>>>" => Tree,
