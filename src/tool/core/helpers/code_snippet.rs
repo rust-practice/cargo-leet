@@ -2,6 +2,7 @@ use super::problem_code::ProblemCode;
 use crate::tool::config::Config;
 use anyhow::{bail, Context};
 use log::info;
+use regex::Regex;
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
@@ -36,12 +37,20 @@ pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemC
         .into_json::<CodeSnippetResponse>()
         .context("Failed to convert response from json to codes_snippet")?;
 
-    match code_snippets_res
+    let mut result = match code_snippets_res
         .code_snippets
         .into_iter()
         .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
     {
-        Some(result) => Ok(result.try_into()?),
+        Some(result) => result,
         None => bail!("Rust not supported for this problem"),
-    }
+    };
+
+    // Add todo!() placeholders in function bodies
+    let re = Regex::new(r#"\{\s*\}"#)?;
+    result = re
+        .replace_all(&result, "{ todo!(\"Fill in body\") }")
+        .to_string();
+
+    result.try_into()
 }
