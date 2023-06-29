@@ -1,3 +1,3 @@
 [alias]
 i = "install --path . --features=tool"
-lg = "run --features=tool -- leet gen"
+g = "run --features=tool -- leet gen"
