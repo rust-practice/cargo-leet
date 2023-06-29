@@ -49,7 +49,7 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
 /// Returns the module name and the module code
 ///
 /// NB: Did not return `Cow` because `module_name` is always a modified version of the input
-pub fn create_module_code(
+fn create_module_code(
     title_slug: Cow<String>,
     args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {

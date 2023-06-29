@@ -11,7 +11,7 @@ struct DailyChallengeResponse {
     title_slug: String,
 }
 
-pub fn get_daily_challenge_slug() -> anyhow::Result<String> {
+pub(crate) fn get_daily_challenge_slug() -> anyhow::Result<String> {
     let daily_challenge_response = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
             "query": r#"query questionOfToday {

@@ -4,12 +4,12 @@ use anyhow::{bail, Context};
 use log::{info, warn};
 use regex::Regex;
 
-pub struct ProblemCode {
+pub(crate) struct ProblemCode {
     code: String,
-    pub type_: ProblemType,
+    pub(crate) type_: ProblemType,
 }
 
-pub enum ProblemType {
+pub(crate) enum ProblemType {
     NonDesign(FunctionInfo),
     Design,
 }
@@ -19,7 +19,7 @@ impl ProblemType {
     ///
     /// [`NonDesign`]: ProblemType::NonDesign
     #[must_use]
-    pub fn is_non_design(&self) -> bool {
+    pub(crate) fn is_non_design(&self) -> bool {
         matches!(self, Self::NonDesign(..))
     }
 }
@@ -87,7 +87,7 @@ impl ProblemCode {
         })
     }
 
-    pub fn has_tree(&self) -> bool {
+    pub(crate) fn has_tree(&self) -> bool {
         if let ProblemType::NonDesign(fn_info) = &self.type_ {
             fn_info.has_tree()
         } else {
@@ -95,7 +95,7 @@ impl ProblemCode {
         }
     }
 
-    pub fn has_list(&self) -> bool {
+    pub(crate) fn has_list(&self) -> bool {
         if let ProblemType::NonDesign(fn_info) = &self.type_ {
             fn_info.has_list()
         } else {
@@ -104,14 +104,14 @@ impl ProblemCode {
     }
 }
 
-pub struct FunctionInfo {
-    pub name: String,
-    pub fn_args: FunctionArgs,
-    pub return_type: Option<FunctionArgType>,
+pub(crate) struct FunctionInfo {
+    pub(crate) name: String,
+    fn_args: FunctionArgs,
+    return_type: Option<FunctionArgType>,
 }
 
 impl FunctionInfo {
-    pub fn get_args_with_case(&self) -> String {
+    pub(crate) fn get_args_with_case(&self) -> String {
         let mut result = String::from("#[case] ");
         for c in self.fn_args.raw_str.chars() {
             match c {
@@ -126,7 +126,7 @@ impl FunctionInfo {
         result
     }
 
-    pub fn get_args_names(&self) -> String {
+    pub(crate) fn get_args_names(&self) -> String {
         let names: Vec<_> = self
             .fn_args
             .args
@@ -136,7 +136,7 @@ impl FunctionInfo {
         names.join(", ")
     }
 
-    pub fn get_solution_comparison_code(&self) -> String {
+    pub(crate) fn get_solution_comparison_code(&self) -> String {
         if let Some(FunctionArgType::F64) = &self.return_type {
             "assert!((actual - expected).abs() < 1e-5, \"Assertion failed: actual {actual:.5} but expected {expected:.5}. Diff is more than 1e-5.\");"
         } else {
@@ -145,7 +145,7 @@ impl FunctionInfo {
         .to_string()
     }
 
-    pub fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
+    pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
         let mut result = String::new();
         let n = self.fn_args.len();
         let lines: Vec<_> = example_test_case_raw.lines().collect();
@@ -182,29 +182,29 @@ impl FunctionInfo {
         Ok(result)
     }
 
-    pub fn has_tree(&self) -> bool {
+    fn has_tree(&self) -> bool {
         self.fn_args.args.iter().any(|arg| arg.arg_type.is_tree())
     }
 
-    pub fn has_list(&self) -> bool {
+    fn has_list(&self) -> bool {
         self.fn_args.args.iter().any(|arg| arg.arg_type.is_list())
     }
 }
 
 #[derive(Debug)]
-pub struct FunctionArg {
-    pub identifier: String,
-    pub arg_type: FunctionArgType,
+pub(crate) struct FunctionArg {
+    identifier: String,
+    arg_type: FunctionArgType,
 }
 
 #[derive(Debug)]
-pub struct FunctionArgs {
+struct FunctionArgs {
     raw_str: String,
-    pub args: Vec<FunctionArg>,
+    args: Vec<FunctionArg>,
 }
 
 impl FunctionArgs {
-    pub fn new(raw_str: String) -> anyhow::Result<Self> {
+    fn new(raw_str: String) -> anyhow::Result<Self> {
         let re = Regex::new(r#"([a-z_0-9]*?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
         let caps: Vec<_> = re.captures_iter(&raw_str).collect();
         let mut args: Vec<FunctionArg> = vec![];
@@ -233,7 +233,7 @@ impl FunctionArgs {
 
 /// Function Arg Type (FAT)
 #[derive(Debug)]
-pub enum FunctionArgType {
+enum FunctionArgType {
     I32,
     I64,
     F64,
