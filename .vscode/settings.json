@@ -5,5 +5,5 @@
     ],
     "editor.formatOnSave": true,
     "files.autoSave": "onFocusChange",
-    "rust-analyzer.cargo.features": "all", //Uncomment to use rust-analyzer on wasm code instead
+    "rust-analyzer.cargo.features": "all", // Sets the features used by rust analyzer
 }
