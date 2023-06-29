@@ -44,9 +44,15 @@ or using alias from `.cargo/config.toml`
 cargo i
 ```
 
-## Running Directly from source without install
+## Running Directly from source without install (When developing the tool)
 
-These commands allow you to run the tool directly from the source code without installation. For more options see [generate help](#cargo-leet-generate---help)
+These commands allow you to run the tool directly from the source code without installation.
+By default they will run the tool on the current working directory.
+This means that it will run in the current project folder for cargo-leet.
+This may be fine for testing but if you want to be able to actually run the code,
+it might be more appropriate to pass the path parameter and specify the path to the repository you want to to run against.
+Eg. `cargo g --path $TEST_REPO`
+For more options see [generate help](#cargo-leet-generate---help)
 
 ```sh
 cargo run --features=tool -- leet gen
@@ -55,8 +61,10 @@ cargo run --features=tool -- leet gen
 or using alias from `.cargo/config.toml`
 
 ```sh
-cargo lg
+cargo g
 ```
+
+
 
 ## Tool Uninstallation
 
