@@ -1,6 +1,7 @@
 use anyhow::Context;
 use log::{error, info};
 use std::{
+    env,
     fs::{remove_file, OpenOptions},
     io::Write,
     path::PathBuf,
@@ -10,7 +11,17 @@ use std::{
 fn update_lib(module_name: &str) -> anyhow::Result<()> {
     info!("Adding {module_name} to libs.rs");
     let lib_path = PathBuf::from("src/lib.rs");
-    let mut lib = OpenOptions::new().append(true).open(lib_path)?;
+    let mut lib = OpenOptions::new()
+        .append(true)
+        .open(&lib_path)
+        .with_context(|| {
+            format!(
+                "Failed to open {:?}",
+                env::current_dir()
+                    .expect("Unable to resolve current directory")
+                    .join(lib_path)
+            )
+        })?;
     let _ = lib.write(format!("pub mod {module_name};").as_bytes())?;
     Ok(())
 }
@@ -35,7 +46,9 @@ pub fn write_file(module_name: &str, module_code: String) -> anyhow::Result<()> 
                 path.display()
             )
         })?;
-        lib_update_status.context("Failed to update lib.rs")?;
+        lib_update_status.context(
+            "Failed to update lib.rs. Does the file exists? Is it able to be written to?",
+        )?;
     }
 
     info!("Going to run rustfmt on files");

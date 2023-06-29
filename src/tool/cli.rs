@@ -18,11 +18,11 @@ pub struct Cli {
     pub command: Commands,
 
     /// Specify the path to the project root (If not provided uses current working directory)
-    #[arg(long, short, value_name = "FOLDER")] // This is an example where I use it
+    #[arg(long, short, global = true, value_name = "FOLDER")]
     path: Option<String>,
 
     /// Set logging level to use
-    #[arg(long, short, value_enum, default_value_t = LogLevel::Error)]
+    #[arg(long, short, value_enum, default_value_t = LogLevel::Warn)]
     pub log_level: LogLevel,
 }
 
