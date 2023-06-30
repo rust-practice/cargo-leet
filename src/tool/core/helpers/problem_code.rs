@@ -373,3 +373,48 @@ impl TryFrom<&str> for FunctionArgType {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn create_code_stub_all_arg_types_non_design() -> &'static str {
+        "
+impl Solution {
+    pub fn func_name(arg01: i32, arg02: i64, arg03: f64) -> UnknownType {
+
+    }
+}
+"
+        // I32 => "i32",
+        // I64 => "i64",
+        // F64 => "f64",
+        // Bool => "bool",
+        // VecI32 => "Vec<i32>",
+        // VecF64 => "Vec<f64>",
+        // VecBool => "Vec<bool>",
+        // VecVecI32 => "Vec<Vec<i32>>",
+        // VecString => "Vec<String>",
+        // String_ => "String",
+        // List => "Option<Box<ListNode>>",
+        // Tree => "Option<Rc<RefCell<TreeNode>>>",
+        // Other { raw } => raw,
+    }
+    #[test]
+    fn function_parsing() {
+        // Arrange
+        let code = create_code_stub_all_arg_types_non_design();
+
+        // Act
+        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
+        let fn_info = if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        };
+
+        // Assert
+        assert_eq!(fn_info.name, "func_name");
+        todo!("Want to fail as I'm testing the CI")
+    }
+}
