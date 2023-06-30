@@ -60,18 +60,6 @@ impl From<Option<Box<ListNode>>> for ListHead {
 
 impl From<Vec<i32>> for ListHead {
     fn from(values: Vec<i32>) -> Self {
-        // Reverse version before looking at
-        // https://github.com/zwhitchcox/leetcode/blob/master/src/0002_add_two_numbers.rs
-        // to see how it could be done going forward instead of backward
-        //
-        // let mut last: Option<Box<ListNode>> = None;
-        // for &n in values.iter().rev() {
-        //     let mut temp = ListNode::new(n);
-        //     temp.next = last;
-        //     last = Some(Box::new(temp));
-        // }
-        // ListHead::new(last)
-
         let mut result = Self { head: None };
         let mut curr = &mut result.head;
         for &num in &values {
