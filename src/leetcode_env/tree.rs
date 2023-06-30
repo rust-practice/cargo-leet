@@ -105,7 +105,6 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
     }
 }
 
-// TODO: Test going from a string to a tree
 impl From<&str> for TreeRoot {
     /// Expects the "[]" around the values, separated by comma "," and only
     /// integers and "null" (which is the format you'll get on LeetCode)
@@ -266,6 +265,20 @@ mod tests {
 
         // Act
         let actual: Vec<Option<i32>> = (&start).into();
+
+        // Assert
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn from_str_to_tree() {
+        // Arrange
+        let start = "[1,2,5,3,null,6,7,null,4,null,null,8]";
+        let expected = test_tree();
+
+        // Act
+        let root: TreeRoot = start.into();
+        let actual: Option<Rc<RefCell<TreeNode>>> = root.into();
 
         // Assert
         assert_eq!(actual, expected);
