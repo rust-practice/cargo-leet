@@ -86,6 +86,15 @@ impl From<&TreeRoot> for Vec<Option<i32>> {
                 }
             }
         }
+
+        // Trim trailing None
+        while let Some(_last) = result.last() {
+            if _last.is_none() {
+                result.pop();
+            } else {
+                break;
+            }
+        }
         result
     }
 }
