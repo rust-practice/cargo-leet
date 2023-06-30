@@ -58,6 +58,7 @@ impl From<Option<Box<ListNode>>> for ListHead {
     }
 }
 
+// TODO: Test the happy path of getting a linked list from a vec
 impl From<Vec<i32>> for ListHead {
     fn from(values: Vec<i32>) -> Self {
         let mut result = Self { head: None };
@@ -71,6 +72,7 @@ impl From<Vec<i32>> for ListHead {
     }
 }
 
+// TODO: Test the happy path of going from a linked list to a vec
 impl From<&ListHead> for Vec<i32> {
     fn from(list_head: &ListHead) -> Self {
         let mut result = vec![];
