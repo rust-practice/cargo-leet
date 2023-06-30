@@ -58,7 +58,6 @@ impl From<Option<Box<ListNode>>> for ListHead {
     }
 }
 
-// TODO: Test the happy path of getting a linked list from a vec
 impl From<Vec<i32>> for ListHead {
     fn from(values: Vec<i32>) -> Self {
         let mut result = Self { head: None };
@@ -82,5 +81,29 @@ impl From<&ListHead> for Vec<i32> {
             curr = &node.next;
         }
         result
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn from_vec_to_linked_list() {
+        // Arrange
+        let start_vec = vec![1, 2, 3, 4, 5];
+        let mut expected = None;
+        for i in (1..=5).rev() {
+            let mut new_node = Some(Box::new(ListNode::new(i)));
+            new_node.as_mut().unwrap().next = expected;
+            expected = new_node;
+        }
+
+        // Act
+        let list_head: ListHead = start_vec.into();
+        let actual: Option<Box<ListNode>> = list_head.into();
+
+        // Assert
+        assert_eq!(actual, expected);
     }
 }
