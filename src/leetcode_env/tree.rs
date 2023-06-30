@@ -7,15 +7,20 @@ use std::{
     rc::Rc,
 };
 
+///Definition for a binary tree node.
 #[derive(PartialEq, Eq)]
 pub struct TreeNode {
+    /// The value stored at this node
     pub val: i32,
+    /// Link to the left child if one exists
     pub left: Option<Rc<RefCell<TreeNode>>>,
+    /// Link to the right child if one exists
     pub right: Option<Rc<RefCell<TreeNode>>>,
 }
 
 impl TreeNode {
     #[inline]
+    /// Creates a new [TreeNode] with no children and the value passed
     pub fn new(val: i32) -> Self {
         TreeNode {
             val,
@@ -29,9 +34,11 @@ impl TreeNode {
     }
 }
 
-// Wrapper class to make handling empty trees easier
+/// Wrapper class to make handling empty trees easier and building of trees
+/// easier via [From] impls
 #[derive(PartialEq, Eq)]
 pub struct TreeRoot {
+    /// The root of the tree held
     pub root: Option<Rc<RefCell<TreeNode>>>,
 }
 

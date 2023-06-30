@@ -4,11 +4,15 @@ use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use log::{info, LevelFilter};
 
-// Taken from example https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/
+/// Top level entry point for command line arguments parsing
+///
+/// Based on example <https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/>
 #[derive(Parser)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 pub enum CargoCli {
+    /// This is necessary because it a cargo subcommand so the first argument
+    /// needs to be the command name
     Leet(Cli),
 }
 #[derive(Args, Debug)]
