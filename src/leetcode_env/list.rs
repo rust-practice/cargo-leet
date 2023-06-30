@@ -71,7 +71,6 @@ impl From<Vec<i32>> for ListHead {
     }
 }
 
-// TODO: Test the happy path of going from a linked list to a vec
 impl From<&ListHead> for Vec<i32> {
     fn from(list_head: &ListHead) -> Self {
         let mut result = vec![];
@@ -92,16 +91,34 @@ mod tests {
     fn from_vec_to_linked_list() {
         // Arrange
         let start_vec = vec![1, 2, 3, 4, 5];
-        let mut expected = None;
-        for i in (1..=5).rev() {
-            let mut new_node = Some(Box::new(ListNode::new(i)));
-            new_node.as_mut().unwrap().next = expected;
-            expected = new_node;
-        }
+        let expected = create_linked_list(1..=5);
 
         // Act
         let list_head: ListHead = start_vec.into();
         let actual: Option<Box<ListNode>> = list_head.into();
+
+        // Assert
+        assert_eq!(actual, expected);
+    }
+
+    fn create_linked_list<I: DoubleEndedIterator<Item = i32>>(values: I) -> Option<Box<ListNode>> {
+        let mut expected = None;
+        for i in values.rev() {
+            let mut new_node = Some(Box::new(ListNode::new(i)));
+            new_node.as_mut().unwrap().next = expected;
+            expected = new_node;
+        }
+        expected
+    }
+
+    #[test]
+    fn from_linked_list_to_vec() {
+        // Arrange
+        let start: ListHead = create_linked_list(1..=5).into();
+        let expected = vec![1, 2, 3, 4, 5];
+
+        // Act
+        let actual: Vec<i32> = (&start).into();
 
         // Assert
         assert_eq!(actual, expected);
