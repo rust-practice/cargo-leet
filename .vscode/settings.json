@@ -6,4 +6,5 @@
     "editor.formatOnSave": true,
     "files.autoSave": "onFocusChange",
     "rust-analyzer.cargo.features": "all", // Sets the features used by rust analyzer
+    "code-runner.customCommand": "cargo test --features=tool",
 }
