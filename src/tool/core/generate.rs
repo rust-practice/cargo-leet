@@ -81,8 +81,6 @@ fn create_module_code(
     let problem_code = get_code_snippet_for_problem(&title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    // Add 2 empty lines between code and "other stuff (like tests and struct
-    // definition"
     code_snippet.push_str(
         "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
     );
