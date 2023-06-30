@@ -90,8 +90,8 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
 }
 
 impl From<&str> for TreeRoot {
-    /// Expects the "[]" around the values, separated by comma "," and only integers and "null"
-    /// (which is the format you'll get on LeetCode)
+    /// Expects the "[]" around the values, separated by comma "," and only
+    /// integers and "null" (which is the format you'll get on LeetCode)
     ///
     /// # Panics
     ///

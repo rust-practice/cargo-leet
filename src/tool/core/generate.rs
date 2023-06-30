@@ -45,10 +45,12 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
     })
 }
 
-/// Gets the code and other data from leetcode and generates the suitable code for the module and the name of the module
-/// Returns the module name and the module code
+/// Gets the code and other data from leetcode and generates the suitable code
+/// for the module and the name of the module Returns the module name and the
+/// module code
 ///
-/// NB: Did not return `Cow` because `module_name` is always a modified version of the input
+/// NB: Did not return `Cow` because `module_name` is always a modified version
+/// of the input
 fn create_module_code(
     title_slug: Cow<String>,
     args: &cli::GenerateArgs,
@@ -79,7 +81,8 @@ fn create_module_code(
     let problem_code = get_code_snippet_for_problem(&title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    // Add 2 empty lines between code and "other stuff (like tests and struct definition"
+    // Add 2 empty lines between code and "other stuff (like tests and struct
+    // definition"
     code_snippet.push_str(
         "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
     );
@@ -118,7 +121,8 @@ fn create_module_code(
 }
 
 /// Quick and dirty test to see if this is a url
-/// Uses a character that is not allowed in slugs but must be in a url to decide between the two
+/// Uses a character that is not allowed in slugs but must be in a url to decide
+/// between the two
 fn is_url(value: &str) -> bool {
     value.contains('/')
 }
