@@ -128,7 +128,7 @@ fn is_url(value: &str) -> bool {
 }
 
 fn url_to_slug(url: &str) -> anyhow::Result<String> {
-    assert!(Config::LEETCODE_PROBLEM_URL.ends_with('/'));
+    debug_assert!(Config::LEETCODE_PROBLEM_URL.ends_with('/'));
     if !url.starts_with(Config::LEETCODE_PROBLEM_URL) {
         bail!(
             "Expected a leetcode url that starts with '{}' but got '{url}'",
