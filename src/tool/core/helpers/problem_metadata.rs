@@ -6,7 +6,8 @@ use serde_flat_path::flat_path;
 
 use super::problem_code::{FunctionInfo, ProblemCode};
 
-/// This struct is only used because there are two fields that we are interested in that start with the same path and flat_path does not support that yet
+/// This struct is only used because there are two fields that we are interested
+/// in that start with the same path and flat_path does not support that yet
 #[flat_path]
 #[derive(Deserialize, Debug)]
 struct QuestionWrapper {

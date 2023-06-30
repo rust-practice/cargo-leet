@@ -17,7 +17,8 @@ pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,
 
-    /// Specify the path to the project root (If not provided uses current working directory)
+    /// Specify the path to the project root (If not provided uses current
+    /// working directory)
     #[arg(long, short, global = true, value_name = "FOLDER")]
     path: Option<String>,
 
@@ -63,8 +64,8 @@ pub struct GenerateArgs {
     pub should_include_problem_number: bool,
 }
 
-/// Exists to provide better help messages variants copied from LevelFilter as that's the type
-/// that is actually needed
+/// Exists to provide better help messages variants copied from LevelFilter as
+/// that's the type that is actually needed
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum LogLevel {
     /// Nothing emitted in this mode
