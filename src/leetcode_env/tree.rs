@@ -65,6 +65,7 @@ impl Debug for TreeRoot {
     }
 }
 
+// TODO: Test going from a tree to a vec
 impl From<&TreeRoot> for Vec<Option<i32>> {
     fn from(value: &TreeRoot) -> Self {
         let mut result = vec![];
@@ -96,6 +97,7 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
     }
 }
 
+// TODO: Test going from a string to a tree
 impl From<&str> for TreeRoot {
     /// Expects the "[]" around the values, separated by comma "," and only
     /// integers and "null" (which is the format you'll get on LeetCode)

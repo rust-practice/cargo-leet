@@ -30,6 +30,8 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     Ok(())
 }
 
+// TODO: Add test where string is interpreted as a slug
+// TODO: Add test where string is interpreted as url
 fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, String>> {
     Ok(if is_url(specific_problem) {
         // Working with a url
@@ -55,6 +57,9 @@ fn create_module_code(
     title_slug: Cow<String>,
     args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {
+    // TODO: Test the code generation, will need to split this function into the
+    //      parts that access the network and the parts that compose the results of
+    //      those calls
     info!("Building module contents for {title_slug}");
 
     let meta_data =
