@@ -203,6 +203,7 @@ impl From<TreeRoot> for Option<Rc<RefCell<TreeNode>>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq; // COMMENT THIS OUT IF YOU WANT NO COLOR
 
     /// Creates the test tree seen below
     /// Leetcode rep: [1,2,5,3,null,6,7,null,4,null,null,8]
