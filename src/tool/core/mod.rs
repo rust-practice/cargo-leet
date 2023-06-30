@@ -6,6 +6,8 @@ use crate::tool::cli::{self, Cli};
 use anyhow::{bail, Context};
 use std::{env, path::Path};
 
+/// Entry point used by the tool. The `main.rs` is pretty thin shim around this
+/// function.
 pub fn run(cli: &Cli) -> anyhow::Result<()> {
     cli.update_current_working_dir()?;
 

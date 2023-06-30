@@ -2,9 +2,12 @@
 
 use std::fmt::{Debug, Formatter};
 
+/// Definition for singly-linked list.
 #[derive(PartialEq, Eq)]
 pub struct ListNode {
+    /// The value stored at this node
     pub val: i32,
+    /// Links to the next node if it exists
     pub next: Option<Box<ListNode>>,
 }
 
@@ -24,6 +27,7 @@ impl Debug for ListNode {
 
 impl ListNode {
     #[inline]
+    /// Creates a new unlinked [ListNode] with the value passed
     pub fn new(val: i32) -> Self {
         ListNode { next: None, val }
     }
