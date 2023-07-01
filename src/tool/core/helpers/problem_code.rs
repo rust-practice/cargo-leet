@@ -212,7 +212,7 @@ struct FunctionArgs {
 
 impl FunctionArgs {
     fn new(raw_str: String) -> anyhow::Result<Self> {
-        let re = Regex::new(r#"([a-z_0-9]*?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
+        let re = Regex::new(r#"([A-Za-z_0-9]+?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
         let caps: Vec<_> = re.captures_iter(&raw_str).collect();
         let mut args: Vec<FunctionArg> = vec![];
         for cap in caps {
