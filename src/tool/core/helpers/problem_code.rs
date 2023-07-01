@@ -114,13 +114,7 @@ pub(crate) struct FunctionInfo {
 impl FunctionInfo {
     pub(crate) fn get_args_with_case(&self) -> String {
         let mut result = String::from("#[case] ");
-        // TODO: After test has been added, change this implementation to use [replace](https://doc.rust-lang.org/std/string/struct.String.html#method.replace)
-        for c in self.fn_args.raw_str.chars() {
-            match c {
-                ',' => result.push_str(", #[case] "),
-                _ => result.push(c),
-            }
-        }
+        result.push_str(&self.fn_args.raw_str.replace(',', ", #[case] "));
 
         if let Some(return_type) = self.return_type.as_ref() {
             result.push_str(&format!(", #[case] expected: {return_type}"))
