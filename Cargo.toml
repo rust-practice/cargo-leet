@@ -18,6 +18,7 @@ serde_flat_path = { version = "0.1.2", optional = true }
 clap = { version = "4.3.3", features = ["derive", "cargo"], optional = true }
 serde = { version = "1.0.164", features = ["derive"], optional = true }
 ureq = { version = "2.6", features = ["json"], optional = true }
+strum = { version = "0.25", features = ["derive"] }
 
 [[bin]]
 name = "cargo-leet"
