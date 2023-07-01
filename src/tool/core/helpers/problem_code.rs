@@ -3,6 +3,7 @@ use std::fmt::Display;
 use anyhow::{bail, Context};
 use log::{info, warn};
 use regex::Regex;
+use strum::EnumIter;
 
 pub(crate) struct ProblemCode {
     code: String,
@@ -50,7 +51,6 @@ impl ProblemCode {
         !code.contains("impl Solution {")
     }
 
-    // TODO: Test extracting arguments (include all argument types)
     fn get_fn_info(code: &str) -> anyhow::Result<FunctionInfo> {
         let re = Regex::new(r#"(?s)\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
         let caps = if let Some(caps) = re.captures(code) {
@@ -239,6 +239,7 @@ impl FunctionArgs {
 }
 
 /// Function Arg Type (FAT)
+#[cfg_attr(debug_assertions, derive(EnumIter, Eq, Hash, PartialEq))]
 #[derive(Debug)]
 enum FunctionArgType {
     I32,
@@ -376,34 +377,71 @@ impl TryFrom<&str> for FunctionArgType {
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
+
+    use strum::IntoEnumIterator;
+
     use super::*;
 
     fn create_code_stub_all_arg_types_non_design() -> &'static str {
         "
 impl Solution {
-    pub fn func_name(arg01: i32, arg02: i64, arg03: f64) -> UnknownType {
-
+    pub fn func_name(
+        L2AC6p: i32,
+        q7kv5k: i64,
+        pP7GhC: f64,
+        HFGzdD: bool,
+        ePfFj3: Vec<i32>,
+        kRubF2: Vec<f64>,
+        ykyF5X: Vec<bool>,
+        bBtcWe: Vec<Vec<i32>>,
+        NkCeR6: Vec<String>,
+        kjACSr: String,
+        bJy3HH: Option<Box<ListNode>>,
+        ndQLTu: Option<Rc<RefCell<TreeNode>>>,
+        PRnJhw: UnknownType,
+    ) {
     }
 }
 "
-        // I32 => "i32",
-        // I64 => "i64",
-        // F64 => "f64",
-        // Bool => "bool",
-        // VecI32 => "Vec<i32>",
-        // VecF64 => "Vec<f64>",
-        // VecBool => "Vec<bool>",
-        // VecVecI32 => "Vec<Vec<i32>>",
-        // VecString => "Vec<String>",
-        // String_ => "String",
-        // List => "Option<Box<ListNode>>",
-        // Tree => "Option<Rc<RefCell<TreeNode>>>",
-        // Other { raw } => raw,
     }
+
+    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
+        match fat {
+            FunctionArgType::I32 => "L2AC6p",
+            FunctionArgType::I64 => "q7kv5k",
+            FunctionArgType::F64 => "pP7GhC",
+            FunctionArgType::Bool => "HFGzdD",
+            FunctionArgType::VecI32 => "ePfFj3",
+            FunctionArgType::VecF64 => "kRubF2",
+            FunctionArgType::VecBool => "ykyF5X",
+            FunctionArgType::VecVecI32 => "bBtcWe",
+            FunctionArgType::VecString => "NkCeR6",
+            FunctionArgType::String_ => "kjACSr",
+            FunctionArgType::List => "bJy3HH",
+            FunctionArgType::Tree => "ndQLTu",
+            FunctionArgType::Other { .. } => "PRnJhw",
+        }
+    }
+
     #[test]
     fn function_parsing() {
         // Arrange
         let code = create_code_stub_all_arg_types_non_design();
+
+        // Create hashset and fill with the possible argument types
+        let mut left_to_see = HashSet::new();
+        FunctionArgType::iter().for_each(|x| {
+            left_to_see.insert(x);
+        });
+
+        // Add special handling for Other variant
+        left_to_see.remove(&FunctionArgType::Other {
+            raw: "".to_string(),
+        });
+        left_to_see.insert(FunctionArgType::Other {
+            raw: "UnknownType".to_string(),
+        });
 
         // Act
         let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
@@ -415,6 +453,21 @@ impl Solution {
 
         // Assert
         assert_eq!(fn_info.name, "func_name");
-        todo!("Want to fail as I'm testing the CI")
+        for arg in fn_info.fn_args.args.iter() {
+            // if !left_to_see.contains(&arg.arg_type) {
+            //     panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
+            // }
+            left_to_see.remove(&arg.arg_type);
+            assert_eq!(
+                arg.identifier,
+                fn_type_to_id(&arg.arg_type),
+                "ArgType: {}",
+                arg.arg_type
+            );
+        }
+        assert!(
+            left_to_see.is_empty(),
+            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
+        );
     }
 }
