@@ -52,7 +52,7 @@ impl ProblemCode {
 
     // TODO: Test extracting arguments (include all argument types)
     fn get_fn_info(code: &str) -> anyhow::Result<FunctionInfo> {
-        let re = Regex::new(r#"\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
+        let re = Regex::new(r#"(?s)\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
         let caps = if let Some(caps) = re.captures(code) {
             caps
         } else {
