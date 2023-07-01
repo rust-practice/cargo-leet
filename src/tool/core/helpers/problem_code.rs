@@ -122,7 +122,6 @@ impl FunctionInfo {
         result
     }
 
-    // TODO: Test that expected names are returned
     pub(crate) fn get_args_names(&self) -> String {
         let names: Vec<_> = self
             .fn_args
@@ -656,5 +655,22 @@ impl Solution {
             fn_info.get_args_with_case(),
             "#[case] s1: String, #[case]  s2: String, #[case]  s3: String, #[case] expected: bool"
         );
+    }
+
+    #[test]
+    fn get_args_names() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_97_interleaving_string()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+        let fn_info = if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        };
+
+        // Assert
+        assert_eq!(fn_info.get_args_names(), "s1, s2, s3");
     }
 }
