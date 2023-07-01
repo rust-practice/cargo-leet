@@ -112,7 +112,6 @@ pub(crate) struct FunctionInfo {
 }
 
 impl FunctionInfo {
-    // TODO: Test output of args generation
     pub(crate) fn get_args_with_case(&self) -> String {
         let mut result = String::from("#[case] ");
         // TODO: After test has been added, change this implementation to use [replace](https://doc.rust-lang.org/std/string/struct.String.html#method.replace)
@@ -643,5 +642,25 @@ impl Solution {
 
         // Assert
         assert!(!problem_code.has_list());
+    }
+
+    #[test]
+    fn get_args_with_case() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_97_interleaving_string()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+        let fn_info = if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        };
+
+        // Assert
+        assert_eq!(
+            fn_info.get_args_with_case(),
+            "#[case] s1: String, #[case]  s2: String, #[case]  s3: String, #[case] expected: bool"
+        );
     }
 }
