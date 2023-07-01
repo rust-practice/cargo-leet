@@ -414,6 +414,16 @@ impl Solution {
         }
     }
 
+    fn extract_function_info(code: &str) -> FunctionInfo {
+        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
+
+        if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        }
+    }
+
     #[test]
     fn function_parsing() {
         // Arrange
@@ -434,12 +444,7 @@ impl Solution {
         });
 
         // Act
-        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
-        let fn_info = if let ProblemType::NonDesign(info) = problem_code.type_ {
-            info
-        } else {
-            panic!("Expected Non Design Problem")
-        };
+        let fn_info = extract_function_info(code);
 
         // Assert
         assert_eq!(fn_info.name, "func_name");
@@ -640,15 +645,7 @@ impl Solution {
     #[test]
     fn get_args_with_case() {
         // Arrange / Act
-        let problem_code: ProblemCode = get_97_interleaving_string()
-            .to_string()
-            .try_into()
-            .expect("Should be valid code");
-        let fn_info = if let ProblemType::NonDesign(info) = problem_code.type_ {
-            info
-        } else {
-            panic!("Expected Non Design Problem")
-        };
+        let fn_info = extract_function_info(get_97_interleaving_string());
 
         // Assert
         assert_eq!(
@@ -660,15 +657,7 @@ impl Solution {
     #[test]
     fn get_args_names() {
         // Arrange / Act
-        let problem_code: ProblemCode = get_97_interleaving_string()
-            .to_string()
-            .try_into()
-            .expect("Should be valid code");
-        let fn_info = if let ProblemType::NonDesign(info) = problem_code.type_ {
-            info
-        } else {
-            panic!("Expected Non Design Problem")
-        };
+        let fn_info = extract_function_info(get_97_interleaving_string());
 
         // Assert
         assert_eq!(fn_info.get_args_names(), "s1, s2, s3");
