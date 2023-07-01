@@ -88,7 +88,6 @@ impl ProblemCode {
         })
     }
 
-    // TODO: Test has_tree with 3 cases, with tree, no tree and design problem
     pub(crate) fn has_tree(&self) -> bool {
         if let ProblemType::NonDesign(fn_info) = &self.type_ {
             fn_info.has_tree()
@@ -469,5 +468,118 @@ impl Solution {
             left_to_see.is_empty(),
             "Expected all argument types to be seen but haven't seen {left_to_see:?}",
         );
+    }
+
+    fn get_100_same_tree() -> &'static str {
+        "// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+//
+// impl TreeNode {
+//   #[inline]
+//   pub fn new(val: i32) -> Self {
+//     TreeNode {
+//       val,
+//       left: None,
+//       right: None
+//     }
+//   }
+// }
+use std::rc::Rc;
+use std::cell::RefCell;
+impl Solution {
+    pub fn is_same_tree(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
+
+    }
+}
+"
+    }
+
+    fn get_97_interleaving_string() -> &'static str {
+        "impl Solution {
+    pub fn is_interleave(s1: String, s2: String, s3: String) -> bool {
+
+    }
+}
+"
+    }
+
+    fn get_706_design_hashmap() -> &'static str {
+        "struct MyHashMap {
+
+}
+
+
+/**
+ * `&self` means the method takes an immutable reference.
+ * If you need a mutable reference, change it to `&mut self` instead.
+ */
+impl MyHashMap {
+
+    fn new() -> Self {
+
+    }
+
+    fn put(&self, key: i32, value: i32) {
+
+    }
+
+    fn get(&self, key: i32) -> i32 {
+
+    }
+
+    fn remove(&self, key: i32) {
+
+    }
+}
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * let obj = MyHashMap::new();
+ * obj.put(key, value);
+ * let ret_2: i32 = obj.get(key);
+ * obj.remove(key);
+ */
+"
+    }
+
+    #[test]
+    fn has_tree_with_tree() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_100_same_tree()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(problem_code.has_tree());
+    }
+
+    #[test]
+    fn has_tree_without_tree() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_97_interleaving_string()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_tree());
+    }
+
+    #[test]
+    fn has_tree_design_question() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_706_design_hashmap()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_tree());
     }
 }
