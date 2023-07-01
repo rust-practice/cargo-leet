@@ -96,7 +96,6 @@ impl ProblemCode {
         }
     }
 
-    // TODO: Test has_list with 3 cases, with list, no list and design problem
     pub(crate) fn has_list(&self) -> bool {
         if let ProblemType::NonDesign(fn_info) = &self.type_ {
             fn_info.has_list()
@@ -547,6 +546,32 @@ impl MyHashMap {
 "
     }
 
+    fn get_2_add_two_numbers() -> &'static str {
+        "
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+//
+// impl ListNode {
+//   #[inline]
+//   fn new(val: i32) -> Self {
+//     ListNode {
+//       next: None,
+//       val
+//     }
+//   }
+// }
+impl Solution {
+    pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+
+    }
+}
+"
+    }
+
     #[test]
     fn has_tree_with_tree() {
         // Arrange / Act
@@ -581,5 +606,41 @@ impl MyHashMap {
 
         // Assert
         assert!(!problem_code.has_tree());
+    }
+
+    #[test]
+    fn has_list_with_list() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_2_add_two_numbers()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(problem_code.has_list());
+    }
+
+    #[test]
+    fn has_list_without_list() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_97_interleaving_string()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_list());
+    }
+
+    #[test]
+    fn has_list_design_question() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_706_design_hashmap()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_list());
     }
 }
