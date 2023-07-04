@@ -33,7 +33,7 @@
 //! version of the rust toolchain due to the fact that leetcode uses a much
 //! older version on their servers and some users may want to use the same
 //! version to ensure their code will always work upon upload. However, because
-//! it is such an old version many of the creates used in the development of the
+//! it is such an old version many of the crates used in the development of the
 //! tool are not able to be compiled with that toolchain and as such they being
 //! only compiled behind a feature flag makes that a non-issue. It also allows
 //! users to not compile the code only needed to support leetcode solution
