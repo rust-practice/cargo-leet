@@ -28,7 +28,7 @@
 //! ## Feature flags
 //!
 //! **cargo-leet** uses feature flags to control which code gets compiled based
-//! on how the create is being used. This is especially important for the code
+//! on how the crate is being used. This is especially important for the code
 //! imported in the solution repository as this repo may be using a much older
 //! version of the rust toolchain due to the fact that leetcode uses a much
 //! older version on their servers and some users may want to use the same
