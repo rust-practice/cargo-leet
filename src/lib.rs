@@ -20,7 +20,7 @@
 //! ### Leetcode Environment Support
 //!
 //! **cargo-leet** also includes helper code with structs and traits to simulate
-//! the environment that you code would run in on the leetcode servers so that
+//! the environment that your code would run in on the leetcode servers so that
 //! you are able to run tests on your code locally. It also provides a few extra
 //! types that facilitate testing especially as it relates to creating test
 //! cases from the text provided by leetcode.
