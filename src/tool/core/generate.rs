@@ -30,8 +30,6 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     Ok(())
 }
 
-// TODO: Add test where string is interpreted as a slug
-// TODO: Add test where string is interpreted as url
 fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, String>> {
     Ok(if is_url(specific_problem) {
         // Working with a url
@@ -142,4 +140,32 @@ fn url_to_slug(url: &str) -> anyhow::Result<String> {
     let split_prefix: Vec<_> = Config::LEETCODE_PROBLEM_URL.split('/').collect();
     debug_assert!(split_prefix.len() < split_url.len());
     Ok(split_url[split_prefix.len() - 1].to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn slug_in_slug_out() {
+        let slug = "two-sum".to_string();
+        let actual = get_slug_from_args(&slug).expect("Expect value to be valid");
+        assert_eq!(actual.to_string(), slug);
+    }
+
+    #[test]
+    fn url_in_slug_out() {
+        let url = "https://leetcode.com/problems/two-sum/".to_string();
+        let expected = "two-sum";
+        let actual = get_slug_from_args(&url).expect("Expect value to be valid");
+        assert_eq!(actual.to_string(), expected);
+    }
+
+    #[test]
+    fn invalid_url() {
+        // Missing "s" in https
+        let url = "http://leetcode.com/problems/two-sum/".to_string();
+        let actual = get_slug_from_args(&url);
+        assert!(actual.is_err());
+    }
 }
