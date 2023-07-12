@@ -360,7 +360,7 @@ impl TryFrom<&str> for FunctionArgType {
             "Option<Box<ListNode>>" => List,
             "Option<Rc<RefCell<TreeNode>>>" => Tree,
             trimmed_value => {
-                warn!("Unknown type \"{trimmed_value}\" found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new");
+                warn!("Unknown type {trimmed_value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/");
                 Other {
                     raw: trimmed_value.to_string(),
                 }
