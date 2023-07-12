@@ -299,7 +299,7 @@ impl FunctionArgType {
                 Self::does_pass_basic_vec_tests(line)?;
                 format!("TreeRoot::from(\"{line}\").into()")
             }
-            Other { raw: _ } => line.to_string(), // Assume input is fine and pass on verbatim,
+            Other { raw: _ } => format!("todo!(\"{line}\")"),
         })
     }
 
