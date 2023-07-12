@@ -255,6 +255,7 @@ impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
+        // TODO: Add support for type mismatch
         use FunctionArgType::*;
         Ok(match self {
             I32 => {
