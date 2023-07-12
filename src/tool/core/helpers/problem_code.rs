@@ -141,7 +141,6 @@ impl FunctionInfo {
         .to_string()
     }
 
-    // TODO: Test parsing of test cases downloaded from leetcode
     pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
         let mut result = String::new();
         let n = self.fn_args.len();
@@ -250,7 +249,6 @@ enum FunctionArgType {
 impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
-        // TODO: Test leetcode test case conversion based on type
         use FunctionArgType::*;
         Ok(match self {
             I32 => {
@@ -661,5 +659,52 @@ impl Solution {
 
         // Assert
         assert_eq!(fn_info.get_args_names(), "s1, s2, s3");
+    }
+
+    fn get_fn_info_min_sub_array_len() -> FunctionInfo {
+        FunctionInfo {
+            name: "min_sub_array_len".into(),
+            fn_args: FunctionArgs {
+                raw_str: "target: i32, nums: Vec<i32>".into(),
+                args: vec![
+                    FunctionArg {
+                        identifier: "target".into(),
+                        arg_type: FunctionArgType::I32,
+                    },
+                    FunctionArg {
+                        identifier: "nums".into(),
+                        arg_type: FunctionArgType::VecI32,
+                    },
+                ],
+            },
+            return_type: Some(FunctionArgType::I32),
+        }
+    }
+
+    #[test]
+    fn get_test_case_ok() {
+        // Arrange
+        let expected = "7, vec![2,3,1,2,4,3], todo!(\"Expected Result\")";
+        let fn_info = get_fn_info_min_sub_array_len();
+        let input = "7\n[2,3,1,2,4,3]";
+
+        // Act
+        let actual = fn_info.get_test_case(input).expect("Expected Ok");
+
+        // Assert
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn get_test_case_invalid_num_args() {
+        // Arrange
+        let fn_info = get_fn_info_min_sub_array_len();
+        let input = "[2,3,1,2,4,3]";
+
+        // Act
+        let actual = fn_info.get_test_case(input);
+
+        // Assert
+        assert!(actual.is_err());
     }
 }
