@@ -1,6 +1,6 @@
 use crate::tool::{config::Config, core::helpers::problem_code::ProblemType};
 use anyhow::Context;
-use log::info;
+use log::{debug, info};
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
@@ -139,5 +139,6 @@ pub(crate) fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMe
     result
         .validate()
         .context("Failed to validate problem metadata")?;
+    debug!("ProblemMetadata built: {result:#?}");
     Ok(result)
 }
