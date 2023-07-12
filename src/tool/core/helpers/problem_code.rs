@@ -1,15 +1,17 @@
 use std::fmt::Display;
 
 use anyhow::{bail, Context};
-use log::{info, warn};
+use log::{debug, info, warn};
 use regex::Regex;
 use strum::EnumIter;
 
+#[derive(Debug)]
 pub(crate) struct ProblemCode {
     code: String,
     pub(crate) type_: ProblemType,
 }
 
+#[derive(Debug)]
 pub(crate) enum ProblemType {
     NonDesign(FunctionInfo),
     Design,
@@ -36,7 +38,9 @@ impl TryFrom<String> for ProblemCode {
             info!("Problem Type is NonDesign");
             ProblemType::NonDesign(Self::get_fn_info(&code).context("Failed to get function info")?)
         };
-        Ok(Self { code, type_ })
+        let result = Self { code, type_ };
+        debug!("ProblemCode built: {result:#?}");
+        Ok(result)
     }
 }
 
@@ -105,6 +109,7 @@ impl ProblemCode {
     }
 }
 
+#[derive(Debug)]
 pub(crate) struct FunctionInfo {
     pub(crate) name: String,
     fn_args: FunctionArgs,
@@ -249,6 +254,7 @@ enum FunctionArgType {
 impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
+        debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
         use FunctionArgType::*;
         Ok(match self {
             I32 => {
