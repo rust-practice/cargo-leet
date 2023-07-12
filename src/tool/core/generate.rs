@@ -55,9 +55,6 @@ fn create_module_code(
     title_slug: Cow<String>,
     args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {
-    // TODO: Test the code generation, will need to split this function into the
-    //      parts that access the network and the parts that compose the results of
-    //      those calls
     info!("Building module contents for {title_slug}");
 
     let meta_data =
