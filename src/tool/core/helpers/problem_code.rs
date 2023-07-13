@@ -255,57 +255,65 @@ impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
-        // TODO: Add support for type mismatch
         use FunctionArgType::*;
-        Ok(match self {
-            I32 => {
-                if let Err(e) = line.parse::<i32>() {
-                    warn!("In testing the test input \"{line}\" the parsing to i32 failed with error: {e}")
-                };
-                line.to_string()
+        let result = match self {
+            I32 => match line.parse::<i32>() {
+                Ok(_) => Ok(line.to_string()),
+                Err(e) => Err(format!(
+                    "In testing the test input {line:?} the parsing to i32 failed with error: {e}"
+                )),
+            },
+            I64 => match line.parse::<i64>() {
+                Ok(_) => Ok(line.to_string()),
+                Err(e) => Err(format!(
+                    "In testing the test input {line:?} the parsing to i64 failed with error: {e}"
+                )),
+            },
+            F64 => match line.parse::<f64>() {
+                Ok(_) => Ok(line.to_string()),
+                Err(e) => Err(format!(
+                    "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
+                )),
+            },
+            VecI32 | VecBool | VecF64 => match Self::does_pass_basic_vec_tests(line) {
+                Ok(_) => Ok(format!("vec!{line}")),
+                Err(e) => Err(e.to_string()),
+            },
+            VecString => match Self::does_pass_basic_vec_tests(line) {
+                Ok(_) => {
+                    let mut result = line.replace("\",", "\".into(),"); // Replace ones before end
+                    result = result.replace("\"]", "\".into()]"); // Replace end
+                    Ok(format!("vec!{result}"))
+                }
+                Err(e) => Err(e.to_string()),
+            },
+            VecVecI32 => match Self::does_pass_basic_vec_tests(line) {
+                Ok(_) => Ok(line.replace('[', "vec![")),
+                Err(e) => Err(e.to_string()),
+            },
+            String_ | Bool => Ok(line.to_string()),
+            List => match Self::does_pass_basic_vec_tests(line) {
+                Ok(_) => Ok(format!("ListHead::from(vec!{line}).into()")),
+                Err(e) => Err(e.to_string()),
+            },
+            Tree => match Self::does_pass_basic_vec_tests(line) {
+                Ok(_) => Ok(format!("TreeRoot::from(\"{line}\").into()")),
+                Err(e) => Err(e.to_string()),
+            },
+            Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
+        };
+        match result {
+            Ok(result) => Ok(result),
+            Err(e) => {
+                warn!("Type Mismatch? Type detected as '{self:?}' but got argument value of {line:?}. Error: {e}");
+                Ok(format!("todo!({line:?})"))
             }
-            I64 => {
-                if let Err(e) = line.parse::<i64>() {
-                    warn!("In testing the test input \"{line}\" the parsing to i64 failed with error: {e}")
-                };
-                line.to_string()
-            }
-            F64 => {
-                if let Err(e) = line.parse::<f64>() {
-                    warn!("In testing the test input \"{line}\" the parsing to f64 failed with error: {e}")
-                };
-                line.to_string()
-            }
-            VecI32 | VecBool | VecF64 => {
-                Self::does_pass_basic_vec_tests(line)?;
-                format!("vec!{line}")
-            }
-            VecString => {
-                Self::does_pass_basic_vec_tests(line)?;
-                let mut result = line.replace("\",", "\".into(),"); // Replace ones before end
-                result = result.replace("\"]", "\".into()]"); // Replace end
-                format!("vec!{result}")
-            }
-            VecVecI32 => {
-                Self::does_pass_basic_vec_tests(line)?;
-                line.replace('[', "vec![")
-            }
-            String_ | Bool => line.to_string(),
-            List => {
-                Self::does_pass_basic_vec_tests(line)?;
-                format!("ListHead::from(vec!{line}).into()")
-            }
-            Tree => {
-                Self::does_pass_basic_vec_tests(line)?;
-                format!("TreeRoot::from(\"{line}\").into()")
-            }
-            Other { raw: _ } => format!("todo!(\"{line}\")"),
-        })
+        }
     }
 
     fn does_pass_basic_vec_tests(s: &str) -> anyhow::Result<()> {
         if !s.starts_with('[') || !s.ends_with(']') {
-            bail!("Expecting something that can be represented as a vec but got '{s}'");
+            bail!("Expecting something that can be represented as a vec but got {s:?}");
         }
         Ok(())
     }
