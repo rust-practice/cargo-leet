@@ -39,7 +39,6 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
         Cow::Owned(slug)
     } else {
         // This is expected to be a valid slug
-        //TODO: Validate slug
         info!("Using '{specific_problem}' as a slug");
         Cow::Borrowed(specific_problem)
     })
