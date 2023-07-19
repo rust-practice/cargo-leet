@@ -2,7 +2,7 @@ use std::env;
 
 use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
-use log::{info, LevelFilter};
+use log::{debug, info, LevelFilter};
 
 /// Top level entry point for command line arguments parsing
 ///
@@ -27,14 +27,14 @@ pub struct Cli {
     path: Option<String>,
 
     /// Set logging level to use
-    #[arg(long, short, value_enum, default_value_t = LogLevel::Warn)]
+    #[arg(long, short, global = true, value_enum, default_value_t = LogLevel::Warn)]
     pub log_level: LogLevel,
 }
 
 impl Cli {
     /// Changes the current working directory to path if one is given
     pub fn update_current_working_dir(&self) -> anyhow::Result<()> {
-        info!(
+        debug!(
             "Before attempting update current dir, it is: {}",
             env::current_dir()?.display()
         );
@@ -47,7 +47,7 @@ impl Cli {
                 env::current_dir()?.display()
             );
         } else {
-            info!("No user supplied path found. No change")
+            debug!("No user supplied path found. No change")
         }
         Ok(())
     }

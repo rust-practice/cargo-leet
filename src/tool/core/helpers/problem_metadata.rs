@@ -1,6 +1,6 @@
 use crate::tool::{config::Config, core::helpers::problem_code::ProblemType};
 use anyhow::Context;
-use log::info;
+use log::{debug, info};
 use serde::Deserialize;
 use serde_flat_path::flat_path;
 
@@ -52,12 +52,15 @@ impl ProblemMetadata {
 
         let tests = match &problem_code.type_ {
             ProblemType::NonDesign(fn_info) => {
+                // Add imports
                 if problem_code.has_tree() {
                     imports.push_str("use cargo_leet::TreeRoot;\n");
                 }
                 if problem_code.has_list() {
                     imports.push_str("use cargo_leet::ListHead;\n");
                 }
+
+                // Add actual test cases
                 self.get_test_cases_is_not_design(fn_info)
                     .context("Failed to get test cases for non-design problem")?
             }
@@ -136,5 +139,6 @@ pub(crate) fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMe
     result
         .validate()
         .context("Failed to validate problem metadata")?;
+    debug!("ProblemMetadata built: {result:#?}");
     Ok(result)
 }
