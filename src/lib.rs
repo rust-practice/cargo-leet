@@ -20,7 +20,7 @@
 //! ### Leetcode Environment Support
 //!
 //! **cargo-leet** also includes helper code with structs and traits to simulate
-//! the environment that you code would run in on the leetcode servers so that
+//! the environment that your code would run in on the leetcode servers so that
 //! you are able to run tests on your code locally. It also provides a few extra
 //! types that facilitate testing especially as it relates to creating test
 //! cases from the text provided by leetcode.
@@ -28,12 +28,12 @@
 //! ## Feature flags
 //!
 //! **cargo-leet** uses feature flags to control which code gets compiled based
-//! on how the create is being used. This is especially important for the code
+//! on how the crate is being used. This is especially important for the code
 //! imported in the solution repository as this repo may be using a much older
 //! version of the rust toolchain due to the fact that leetcode uses a much
 //! older version on their servers and some users may want to use the same
 //! version to ensure their code will always work upon upload. However, because
-//! it is such an old version many of the creates used in the development of the
+//! it is such an old version many of the crates used in the development of the
 //! tool are not able to be compiled with that toolchain and as such they being
 //! only compiled behind a feature flag makes that a non-issue. It also allows
 //! users to not compile the code only needed to support leetcode solution
