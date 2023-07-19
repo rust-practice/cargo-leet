@@ -3,6 +3,7 @@ use std::fmt::Display;
 use anyhow::{bail, Context};
 use log::{info, warn};
 use regex::Regex;
+use strum::EnumIter;
 
 pub(crate) struct ProblemCode {
     code: String,
@@ -50,9 +51,8 @@ impl ProblemCode {
         !code.contains("impl Solution {")
     }
 
-    // TODO: Test extracting arguments (include all argument types)
     fn get_fn_info(code: &str) -> anyhow::Result<FunctionInfo> {
-        let re = Regex::new(r#"\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
+        let re = Regex::new(r#"(?s)\n\s*pub fn ([a-z_0-9]*)\((.*)\)(?: ?-> ?(.*))? \{"#)?;
         let caps = if let Some(caps) = re.captures(code) {
             caps
         } else {
@@ -88,7 +88,6 @@ impl ProblemCode {
         })
     }
 
-    // TODO: Test has_tree with 3 cases, with tree, no tree and design problem
     pub(crate) fn has_tree(&self) -> bool {
         if let ProblemType::NonDesign(fn_info) = &self.type_ {
             fn_info.has_tree()
@@ -97,7 +96,6 @@ impl ProblemCode {
         }
     }
 
-    // TODO: Test has_list with 3 cases, with list, no list and design problem
     pub(crate) fn has_list(&self) -> bool {
         if let ProblemType::NonDesign(fn_info) = &self.type_ {
             fn_info.has_list()
@@ -114,16 +112,9 @@ pub(crate) struct FunctionInfo {
 }
 
 impl FunctionInfo {
-    // TODO: Test output of args generation
     pub(crate) fn get_args_with_case(&self) -> String {
         let mut result = String::from("#[case] ");
-        // TODO: After test has been added, change this implementation to use [replace](https://doc.rust-lang.org/std/string/struct.String.html#method.replace)
-        for c in self.fn_args.raw_str.chars() {
-            match c {
-                ',' => result.push_str(", #[case] "),
-                _ => result.push(c),
-            }
-        }
+        result.push_str(&self.fn_args.raw_str.replace(',', ", #[case] "));
 
         if let Some(return_type) = self.return_type.as_ref() {
             result.push_str(&format!(", #[case] expected: {return_type}"))
@@ -131,7 +122,6 @@ impl FunctionInfo {
         result
     }
 
-    // TODO: Test that expected names are returned
     pub(crate) fn get_args_names(&self) -> String {
         let names: Vec<_> = self
             .fn_args
@@ -151,7 +141,6 @@ impl FunctionInfo {
         .to_string()
     }
 
-    // TODO: Test parsing of test cases downloaded from leetcode
     pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
         let mut result = String::new();
         let n = self.fn_args.len();
@@ -212,7 +201,7 @@ struct FunctionArgs {
 
 impl FunctionArgs {
     fn new(raw_str: String) -> anyhow::Result<Self> {
-        let re = Regex::new(r#"([a-z_0-9]*?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
+        let re = Regex::new(r#"([A-Za-z_0-9]+?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
         let caps: Vec<_> = re.captures_iter(&raw_str).collect();
         let mut args: Vec<FunctionArg> = vec![];
         for cap in caps {
@@ -239,6 +228,7 @@ impl FunctionArgs {
 }
 
 /// Function Arg Type (FAT)
+#[cfg_attr(debug_assertions, derive(EnumIter, Eq, Hash, PartialEq))]
 #[derive(Debug)]
 enum FunctionArgType {
     I32,
@@ -259,7 +249,6 @@ enum FunctionArgType {
 impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
-        // TODO: Test leetcode test case conversion based on type
         use FunctionArgType::*;
         Ok(match self {
             I32 => {
@@ -371,5 +360,351 @@ impl TryFrom<&str> for FunctionArgType {
                 }
             }
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashSet;
+
+    use strum::IntoEnumIterator;
+
+    use super::*;
+
+    fn create_code_stub_all_arg_types_non_design() -> &'static str {
+        "
+impl Solution {
+    pub fn func_name(
+        L2AC6p: i32,
+        q7kv5k: i64,
+        pP7GhC: f64,
+        HFGzdD: bool,
+        ePfFj3: Vec<i32>,
+        kRubF2: Vec<f64>,
+        ykyF5X: Vec<bool>,
+        bBtcWe: Vec<Vec<i32>>,
+        NkCeR6: Vec<String>,
+        kjACSr: String,
+        bJy3HH: Option<Box<ListNode>>,
+        ndQLTu: Option<Rc<RefCell<TreeNode>>>,
+        PRnJhw: UnknownType,
+    ) {
+    }
+}
+"
+    }
+
+    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
+        match fat {
+            FunctionArgType::I32 => "L2AC6p",
+            FunctionArgType::I64 => "q7kv5k",
+            FunctionArgType::F64 => "pP7GhC",
+            FunctionArgType::Bool => "HFGzdD",
+            FunctionArgType::VecI32 => "ePfFj3",
+            FunctionArgType::VecF64 => "kRubF2",
+            FunctionArgType::VecBool => "ykyF5X",
+            FunctionArgType::VecVecI32 => "bBtcWe",
+            FunctionArgType::VecString => "NkCeR6",
+            FunctionArgType::String_ => "kjACSr",
+            FunctionArgType::List => "bJy3HH",
+            FunctionArgType::Tree => "ndQLTu",
+            FunctionArgType::Other { .. } => "PRnJhw",
+        }
+    }
+
+    fn extract_function_info(code: &str) -> FunctionInfo {
+        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
+
+        if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        }
+    }
+
+    #[test]
+    fn function_parsing() {
+        // Arrange
+        let code = create_code_stub_all_arg_types_non_design();
+
+        // Create hashset and fill with the possible argument types
+        let mut left_to_see = HashSet::new();
+        FunctionArgType::iter().for_each(|x| {
+            left_to_see.insert(x);
+        });
+
+        // Add special handling for Other variant
+        left_to_see.remove(&FunctionArgType::Other {
+            raw: "".to_string(),
+        });
+        left_to_see.insert(FunctionArgType::Other {
+            raw: "UnknownType".to_string(),
+        });
+
+        // Act
+        let fn_info = extract_function_info(code);
+
+        // Assert
+        assert_eq!(fn_info.name, "func_name");
+        assert!(fn_info.return_type.is_none());
+        for arg in fn_info.fn_args.args.iter() {
+            // if !left_to_see.contains(&arg.arg_type) {
+            //     panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
+            // }
+            left_to_see.remove(&arg.arg_type);
+            assert_eq!(
+                arg.identifier,
+                fn_type_to_id(&arg.arg_type),
+                "ArgType: {}",
+                arg.arg_type
+            );
+        }
+        assert!(
+            left_to_see.is_empty(),
+            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
+        );
+    }
+
+    fn get_100_same_tree() -> &'static str {
+        "// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+//
+// impl TreeNode {
+//   #[inline]
+//   pub fn new(val: i32) -> Self {
+//     TreeNode {
+//       val,
+//       left: None,
+//       right: None
+//     }
+//   }
+// }
+use std::rc::Rc;
+use std::cell::RefCell;
+impl Solution {
+    pub fn is_same_tree(p: Option<Rc<RefCell<TreeNode>>>, q: Option<Rc<RefCell<TreeNode>>>) -> bool {
+
+    }
+}
+"
+    }
+
+    fn get_97_interleaving_string() -> &'static str {
+        "impl Solution {
+    pub fn is_interleave(s1: String, s2: String, s3: String) -> bool {
+
+    }
+}
+"
+    }
+
+    fn get_706_design_hashmap() -> &'static str {
+        "struct MyHashMap {
+
+}
+
+
+/**
+ * `&self` means the method takes an immutable reference.
+ * If you need a mutable reference, change it to `&mut self` instead.
+ */
+impl MyHashMap {
+
+    fn new() -> Self {
+
+    }
+
+    fn put(&self, key: i32, value: i32) {
+
+    }
+
+    fn get(&self, key: i32) -> i32 {
+
+    }
+
+    fn remove(&self, key: i32) {
+
+    }
+}
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * let obj = MyHashMap::new();
+ * obj.put(key, value);
+ * let ret_2: i32 = obj.get(key);
+ * obj.remove(key);
+ */
+"
+    }
+
+    fn get_2_add_two_numbers() -> &'static str {
+        "
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+//
+// impl ListNode {
+//   #[inline]
+//   fn new(val: i32) -> Self {
+//     ListNode {
+//       next: None,
+//       val
+//     }
+//   }
+// }
+impl Solution {
+    pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+
+    }
+}
+"
+    }
+
+    #[test]
+    fn has_tree_with_tree() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_100_same_tree()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(problem_code.has_tree());
+    }
+
+    #[test]
+    fn has_tree_without_tree() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_97_interleaving_string()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_tree());
+    }
+
+    #[test]
+    fn has_tree_design_question() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_706_design_hashmap()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_tree());
+    }
+
+    #[test]
+    fn has_list_with_list() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_2_add_two_numbers()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(problem_code.has_list());
+    }
+
+    #[test]
+    fn has_list_without_list() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_97_interleaving_string()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_list());
+    }
+
+    #[test]
+    fn has_list_design_question() {
+        // Arrange / Act
+        let problem_code: ProblemCode = get_706_design_hashmap()
+            .to_string()
+            .try_into()
+            .expect("Should be valid code");
+
+        // Assert
+        assert!(!problem_code.has_list());
+    }
+
+    #[test]
+    fn get_args_with_case() {
+        // Arrange / Act
+        let fn_info = extract_function_info(get_97_interleaving_string());
+
+        // Assert
+        assert_eq!(
+            fn_info.get_args_with_case(),
+            "#[case] s1: String, #[case]  s2: String, #[case]  s3: String, #[case] expected: bool"
+        );
+    }
+
+    #[test]
+    fn get_args_names() {
+        // Arrange / Act
+        let fn_info = extract_function_info(get_97_interleaving_string());
+
+        // Assert
+        assert_eq!(fn_info.get_args_names(), "s1, s2, s3");
+    }
+
+    fn get_fn_info_min_sub_array_len() -> FunctionInfo {
+        FunctionInfo {
+            name: "min_sub_array_len".into(),
+            fn_args: FunctionArgs {
+                raw_str: "target: i32, nums: Vec<i32>".into(),
+                args: vec![
+                    FunctionArg {
+                        identifier: "target".into(),
+                        arg_type: FunctionArgType::I32,
+                    },
+                    FunctionArg {
+                        identifier: "nums".into(),
+                        arg_type: FunctionArgType::VecI32,
+                    },
+                ],
+            },
+            return_type: Some(FunctionArgType::I32),
+        }
+    }
+
+    #[test]
+    fn get_test_case_ok() {
+        // Arrange
+        let expected = "7, vec![2,3,1,2,4,3], todo!(\"Expected Result\")";
+        let fn_info = get_fn_info_min_sub_array_len();
+        let input = "7\n[2,3,1,2,4,3]";
+
+        // Act
+        let actual = fn_info.get_test_case(input).expect("Expected Ok");
+
+        // Assert
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn get_test_case_invalid_num_args() {
+        // Arrange
+        let fn_info = get_fn_info_min_sub_array_len();
+        let input = "[2,3,1,2,4,3]";
+
+        // Act
+        let actual = fn_info.get_test_case(input);
+
+        // Assert
+        assert!(actual.is_err());
     }
 }

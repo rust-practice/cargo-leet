@@ -65,7 +65,6 @@ impl Debug for TreeRoot {
     }
 }
 
-// TODO: Test going from a tree to a vec
 impl From<&TreeRoot> for Vec<Option<i32>> {
     fn from(value: &TreeRoot) -> Self {
         let mut result = vec![];
@@ -87,6 +86,15 @@ impl From<&TreeRoot> for Vec<Option<i32>> {
                 }
             }
         }
+
+        // Trim trailing None
+        while let Some(_last) = result.last() {
+            if _last.is_none() {
+                result.pop();
+            } else {
+                break;
+            }
+        }
         result
     }
 }
@@ -97,7 +105,6 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
     }
 }
 
-// TODO: Test going from a string to a tree
 impl From<&str> for TreeRoot {
     /// Expects the "[]" around the values, separated by comma "," and only
     /// integers and "null" (which is the format you'll get on LeetCode)
@@ -198,5 +205,81 @@ impl From<Vec<Option<i32>>> for TreeRoot {
 impl From<TreeRoot> for Option<Rc<RefCell<TreeNode>>> {
     fn from(value: TreeRoot) -> Self {
         value.root
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Creates the test tree seen below
+    /// Leetcode rep: [1,2,5,3,null,6,7,null,4,null,null,8]
+    ///            1
+    ///         /     \
+    ///        /       \
+    ///       /         \
+    ///      2           5
+    ///    /   \       /   \
+    ///   3     -     6     7
+    ///  / \         / \   / \
+    /// -   4       -   - 8   -
+    #[allow(unused_mut)] // It's easier to read the code if they all line up but the leaves  don't need to be mutable
+    fn test_tree() -> Option<Rc<RefCell<TreeNode>>> {
+        let mut node1 = Some(Rc::new(RefCell::new(TreeNode::new(1))));
+        let mut node2 = Some(Rc::new(RefCell::new(TreeNode::new(2))));
+        let mut node3 = Some(Rc::new(RefCell::new(TreeNode::new(3))));
+        let mut node4 = Some(Rc::new(RefCell::new(TreeNode::new(4))));
+        let mut node5 = Some(Rc::new(RefCell::new(TreeNode::new(5))));
+        let mut node6 = Some(Rc::new(RefCell::new(TreeNode::new(6))));
+        let mut node7 = Some(Rc::new(RefCell::new(TreeNode::new(7))));
+        let mut node8 = Some(Rc::new(RefCell::new(TreeNode::new(8))));
+        node3.as_mut().unwrap().borrow_mut().right = node4;
+        node7.as_mut().unwrap().borrow_mut().left = node8;
+        node2.as_mut().unwrap().borrow_mut().left = node3;
+        node5.as_mut().unwrap().borrow_mut().left = node6;
+        node5.as_mut().unwrap().borrow_mut().right = node7;
+        node1.as_mut().unwrap().borrow_mut().left = node2;
+        node1.as_mut().unwrap().borrow_mut().right = node5;
+        node1
+    }
+
+    #[test]
+    fn from_tree_to_vec() {
+        // Arrange
+        let start: TreeRoot = test_tree().into();
+        let expected = vec![
+            Some(1),
+            Some(2),
+            Some(5),
+            Some(3),
+            None,
+            Some(6),
+            Some(7),
+            None,
+            Some(4),
+            None,
+            None,
+            Some(8),
+        ];
+
+        // Act
+        let actual: Vec<Option<i32>> = (&start).into();
+
+        // Assert
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn from_str_to_tree() {
+        // Arrange
+        let start = "[1,2,5,3,null,6,7,null,4,null,null,8]";
+        let expected = test_tree();
+
+        // Act
+        let root: TreeRoot = start.into();
+        let actual: Option<Rc<RefCell<TreeNode>>> = root.into();
+
+        // Assert
+        assert_eq!(actual, expected);
     }
 }
