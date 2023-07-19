@@ -1,4 +1,4 @@
-## Leetcode local development assistant
+## cargo-leet - A leetcode local development assistant
 
  A program that given the link or slug to a leetcode problem,
  creates a local file where you can develop and test your solution before post it back to leetcode.

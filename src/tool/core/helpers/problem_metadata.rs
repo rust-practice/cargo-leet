@@ -6,7 +6,8 @@ use serde_flat_path::flat_path;
 
 use super::problem_code::{FunctionInfo, ProblemCode};
 
-/// This struct is only used because there are two fields that we are interested in that start with the same path and flat_path does not support that yet
+/// This struct is only used because there are two fields that we are interested
+/// in that start with the same path and flat_path does not support that yet
 #[flat_path]
 #[derive(Deserialize, Debug)]
 struct QuestionWrapper {
@@ -16,7 +17,7 @@ struct QuestionWrapper {
 
 #[flat_path]
 #[derive(Deserialize, Debug)]
-pub struct ProblemMetadata {
+pub(crate) struct ProblemMetadata {
     #[serde(rename = "questionFrontendId")]
     id: String,
     #[serde(rename = "questionTitle")]
@@ -32,7 +33,7 @@ impl ProblemMetadata {
         Ok(())
     }
 
-    pub fn get_id(&self) -> anyhow::Result<u16> {
+    pub(crate) fn get_id(&self) -> anyhow::Result<u16> {
         let result = self
             .id
             .parse()
@@ -40,11 +41,11 @@ impl ProblemMetadata {
         Ok(result)
     }
 
-    pub fn get_num_and_title(&self) -> anyhow::Result<String> {
+    pub(crate) fn get_num_and_title(&self) -> anyhow::Result<String> {
         Ok(format!("{}. {}", self.get_id()?, self.title))
     }
 
-    pub fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
+    pub(crate) fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
         info!("Going to get tests");
 
         let mut imports = String::new();
@@ -115,7 +116,7 @@ mod tests {{
     }
 }
 
-pub fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMetadata> {
+pub(crate) fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMetadata> {
     info!("Going to get problem metadata");
     let QuestionWrapper { inner: result } = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({

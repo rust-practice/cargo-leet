@@ -26,7 +26,7 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn write_file(module_name: &str, module_code: String) -> anyhow::Result<()> {
+pub(crate) fn write_file(module_name: &str, module_code: String) -> anyhow::Result<()> {
     info!("Writing code to disk for module {module_name}");
     let path = PathBuf::from(format!("src/{module_name}.rs"));
     let mut file = OpenOptions::new()

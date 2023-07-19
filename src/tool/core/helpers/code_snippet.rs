@@ -8,17 +8,17 @@ use serde_flat_path::flat_path;
 
 #[flat_path]
 #[derive(Deserialize)]
-pub struct CodeSnippetResponse {
+struct CodeSnippetResponse {
     #[flat_path("data.question.codeSnippets")]
     code_snippets: Vec<CodeSnippet>,
 }
 #[derive(Deserialize)]
-pub struct CodeSnippet {
+struct CodeSnippet {
     lang: String,
     code: String,
 }
 
-pub fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemCode> {
+pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemCode> {
     info!("Going to get code for {title_slug}");
     let code_snippets_res = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({

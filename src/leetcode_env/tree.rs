@@ -7,15 +7,20 @@ use std::{
     rc::Rc,
 };
 
+///Definition for a binary tree node.
 #[derive(PartialEq, Eq)]
 pub struct TreeNode {
+    /// The value stored at this node
     pub val: i32,
+    /// Link to the left child if one exists
     pub left: Option<Rc<RefCell<TreeNode>>>,
+    /// Link to the right child if one exists
     pub right: Option<Rc<RefCell<TreeNode>>>,
 }
 
 impl TreeNode {
     #[inline]
+    /// Creates a new [TreeNode] with no children and the value passed
     pub fn new(val: i32) -> Self {
         TreeNode {
             val,
@@ -29,9 +34,11 @@ impl TreeNode {
     }
 }
 
-// Wrapper class to make handling empty trees easier
+/// Wrapper class to make handling empty trees easier and building of trees
+/// easier via [From] impls
 #[derive(PartialEq, Eq)]
 pub struct TreeRoot {
+    /// The root of the tree held
     pub root: Option<Rc<RefCell<TreeNode>>>,
 }
 
@@ -58,6 +65,7 @@ impl Debug for TreeRoot {
     }
 }
 
+// TODO: Test going from a tree to a vec
 impl From<&TreeRoot> for Vec<Option<i32>> {
     fn from(value: &TreeRoot) -> Self {
         let mut result = vec![];
@@ -89,9 +97,10 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
     }
 }
 
+// TODO: Test going from a string to a tree
 impl From<&str> for TreeRoot {
-    /// Expects the "[]" around the values, separated by comma "," and only integers and "null"
-    /// (which is the format you'll get on LeetCode)
+    /// Expects the "[]" around the values, separated by comma "," and only
+    /// integers and "null" (which is the format you'll get on LeetCode)
     ///
     /// # Panics
     ///

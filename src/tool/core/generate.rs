@@ -30,6 +30,8 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     Ok(())
 }
 
+// TODO: Add test where string is interpreted as a slug
+// TODO: Add test where string is interpreted as url
 fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, String>> {
     Ok(if is_url(specific_problem) {
         // Working with a url
@@ -45,14 +47,19 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
     })
 }
 
-/// Gets the code and other data from leetcode and generates the suitable code for the module and the name of the module
-/// Returns the module name and the module code
+/// Gets the code and other data from leetcode and generates the suitable code
+/// for the module and the name of the module Returns the module name and the
+/// module code
 ///
-/// NB: Did not return `Cow` because `module_name` is always a modified version of the input
-pub fn create_module_code(
+/// NB: Did not return `Cow` because `module_name` is always a modified version
+/// of the input
+fn create_module_code(
     title_slug: Cow<String>,
     args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {
+    // TODO: Test the code generation, will need to split this function into the
+    //      parts that access the network and the parts that compose the results of
+    //      those calls
     info!("Building module contents for {title_slug}");
 
     let meta_data =
@@ -79,7 +86,6 @@ pub fn create_module_code(
     let problem_code = get_code_snippet_for_problem(&title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    // Add 2 empty lines between code and "other stuff (like tests and struct definition"
     code_snippet.push_str(
         "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
     );
@@ -118,13 +124,14 @@ pub fn create_module_code(
 }
 
 /// Quick and dirty test to see if this is a url
-/// Uses a character that is not allowed in slugs but must be in a url to decide between the two
+/// Uses a character that is not allowed in slugs but must be in a url to decide
+/// between the two
 fn is_url(value: &str) -> bool {
     value.contains('/')
 }
 
 fn url_to_slug(url: &str) -> anyhow::Result<String> {
-    assert!(Config::LEETCODE_PROBLEM_URL.ends_with('/'));
+    debug_assert!(Config::LEETCODE_PROBLEM_URL.ends_with('/'));
     if !url.starts_with(Config::LEETCODE_PROBLEM_URL) {
         bail!(
             "Expected a leetcode url that starts with '{}' but got '{url}'",
