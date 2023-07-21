@@ -275,8 +275,9 @@ impl FunctionArgType {
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-            VecI32 | VecBool | VecF64 => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => Ok(format!("vec!{line}")),
+
+            VecI32 | VecBool | VecF64 | VecVecI32 => match Self::does_pass_basic_vec_tests(line) {
+                Ok(_) => Ok(line.replace('[', "vec![")),
                 Err(e) => Err(e.to_string()),
             },
             VecString => match Self::does_pass_basic_vec_tests(line) {
@@ -285,10 +286,6 @@ impl FunctionArgType {
                     result = result.replace("\"]", "\".into()]"); // Replace end
                     Ok(format!("vec!{result}"))
                 }
-                Err(e) => Err(e.to_string()),
-            },
-            VecVecI32 => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => Ok(line.replace('[', "vec![")),
                 Err(e) => Err(e.to_string()),
             },
             String_ | Bool => Ok(line.to_string()),
