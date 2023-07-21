@@ -382,100 +382,6 @@ mod tests {
 
     use super::*;
 
-    fn create_code_stub_all_arg_types_non_design() -> &'static str {
-        "
-impl Solution {
-    pub fn func_name(
-        L2AC6p: i32,
-        q7kv5k: i64,
-        pP7GhC: f64,
-        HFGzdD: bool,
-        ePfFj3: Vec<i32>,
-        kRubF2: Vec<f64>,
-        ykyF5X: Vec<bool>,
-        bBtcWe: Vec<Vec<i32>>,
-        NkCeR6: Vec<String>,
-        kjACSr: String,
-        bJy3HH: Option<Box<ListNode>>,
-        ndQLTu: Option<Rc<RefCell<TreeNode>>>,
-        PRnJhw: UnknownType,
-    ) {
-    }
-}
-"
-    }
-
-    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
-        match fat {
-            FunctionArgType::I32 => "L2AC6p",
-            FunctionArgType::I64 => "q7kv5k",
-            FunctionArgType::F64 => "pP7GhC",
-            FunctionArgType::Bool => "HFGzdD",
-            FunctionArgType::VecI32 => "ePfFj3",
-            FunctionArgType::VecF64 => "kRubF2",
-            FunctionArgType::VecBool => "ykyF5X",
-            FunctionArgType::VecVecI32 => "bBtcWe",
-            FunctionArgType::VecString => "NkCeR6",
-            FunctionArgType::String_ => "kjACSr",
-            FunctionArgType::List => "bJy3HH",
-            FunctionArgType::Tree => "ndQLTu",
-            FunctionArgType::Other { .. } => "PRnJhw",
-        }
-    }
-
-    fn extract_function_info(code: &str) -> FunctionInfo {
-        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
-
-        if let ProblemType::NonDesign(info) = problem_code.type_ {
-            info
-        } else {
-            panic!("Expected Non Design Problem")
-        }
-    }
-
-    #[test]
-    fn function_parsing() {
-        // Arrange
-        let code = create_code_stub_all_arg_types_non_design();
-
-        // Create hashset and fill with the possible argument types
-        let mut left_to_see = HashSet::new();
-        FunctionArgType::iter().for_each(|x| {
-            left_to_see.insert(x);
-        });
-
-        // Add special handling for Other variant
-        left_to_see.remove(&FunctionArgType::Other {
-            raw: "".to_string(),
-        });
-        left_to_see.insert(FunctionArgType::Other {
-            raw: "UnknownType".to_string(),
-        });
-
-        // Act
-        let fn_info = extract_function_info(code);
-
-        // Assert
-        assert_eq!(fn_info.name, "func_name");
-        assert!(fn_info.return_type.is_none());
-        for arg in fn_info.fn_args.args.iter() {
-            // if !left_to_see.contains(&arg.arg_type) {
-            //     panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
-            // }
-            left_to_see.remove(&arg.arg_type);
-            assert_eq!(
-                arg.identifier,
-                fn_type_to_id(&arg.arg_type),
-                "ArgType: {}",
-                arg.arg_type
-            );
-        }
-        assert!(
-            left_to_see.is_empty(),
-            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
-        );
-    }
-
     fn get_100_same_tree() -> &'static str {
         "// Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
@@ -717,5 +623,99 @@ impl Solution {
 
         // Assert
         assert!(actual.is_err());
+    }
+
+    fn create_code_stub_all_arg_types_non_design() -> &'static str {
+        "
+impl Solution {
+    pub fn func_name(
+        L2AC6p: i32,
+        q7kv5k: i64,
+        pP7GhC: f64,
+        HFGzdD: bool,
+        ePfFj3: Vec<i32>,
+        kRubF2: Vec<f64>,
+        ykyF5X: Vec<bool>,
+        bBtcWe: Vec<Vec<i32>>,
+        NkCeR6: Vec<String>,
+        kjACSr: String,
+        bJy3HH: Option<Box<ListNode>>,
+        ndQLTu: Option<Rc<RefCell<TreeNode>>>,
+        PRnJhw: UnknownType,
+    ) {
+    }
+}
+"
+    }
+
+    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
+        match fat {
+            FunctionArgType::I32 => "L2AC6p",
+            FunctionArgType::I64 => "q7kv5k",
+            FunctionArgType::F64 => "pP7GhC",
+            FunctionArgType::Bool => "HFGzdD",
+            FunctionArgType::VecI32 => "ePfFj3",
+            FunctionArgType::VecF64 => "kRubF2",
+            FunctionArgType::VecBool => "ykyF5X",
+            FunctionArgType::VecVecI32 => "bBtcWe",
+            FunctionArgType::VecString => "NkCeR6",
+            FunctionArgType::String_ => "kjACSr",
+            FunctionArgType::List => "bJy3HH",
+            FunctionArgType::Tree => "ndQLTu",
+            FunctionArgType::Other { .. } => "PRnJhw",
+        }
+    }
+
+    fn extract_function_info(code: &str) -> FunctionInfo {
+        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
+
+        if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        }
+    }
+
+    #[test]
+    fn function_parsing() {
+        // Arrange
+        let code = create_code_stub_all_arg_types_non_design();
+
+        // Create hashset and fill with the possible argument types
+        let mut left_to_see = HashSet::new();
+        FunctionArgType::iter().for_each(|x| {
+            left_to_see.insert(x);
+        });
+
+        // Add special handling for Other variant
+        left_to_see.remove(&FunctionArgType::Other {
+            raw: "".to_string(),
+        });
+        left_to_see.insert(FunctionArgType::Other {
+            raw: "UnknownType".to_string(),
+        });
+
+        // Act
+        let fn_info = extract_function_info(code);
+
+        // Assert
+        assert_eq!(fn_info.name, "func_name");
+        assert!(fn_info.return_type.is_none());
+        for arg in fn_info.fn_args.args.iter() {
+            // if !left_to_see.contains(&arg.arg_type) {
+            //     panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
+            // }
+            left_to_see.remove(&arg.arg_type);
+            assert_eq!(
+                arg.identifier,
+                fn_type_to_id(&arg.arg_type),
+                "ArgType: {}",
+                arg.arg_type
+            );
+        }
+        assert!(
+            left_to_see.is_empty(),
+            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
+        );
     }
 }
