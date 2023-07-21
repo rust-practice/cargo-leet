@@ -257,6 +257,7 @@ impl FunctionArgType {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
         use FunctionArgType::*;
         let result = match self {
+            String_ | Bool => Ok(line.to_string()),
             I32 => match line.parse::<i32>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
@@ -275,7 +276,6 @@ impl FunctionArgType {
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-
             VecI32 | VecBool | VecF64 | VecVecI32 => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(line.replace('[', "vec![")),
                 Err(e) => Err(e.to_string()),
@@ -288,7 +288,6 @@ impl FunctionArgType {
                 }
                 Err(e) => Err(e.to_string()),
             },
-            String_ | Bool => Ok(line.to_string()),
             List => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(format!("ListHead::from(vec!{line}).into()")),
                 Err(e) => Err(e.to_string()),
