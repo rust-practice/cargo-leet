@@ -702,9 +702,9 @@ impl Solution {
         assert_eq!(fn_info.name, "func_name");
         assert!(fn_info.return_type.is_none());
         for arg in fn_info.fn_args.args.iter() {
-            // if !left_to_see.contains(&arg.arg_type) {
-            //     panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
-            // }
+            if !left_to_see.contains(&arg.arg_type) {
+                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
+            }
             left_to_see.remove(&arg.arg_type);
             assert_eq!(
                 arg.identifier,
