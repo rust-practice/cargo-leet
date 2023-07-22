@@ -1,5 +1,14 @@
 [alias]
+
+# Install the version from the repo to your local system
 i = "install --path . --features=tool"
-g = "run --features=tool -- leet gen"
+
+# Run the generate command in the test_proj folder (Arguments can be added for generate command (use `cargo g -h` to see usage options))
+g = "run --features=tool -- leet --path test_proj gen"
+
+# Override cargo t and test to run tests with all features
 t = "test --all-features"
 test = "test --all-features"
+
+# Run with only path option set (Other arguments can be appended as normal eg. `cargo tool -h`)
+tool = "run --features=tool -- leet --path test_proj"

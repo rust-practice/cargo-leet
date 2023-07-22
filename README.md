@@ -3,6 +3,8 @@
  A program that given the link or slug to a leetcode problem,
  creates a local file where you can develop and test your solution before post it back to leetcode.
 
+ NB: Because this is a cargo subcommand it expects the first argument after the executable to be the name of the subcommand. Also to run the tool requires the "tool" feature, so for example to run with "no arguments" use `cargo run --features=tool -- leet`. Some alias have been set to make doing several operations easier (See [`.cargo/config.tom`](.cargo/config.toml)).
+
  ## ScreenShots
 
  ### `cargo leet`
