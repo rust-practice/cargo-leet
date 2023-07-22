@@ -240,12 +240,13 @@ enum FunctionArgType {
     I64,
     F64,
     Bool,
+    String_,
     VecI32,
     VecF64,
     VecBool,
-    VecVecI32,
     VecString,
-    String_,
+    VecVecI32,
+    VecVecString,
     List,
     Tree,
     Other { raw: String },
@@ -257,6 +258,7 @@ impl FunctionArgType {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
         use FunctionArgType::*;
         let result = match self {
+            String_ | Bool => Ok(line.to_string()),
             I32 => match line.parse::<i32>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
@@ -275,23 +277,19 @@ impl FunctionArgType {
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-            VecI32 | VecBool | VecF64 => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => Ok(format!("vec!{line}")),
-                Err(e) => Err(e.to_string()),
-            },
-            VecString => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => {
-                    let mut result = line.replace("\",", "\".into(),"); // Replace ones before end
-                    result = result.replace("\"]", "\".into()]"); // Replace end
-                    Ok(format!("vec!{result}"))
+            VecI32 | VecBool | VecF64 | VecVecI32 | VecString | VecVecString => {
+                match Self::does_pass_basic_vec_tests(line) {
+                    Ok(_) => {
+                        let mut result = line.to_string();
+                        if [VecString, VecVecString].contains(self) {
+                            result = result.replace("\",", "\".into(),"); // Replace ones before end
+                            result = result.replace("\"]", "\".into()]"); // Replace end
+                        }
+                        Ok(result.replace('[', "vec!["))
+                    }
+                    Err(e) => Err(e.to_string()),
                 }
-                Err(e) => Err(e.to_string()),
-            },
-            VecVecI32 => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => Ok(line.replace('[', "vec![")),
-                Err(e) => Err(e.to_string()),
-            },
-            String_ | Bool => Ok(line.to_string()),
+            }
             List => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(format!("ListHead::from(vec!{line}).into()")),
                 Err(e) => Err(e.to_string()),
@@ -335,12 +333,13 @@ impl Display for FunctionArgType {
             I64 => "i64",
             F64 => "f64",
             Bool => "bool",
+            String_ => "String",
             VecI32 => "Vec<i32>",
             VecF64 => "Vec<f64>",
             VecBool => "Vec<bool>",
-            VecVecI32 => "Vec<Vec<i32>>",
             VecString => "Vec<String>",
-            String_ => "String",
+            VecVecI32 => "Vec<Vec<i32>>",
+            VecVecString => "Vec<Vec<String>>",
             List => "Option<Box<ListNode>>",
             Tree => "Option<Rc<RefCell<TreeNode>>>",
             Other { raw } => raw,
@@ -360,12 +359,13 @@ impl TryFrom<&str> for FunctionArgType {
             "i64" => I64,
             "f64" => F64,
             "bool" => Bool,
+            "String" => String_,
             "Vec<i32>" => VecI32,
             "Vec<f64>" => VecF64,
             "Vec<bool>" => VecBool,
-            "Vec<Vec<i32>>" => VecVecI32,
             "Vec<String>" => VecString,
-            "String" => String_,
+            "Vec<Vec<i32>>" => VecVecI32,
+            "Vec<Vec<String>>" => VecVecString,
             "Option<Box<ListNode>>" => List,
             "Option<Rc<RefCell<TreeNode>>>" => Tree,
             trimmed_value => {
@@ -385,100 +385,6 @@ mod tests {
     use strum::IntoEnumIterator;
 
     use super::*;
-
-    fn create_code_stub_all_arg_types_non_design() -> &'static str {
-        "
-impl Solution {
-    pub fn func_name(
-        L2AC6p: i32,
-        q7kv5k: i64,
-        pP7GhC: f64,
-        HFGzdD: bool,
-        ePfFj3: Vec<i32>,
-        kRubF2: Vec<f64>,
-        ykyF5X: Vec<bool>,
-        bBtcWe: Vec<Vec<i32>>,
-        NkCeR6: Vec<String>,
-        kjACSr: String,
-        bJy3HH: Option<Box<ListNode>>,
-        ndQLTu: Option<Rc<RefCell<TreeNode>>>,
-        PRnJhw: UnknownType,
-    ) {
-    }
-}
-"
-    }
-
-    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
-        match fat {
-            FunctionArgType::I32 => "L2AC6p",
-            FunctionArgType::I64 => "q7kv5k",
-            FunctionArgType::F64 => "pP7GhC",
-            FunctionArgType::Bool => "HFGzdD",
-            FunctionArgType::VecI32 => "ePfFj3",
-            FunctionArgType::VecF64 => "kRubF2",
-            FunctionArgType::VecBool => "ykyF5X",
-            FunctionArgType::VecVecI32 => "bBtcWe",
-            FunctionArgType::VecString => "NkCeR6",
-            FunctionArgType::String_ => "kjACSr",
-            FunctionArgType::List => "bJy3HH",
-            FunctionArgType::Tree => "ndQLTu",
-            FunctionArgType::Other { .. } => "PRnJhw",
-        }
-    }
-
-    fn extract_function_info(code: &str) -> FunctionInfo {
-        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
-
-        if let ProblemType::NonDesign(info) = problem_code.type_ {
-            info
-        } else {
-            panic!("Expected Non Design Problem")
-        }
-    }
-
-    #[test]
-    fn function_parsing() {
-        // Arrange
-        let code = create_code_stub_all_arg_types_non_design();
-
-        // Create hashset and fill with the possible argument types
-        let mut left_to_see = HashSet::new();
-        FunctionArgType::iter().for_each(|x| {
-            left_to_see.insert(x);
-        });
-
-        // Add special handling for Other variant
-        left_to_see.remove(&FunctionArgType::Other {
-            raw: "".to_string(),
-        });
-        left_to_see.insert(FunctionArgType::Other {
-            raw: "UnknownType".to_string(),
-        });
-
-        // Act
-        let fn_info = extract_function_info(code);
-
-        // Assert
-        assert_eq!(fn_info.name, "func_name");
-        assert!(fn_info.return_type.is_none());
-        for arg in fn_info.fn_args.args.iter() {
-            // if !left_to_see.contains(&arg.arg_type) {
-            //     panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
-            // }
-            left_to_see.remove(&arg.arg_type);
-            assert_eq!(
-                arg.identifier,
-                fn_type_to_id(&arg.arg_type),
-                "ArgType: {}",
-                arg.arg_type
-            );
-        }
-        assert!(
-            left_to_see.is_empty(),
-            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
-        );
-    }
 
     fn get_100_same_tree() -> &'static str {
         "// Definition for a binary tree node.
@@ -721,5 +627,167 @@ impl Solution {
 
         // Assert
         assert!(actual.is_err());
+    }
+
+    fn create_code_stub_all_arg_types_non_design() -> &'static str {
+        "
+impl Solution {
+    pub fn func_name(
+        L2AC6p: i32,
+        q7kv5k: i64,
+        pP7GhC: f64,
+        HFGzdD: bool,
+        kjACSr: String,
+        ePfFj3: Vec<i32>,
+        kRubF2: Vec<f64>,
+        ykyF5X: Vec<bool>,
+        NkCeR6: Vec<String>,
+        bBtcWe: Vec<Vec<i32>>,
+        ndi4ny: Vec<Vec<String>>,
+        bJy3HH: Option<Box<ListNode>>,
+        ndQLTu: Option<Rc<RefCell<TreeNode>>>,
+        PRnJhw: UnknownType,
+    ) {
+    }
+}
+"
+    }
+
+    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
+        match fat {
+            FunctionArgType::I32 => "L2AC6p",
+            FunctionArgType::I64 => "q7kv5k",
+            FunctionArgType::F64 => "pP7GhC",
+            FunctionArgType::Bool => "HFGzdD",
+            FunctionArgType::String_ => "kjACSr",
+            FunctionArgType::VecI32 => "ePfFj3",
+            FunctionArgType::VecF64 => "kRubF2",
+            FunctionArgType::VecBool => "ykyF5X",
+            FunctionArgType::VecString => "NkCeR6",
+            FunctionArgType::VecVecI32 => "bBtcWe",
+            FunctionArgType::VecVecString => "ndi4ny",
+            FunctionArgType::List => "bJy3HH",
+            FunctionArgType::Tree => "ndQLTu",
+            FunctionArgType::Other { .. } => "PRnJhw",
+        }
+    }
+
+    fn extract_function_info(code: &str) -> FunctionInfo {
+        let problem_code: ProblemCode = code.to_string().try_into().expect("Should be valid code");
+
+        if let ProblemType::NonDesign(info) = problem_code.type_ {
+            info
+        } else {
+            panic!("Expected Non Design Problem")
+        }
+    }
+
+    #[test]
+    fn function_parsing() {
+        // Arrange
+        let code = create_code_stub_all_arg_types_non_design();
+
+        // Create hashset and fill with the possible argument types
+        let mut left_to_see = HashSet::new();
+        FunctionArgType::iter().for_each(|x| {
+            left_to_see.insert(x);
+        });
+
+        // Add special handling for Other variant
+        left_to_see.remove(&FunctionArgType::Other {
+            raw: "".to_string(),
+        });
+        left_to_see.insert(FunctionArgType::Other {
+            raw: "UnknownType".to_string(),
+        });
+
+        // Act
+        let fn_info = extract_function_info(code);
+
+        // Assert
+        assert_eq!(fn_info.name, "func_name");
+        assert!(fn_info.return_type.is_none());
+        for arg in fn_info.fn_args.args.iter() {
+            if !left_to_see.contains(&arg.arg_type) {
+                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
+            }
+            left_to_see.remove(&arg.arg_type);
+            assert_eq!(
+                arg.identifier,
+                fn_type_to_id(&arg.arg_type),
+                "ArgType: {}",
+                arg.arg_type
+            );
+        }
+        assert!(
+            left_to_see.is_empty(),
+            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
+        );
+    }
+
+    #[test]
+    fn function_arg_type_apply() {
+        // Using an array instead of rstest because we need to ensure all inputs are covered
+        use FunctionArgType::*;
+        let inputs = [
+            (I32, "1"),
+            (I64, "2"),
+            (F64, "2.00000"),
+            (Bool, "true"),
+            (String_, "\"leetcode\""),
+            (VecI32, "[1,2,3,4]"),
+            (VecF64, "[6.00000,0.50000,-1.00000,1.00000,-1.00000]"),
+            (VecBool, "[true,false,false,false,false]"),
+            (VecString, "[\"@..aA\",\"..B#.\",\"....b\"]"),
+            (VecVecI32, "[[2,2,3],[7]]"),
+            (
+                VecVecString,
+                "[[\"java\"],[\"nodejs\"],[\"nodejs\",\"reactjs\"]]",
+            ),
+            (List, "[1,2,4]"),
+            (Tree, "[1,null,2,3]"),
+            (Other { raw: "".into() }, "1"),
+        ];
+
+        // Create hashset and fill with the possible argument types
+        let mut left_to_see = HashSet::new();
+        FunctionArgType::iter().for_each(|x| {
+            left_to_see.insert(x);
+        });
+
+        // Ensure each is there exactly once
+        for (fat, _) in inputs.iter() {
+            if !left_to_see.contains(fat) {
+                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {fat}");
+            }
+            left_to_see.remove(fat);
+        }
+        assert!(
+            left_to_see.is_empty(),
+            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
+        );
+
+        for (fat, input) in inputs {
+            let expected = match fat {
+                I32 => "1",
+                I64 => "2",
+                F64 => "2.00000",
+                Bool => "true",
+                String_ => "\"leetcode\"",
+                VecI32 => "vec![1,2,3,4]",
+                VecF64 => "vec![6.00000,0.50000,-1.00000,1.00000,-1.00000]",
+                VecBool => "vec![true,false,false,false,false]",
+                VecString => "vec![\"@..aA\".into(),\"..B#.\".into(),\"....b\".into()]",
+                VecVecI32 => "vec![vec![2,2,3],vec![7]]",
+                VecVecString => {
+                    "vec![vec![\"java\".into()],vec![\"nodejs\".into()],vec![\"nodejs\".into(),\"reactjs\".into()]]"
+                }
+                List => "ListHead::from(vec![1,2,4]).into()",
+                Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
+                Other { raw: _ } => "todo!(\"1\")",
+            };
+            let actual = fat.apply(input).expect("Should be valid input");
+            assert_eq!(actual, expected);
+        }
     }
 }
