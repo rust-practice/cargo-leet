@@ -24,7 +24,7 @@ pub struct Cli {
     /// Specify the path to the project root (If not provided uses current
     /// working directory)
     #[arg(long, short, global = true, value_name = "FOLDER")]
-    path: Option<String>,
+    pub path: Option<String>,
 
     /// Set logging level to use
     #[arg(long, short, global = true, value_enum, default_value_t = LogLevel::Warn)]
@@ -57,6 +57,10 @@ impl Cli {
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
     Generate(GenerateArgs),
+
+    /// Creates or updates a project
+    #[clap(short_flag = 'i')]
+    Init(InitArgs),
 }
 
 #[derive(Args, Debug)]
@@ -66,6 +70,13 @@ pub struct GenerateArgs {
     /// If set the module name generated includes the number for the problem
     #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
     pub should_include_problem_number: bool,
+}
+
+#[derive(Args, Debug)]
+pub struct InitArgs {
+    /// If set no changes are made only list of changes that would be done
+    #[arg(short = 'd', default_value_t = false)]
+    pub dry_run: bool,
 }
 
 /// Exists to provide better help messages variants copied from LevelFilter as
