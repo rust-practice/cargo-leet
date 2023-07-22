@@ -246,6 +246,7 @@ enum FunctionArgType {
     VecBool,
     VecString,
     VecVecI32,
+    VecVecString,
     List,
     Tree,
     Other { raw: String },
@@ -276,11 +277,11 @@ impl FunctionArgType {
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-            VecI32 | VecBool | VecF64 | VecVecI32 | VecString => {
+            VecI32 | VecBool | VecF64 | VecVecI32 | VecString | VecVecString => {
                 match Self::does_pass_basic_vec_tests(line) {
                     Ok(_) => {
                         let mut result = line.to_string();
-                        if [VecString].contains(self) {
+                        if [VecString, VecVecString].contains(self) {
                             result = result.replace("\",", "\".into(),"); // Replace ones before end
                             result = result.replace("\"]", "\".into()]"); // Replace end
                         }
@@ -338,6 +339,7 @@ impl Display for FunctionArgType {
             VecBool => "Vec<bool>",
             VecString => "Vec<String>",
             VecVecI32 => "Vec<Vec<i32>>",
+            VecVecString => "Vec<Vec<String>>",
             List => "Option<Box<ListNode>>",
             Tree => "Option<Rc<RefCell<TreeNode>>>",
             Other { raw } => raw,
@@ -363,6 +365,7 @@ impl TryFrom<&str> for FunctionArgType {
             "Vec<bool>" => VecBool,
             "Vec<String>" => VecString,
             "Vec<Vec<i32>>" => VecVecI32,
+            "Vec<Vec<String>>" => VecVecString,
             "Option<Box<ListNode>>" => List,
             "Option<Rc<RefCell<TreeNode>>>" => Tree,
             trimmed_value => {
@@ -640,6 +643,7 @@ impl Solution {
         ykyF5X: Vec<bool>,
         NkCeR6: Vec<String>,
         bBtcWe: Vec<Vec<i32>>,
+        ndi4ny: Vec<Vec<String>>,
         bJy3HH: Option<Box<ListNode>>,
         ndQLTu: Option<Rc<RefCell<TreeNode>>>,
         PRnJhw: UnknownType,
@@ -661,6 +665,7 @@ impl Solution {
             FunctionArgType::VecBool => "ykyF5X",
             FunctionArgType::VecString => "NkCeR6",
             FunctionArgType::VecVecI32 => "bBtcWe",
+            FunctionArgType::VecVecString => "ndi4ny",
             FunctionArgType::List => "bJy3HH",
             FunctionArgType::Tree => "ndQLTu",
             FunctionArgType::Other { .. } => "PRnJhw",
@@ -735,6 +740,10 @@ impl Solution {
             (VecBool, "[true,false,false,false,false]"),
             (VecString, "[\"@..aA\",\"..B#.\",\"....b\"]"),
             (VecVecI32, "[[2,2,3],[7]]"),
+            (
+                VecVecString,
+                "[[\"java\"],[\"nodejs\"],[\"nodejs\",\"reactjs\"]]",
+            ),
             (List, "[1,2,4]"),
             (Tree, "[1,null,2,3]"),
             (Other { raw: "".into() }, "1"),
@@ -770,6 +779,9 @@ impl Solution {
                 VecBool => "vec![true,false,false,false,false]",
                 VecString => "vec![\"@..aA\".into(),\"..B#.\".into(),\"....b\".into()]",
                 VecVecI32 => "vec![vec![2,2,3],vec![7]]",
+                VecVecString => {
+                    "vec![vec![\"java\".into()],vec![\"nodejs\".into()],vec![\"nodejs\".into(),\"reactjs\".into()]]"
+                }
                 List => "ListHead::from(vec![1,2,4]).into()",
                 Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
                 Other { raw: _ } => "todo!(\"1\")",
