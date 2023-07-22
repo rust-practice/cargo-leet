@@ -718,4 +718,63 @@ impl Solution {
             "Expected all argument types to be seen but haven't seen {left_to_see:?}",
         );
     }
+
+    #[test]
+    fn function_arg_type_apply() {
+        // Using an array instead of rstest because we need to ensure all inputs are covered
+        use FunctionArgType::*;
+        let inputs = [
+            (I32, "1"),
+            (I64, "2"),
+            (F64, "2.00000"),
+            (Bool, "true"),
+            (VecI32, "[1,2,3,4]"),
+            (VecF64, "[6.00000,0.50000,-1.00000,1.00000,-1.00000]"),
+            (VecBool, "[true,false,false,false,false]"),
+            (VecVecI32, "[[2,2,3],[7]]"),
+            (VecString, "[\"@..aA\",\"..B#.\",\"....b\"]"),
+            (String_, "\"leetcode\""),
+            (List, "[1,2,4]"),
+            (Tree, "[1,null,2,3]"),
+            (Other { raw: "".into() }, "1"),
+        ];
+
+        // Create hashset and fill with the possible argument types
+        let mut left_to_see = HashSet::new();
+        FunctionArgType::iter().for_each(|x| {
+            left_to_see.insert(x);
+        });
+
+        // Ensure each is there exactly once
+        for (fat, _) in inputs.iter() {
+            if !left_to_see.contains(fat) {
+                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {fat}");
+            }
+            left_to_see.remove(fat);
+        }
+        assert!(
+            left_to_see.is_empty(),
+            "Expected all argument types to be seen but haven't seen {left_to_see:?}",
+        );
+
+        for (fat, input) in inputs {
+            let expected = match fat {
+                I32 => "1",
+                I64 => "2",
+                F64 => "2.00000",
+                Bool => "true",
+                VecI32 => "vec![1,2,3,4]",
+                VecF64 => "vec![6.00000,0.50000,-1.00000,1.00000,-1.00000]",
+                VecBool => "vec![true,false,false,false,false]",
+                VecVecI32 => "vec![vec![2,2,3],vec![7]]",
+                VecString => "vec![\"@..aA\".into(),\"..B#.\".into(),\"....b\".into()]",
+                String_ => "\"leetcode\"",
+                List => "ListHead::from(vec![1,2,4]).into()",
+                Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
+                Other { raw: _ } => "todo!(\"1\")",
+            };
+            let actual = fat.apply(input).expect("Should be valid input");
+            assert_eq!(actual, expected);
+        }
+    }
 }
