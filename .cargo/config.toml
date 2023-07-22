@@ -8,7 +8,6 @@ g = "run --features=tool -- leet --path test_proj gen"
 
 # Override cargo t and test to run tests with all features
 t = "test --all-features"
-test = "test --all-features"
 
 # Run with only path option set (Other arguments can be appended as normal eg. `cargo tool -h`)
 tool = "run --features=tool -- leet --path test_proj"
