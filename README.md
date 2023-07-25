@@ -86,6 +86,10 @@ This means you can select the license you prefer!
 This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are very good reasons to include both as noted in
 this [issue](https://github.com/bevyengine/bevy/issues/2373) on [Bevy](https://bevyengine.org)'s repo.
 
+## Not affiliated with Leetcode
+
+We are not affiliated or endorsed by Leetcode and only provide this code and tool as is to make your learning experience better and for us to learn while developing it.
+
 ### Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted
