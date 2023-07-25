@@ -1,0 +1,24 @@
+name: Release Build Confirmation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches:
+      - main
+      - develop
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release_compile:
+    name: Release Compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Run Release Compile
+        run: cargo check --all-features --release
