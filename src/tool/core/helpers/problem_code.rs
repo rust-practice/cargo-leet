@@ -3,7 +3,6 @@ use std::fmt::Display;
 use anyhow::{bail, Context};
 use log::{debug, info, warn};
 use regex::Regex;
-use strum::EnumIter;
 
 #[derive(Debug)]
 pub(crate) struct ProblemCode {
@@ -233,7 +232,7 @@ impl FunctionArgs {
 }
 
 /// Function Arg Type (FAT)
-#[cfg_attr(debug_assertions, derive(EnumIter, Eq, Hash, PartialEq))]
+#[cfg_attr(debug_assertions, derive(strum::EnumIter, Eq, Hash, PartialEq))]
 #[derive(Debug)]
 enum FunctionArgType {
     I32,
