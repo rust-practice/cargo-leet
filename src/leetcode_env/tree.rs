@@ -223,7 +223,8 @@ mod tests {
     ///   3     -     6     7
     ///  / \         / \   / \
     /// -   4       -   - 8   -
-    #[allow(unused_mut)] // It's easier to read the code if they all line up but the leaves  don't need to be mutable
+    #[allow(unused_mut)] // It's easier to read the code if they all line up but the leaves  don't need
+                         // to be mutable
     fn test_tree() -> Option<Rc<RefCell<TreeNode>>> {
         let mut node1 = Some(Rc::new(RefCell::new(TreeNode::new(1))));
         let mut node2 = Some(Rc::new(RefCell::new(TreeNode::new(2))));
