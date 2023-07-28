@@ -11,8 +11,11 @@ use log::{debug, info, LevelFilter};
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 pub enum CargoCli {
-    /// This is necessary because it a cargo subcommand so the first argument
-    /// needs to be the command name
+    // This is necessary because it a cargo subcommand so the first argument needs to be the
+    // command name
+    /// A program that given the link or slug to a leetcode problem, creates a
+    /// local file where you can develop and test your solution before post it
+    /// back to leetcode.
     Leet(Cli),
 }
 #[derive(Args, Debug)]
