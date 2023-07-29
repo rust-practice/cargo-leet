@@ -77,7 +77,7 @@ pub struct GenerateArgs {
 
 #[derive(Args, Debug)]
 pub struct InitArgs {
-    /// If set no changes are made only list of changes that would be done
+    /// Do not make any changes only show what changes would be made
     #[arg(short = 'd', long, default_value_t = false)]
     pub dry_run: bool,
 }
