@@ -11,10 +11,10 @@ use log::{debug, info, LevelFilter};
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 pub enum CargoCli {
-    // This is necessary because it a cargo subcommand so the first argument needs to be the
+    // This is necessary because it is a cargo subcommand so the first argument needs to be the
     // command name
     /// A program that given the link or slug to a leetcode problem, creates a
-    /// local file where you can develop and test your solution before post it
+    /// local file where you can develop and test your solution before posting it
     /// back to leetcode.
     Leet(Cli),
 }
@@ -78,7 +78,7 @@ pub struct GenerateArgs {
 #[derive(Args, Debug)]
 pub struct InitArgs {
     /// If set no changes are made only list of changes that would be done
-    #[arg(short = 'd', default_value_t = false)]
+    #[arg(short = 'd', long, default_value_t = false)]
     pub dry_run: bool,
 }
 
