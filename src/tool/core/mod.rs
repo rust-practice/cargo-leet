@@ -6,16 +6,27 @@ use crate::tool::cli::{self, Cli};
 use anyhow::{bail, Context};
 use std::{env, path::Path};
 
+use super::cli::InitArgs;
+
 /// Entry point used by the tool. The `main.rs` is pretty thin shim around this
 /// function.
 pub fn run(cli: &Cli) -> anyhow::Result<()> {
-    cli.update_current_working_dir()?;
-
-    working_directory_validation()?;
-
     match &cli.command {
-        cli::Commands::Generate(args) => do_generate(args),
+        cli::Commands::Generate(args) => {
+            cli.update_current_working_dir()?;
+            working_directory_validation()?;
+            do_generate(args)
+        }
+        cli::Commands::Init(args) => do_init(cli.path.as_ref(), args),
     }
+}
+
+fn do_init(path: Option<&String>, args: &InitArgs) -> Result<(), anyhow::Error> {
+    dbg!(path, args);
+    // TODO implement subcommand using a wrapper function for all side effects
+    //  the wrapper checks the args and if dry-run it prints the message it was given
+    //  if it is not a dry run it logs the message it was given and executes the closure it was passed
+    Ok(())
 }
 
 fn working_directory_validation() -> anyhow::Result<()> {

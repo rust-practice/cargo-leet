@@ -1,7 +1,9 @@
 ## cargo-leet - A leetcode local development assistant
 
  A program that given the link or slug to a leetcode problem,
- creates a local file where you can develop and test your solution before post it back to leetcode.
+ creates a local file where you can develop and test your solution before posting it back to leetcode.
+
+ NB: Because this is a cargo subcommand it expects the first argument after the executable to be the name of the subcommand. Also to run the tool requires the "tool" feature, so for example to run with "no arguments" use `cargo run --features=tool -- leet`. Some alias have been set to make doing several operations easier (See [`.cargo/config.tom`](.cargo/config.toml)).
 
  ## ScreenShots
 
@@ -83,6 +85,10 @@ at your option.
 This means you can select the license you prefer!
 This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are very good reasons to include both as noted in
 this [issue](https://github.com/bevyengine/bevy/issues/2373) on [Bevy](https://bevyengine.org)'s repo.
+
+## Not affiliated with Leetcode
+
+We are not affiliated or endorsed by Leetcode and only provide this code and tool as is to make your learning experience better and for us to learn while developing it.
 
 ### Contribution
 

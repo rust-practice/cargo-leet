@@ -726,7 +726,8 @@ impl Solution {
 
     #[test]
     fn function_arg_type_apply() {
-        // Using an array instead of rstest because we need to ensure all inputs are covered
+        // Using an array instead of rstest because we need to ensure all inputs are
+        // covered
         use FunctionArgType::*;
         let inputs = [
             (I32, "1"),

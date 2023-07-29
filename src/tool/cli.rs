@@ -11,8 +11,11 @@ use log::{debug, info, LevelFilter};
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 pub enum CargoCli {
-    /// This is necessary because it a cargo subcommand so the first argument
-    /// needs to be the command name
+    // This is necessary because it is a cargo subcommand so the first argument needs to be the
+    // command name
+    /// A program that given the link or slug to a leetcode problem, creates a
+    /// local file where you can develop and test your solution before posting it
+    /// back to leetcode.
     Leet(Cli),
 }
 #[derive(Args, Debug)]
@@ -24,7 +27,7 @@ pub struct Cli {
     /// Specify the path to the project root (If not provided uses current
     /// working directory)
     #[arg(long, short, global = true, value_name = "FOLDER")]
-    path: Option<String>,
+    pub path: Option<String>,
 
     /// Set logging level to use
     #[arg(long, short, global = true, value_enum, default_value_t = LogLevel::Warn)]
@@ -57,6 +60,10 @@ impl Cli {
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
     Generate(GenerateArgs),
+
+    /// Creates or updates a project
+    #[clap(short_flag = 'i')]
+    Init(InitArgs),
 }
 
 #[derive(Args, Debug)]
@@ -64,6 +71,17 @@ pub struct GenerateArgs {
     /// Question slug or url (If none specified then daily challenge is used)
     pub problem: Option<String>,
     /// If set the module name generated includes the number for the problem
+    #[arg(short = 'n', long = "number_in_name")]
+    pub should_include_problem_number: bool,
+}
+
+#[derive(Args, Debug)]
+pub struct InitArgs {
+    /// Do not make any changes only show what changes would be made
+    #[arg(short, long)]
+    pub dry_run: bool,
+
+    /// Make alias commands created set option to add problem numbers to filenames created (`-n` for generate)
     #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
     pub should_include_problem_number: bool,
 }
