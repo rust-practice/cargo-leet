@@ -23,6 +23,9 @@ pub fn run(cli: &Cli) -> anyhow::Result<()> {
 
 fn do_init(path: Option<&String>, args: &InitArgs) -> Result<(), anyhow::Error> {
     dbg!(path, args);
+    // TODO implement subcommand using a wrapper function for all side effects
+    //  the wrapper checks the args and if dry-run it prints the message it was given
+    //  if it is not a dry run it logs the message it was given and executes the closure it was passed
     Ok(())
 }
 
