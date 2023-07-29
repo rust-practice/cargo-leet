@@ -80,6 +80,10 @@ pub struct InitArgs {
     /// Do not make any changes only show what changes would be made
     #[arg(short, long)]
     pub dry_run: bool,
+
+    /// Make alias commands created set option to add problem numbers to filenames created (`-n` for generate)
+    #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
+    pub should_include_problem_number: bool,
 }
 
 /// Exists to provide better help messages variants copied from LevelFilter as
