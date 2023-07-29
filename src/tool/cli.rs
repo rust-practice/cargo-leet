@@ -71,14 +71,14 @@ pub struct GenerateArgs {
     /// Question slug or url (If none specified then daily challenge is used)
     pub problem: Option<String>,
     /// If set the module name generated includes the number for the problem
-    #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
+    #[arg(short = 'n', long = "number_in_name")]
     pub should_include_problem_number: bool,
 }
 
 #[derive(Args, Debug)]
 pub struct InitArgs {
     /// Do not make any changes only show what changes would be made
-    #[arg(short = 'd', long, default_value_t = false)]
+    #[arg(short, long)]
     pub dry_run: bool,
 }
 
