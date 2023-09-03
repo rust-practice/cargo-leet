@@ -1,4 +1,4 @@
-# This is unstable so to use you need to use nightly.
+# `wrap_comments` is unstable so to use you need to use nightly.
 # Uncomment the line below then run `cargo +nightly fmt`
 
 # wrap_comments = true
