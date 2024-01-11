@@ -6,10 +6,11 @@ All contributions, bug reports, bug fixes, documentation improvements, enhanceme
 
 The best place to start is to check the [issues](https://github.com/rust-practice/cargo-leet)
 for something that interests you.
+There are also other thing in [discussion](https://github.com/rust-practice/cargo-leet/discussions) feel free to pick from there as well.
 
 ## Bug Reports
 
-* Explain what is currently happening and what you expect instead.
+Please see the [issue templates](https://github.com/rust-practice/cargo-leet/issues/new/choose) that describe the types of information that we are looking for but no worries just fill it the best you can and we'll go from there.
 
 ## Working on the code
 
@@ -18,15 +19,17 @@ for something that interests you.
 In order to work on the project you will need your own fork. To do this click the "Fork" button on
 this project.
 
-Once the project is forked clone it to your local machine:
+Once the project is forked you can work on it directly in github codespaces without needing to install anything by clicking the green button near the top and switching to code spaces.
+According to [github docs](https://docs.github.com/en/codespaces/overview#billing-for-codespaces) by default you can only use it up to the free amount so you don't need to worry about charges.
+Feel free to check some [notes collected](https://c-git.github.io/github/codespaces/) on how to use codespaces with rust (You don't need trunk for this project).
+
+Alternatively you can clone it to your local machine. The following commands creates the directory cargo-leet and connects your repository to the upstream (main project) repository.
 
 ```sh
-git clone git@github.com:your-user-name/cargo-leet
+git clone https://github.com/your-user-name/cargo-leet.git
 cd cargo-leet
 git remote add upstream git@github.com:rust-practice/cargo-leet.git
 ```
-
-This creates the directory cargo-leet and connects your repository to the upstream (main project) repository.
 
 ### Creating a branch
 
@@ -65,8 +68,10 @@ cargo fmt
 
 To run the tests:
 
+Note the follow is overridden in `.cargo/config.toml` to run with all features enabled
+
 ```sh
-cargo test
+cargo t
 ```
 
 To ensure the code compiles run:
@@ -75,7 +80,7 @@ To ensure the code compiles run:
 cargo check
 ```
 
-Be sure to run all these checks before submitting your pull request.
+Please run the tests before submitting your pull request.
 
 ## Committing your code
 
@@ -99,13 +104,13 @@ git commit -am 'Some short helpful message to describe your changes'
 
 ## Push your changes
 
-Once your changes are ready and all linting/tests are passing you can push your changes to your forked repositry:
+Once your changes are ready and all linting/tests are passing you can push your changes to your forked repository:
 
 ```sh
 git push origin my-new-feature
 ```
 
-origin is the default name of your remote repositry on GitHub. You can see all of your remote repositories by running:
+origin is the default name of your remote repository on GitHub. You can see all of your remote repositories by running:
 
 ```sh
 git remote -v
@@ -138,19 +143,17 @@ This request then goes to the repository maintainers, and they will review the c
 
 ### Updating your pull request
 
-Changes to your code may be needed based on the review of your pull request. If this is the case you
-can make them in your branch, add a new commit to that branch, push it to GitHub, and the pull
-request will be automatically updated. Pushing them to GitHub again is done by:
+Changes to your code may be needed based on the review of your pull request.
+If this is the case you can make them in your branch, add a new commit to that branch, push it to GitHub, and the pull request will be automatically updated.
+Pushing them to GitHub again is done by:
 
 ```sh
 git push origin my-new-feature
 ```
 
-This will automatically update your pull request with the latest code and restart the Continuous
-Integration tests.
+This will automatically update your pull request with the latest code and restart the Continuous Integration tests.
 
-Another reason you might need to update your pull request is to solve conflicts with changes that
-have been merged into the main branch since you opened your pull request.
+Another reason you might need to update your pull request is to solve conflicts with changes that have been merged into the main branch since you opened your pull request.
 
 To do this, you need to rebase your branch:
 
@@ -160,8 +163,8 @@ git fetch upstream
 git rebase upstream/main
 ```
 
-There may be some merge conficts that need to be resolved. After the feature branch has been update
-locally, you can now update your pull request by pushing to the branch on GitHub:
+There may be some merge conflicts that need to be resolved.
+After the feature branch has been update locally, you can now update your pull request by pushing to the branch on GitHub:
 
 ```sh
 git push origin my-new-feature
@@ -197,4 +200,3 @@ The branch will still exist on GitHub, so to delete it there do:
 ```sh
 git push origin --delete my-new-feature
 ```
-
