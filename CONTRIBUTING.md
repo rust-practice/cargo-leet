@@ -70,19 +70,13 @@ cargo fmt
 
 To run the tests:
 
-Note the follow is overridden in `.cargo/config.toml` to run with all features enabled
+Note the following is overridden in `.cargo/config.toml` to run with all features enabled
 
 ```sh
 cargo t
 ```
 
-To ensure the code compiles run:
-
-```sh
-cargo check
-```
-
-Please run the tests before submitting your pull request.
+Please run these checks before submitting your pull request.
 
 ## Committing your code
 
