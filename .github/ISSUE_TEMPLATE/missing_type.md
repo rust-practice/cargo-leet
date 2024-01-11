@@ -8,9 +8,12 @@ assignees: ''
 ---
 
 **Leetcode problem**
+
 <!-- Link to example problem on leetcode where the type is being used-->
 
 **Error Message**
+
 <!-- Please provide a copy of the error received or a screenshot of the error -->
+
 ```
 ```
