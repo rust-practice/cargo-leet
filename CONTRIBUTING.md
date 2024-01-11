@@ -33,8 +33,10 @@ git remote add upstream git@github.com:rust-practice/cargo-leet.git
 
 ### Creating a branch
 
-You want your main branch to reflect only production-ready code, so create a feature branch for
-making your changes. For example:
+You want your main branch to reflect only production-ready code.
+Please base your branch on the develop branch which is the default in cargo-leet repo so create a feature branch for
+making your changes.
+For example:
 
 ```sh
 git checkout -b my-new-feature
@@ -44,12 +46,12 @@ This changes your working directory to the my-new-feature branch. Keep any chang
 specific to one bug or feature so the purpose is clear. You can have many my-new-features and switch
 in between them using the git checkout command.
 
-When creating this branch, make sure your main branch is up to date with the latest upstream
-main version. To update your local main branch, you can do:
+When creating this branch, make sure your develop branch is up to date with the latest upstream
+develop version. To update your local develop branch, you can do:
 
 ```sh
-git checkout main
-git pull upstream main --ff-only
+git checkout develop
+git pull upstream develop --ff-only
 ```
 
 ### Code linting, formatting, and tests
@@ -126,7 +128,7 @@ documentation. You should also double check your branch changes against the bran
 1. Navigating to your repository on GitHub
 1. Click on Branches
 1. Click on the Compare button for your feature branch
-1. Select the base and compare branches, if necessary. This will be main and my-new-feature, respectively.
+1. Select the base and compare branches, if necessary. This will be develop and my-new-feature, respectively.
 
 ### Make the pull request
 
@@ -153,14 +155,14 @@ git push origin my-new-feature
 
 This will automatically update your pull request with the latest code and restart the Continuous Integration tests.
 
-Another reason you might need to update your pull request is to solve conflicts with changes that have been merged into the main branch since you opened your pull request.
+Another reason you might need to update your pull request is to solve conflicts with changes that have been merged into the develop branch since you opened your pull request.
 
 To do this, you need to rebase your branch:
 
 ```sh
 git checkout my-new-feature
 git fetch upstream
-git rebase upstream/main
+git rebase upstream/develop
 ```
 
 There may be some merge conflicts that need to be resolved.
@@ -179,12 +181,12 @@ git push origin my-new-feature --force
 ## Delete your merged branch (optional)
 
 Once your feature branch is accepted into upstream, you’ll probably want to get rid of the branch.
-First, merge upstream main into your main branch so git knows it is safe to delete your branch:
+First, merge upstream develop into your develop branch so git knows it is safe to delete your branch:
 
 ```sh
 git fetch upstream
-git checkout main
-git merge upstream/main
+git checkout develop
+git merge upstream/develop
 ```
 
 Then you can do:
