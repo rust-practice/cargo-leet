@@ -1,6 +1,4 @@
-# This is unsable so to use you need to use nightly.
-# Uncomment the line below then run `rustfmt +nightly src/lib.rs`
-# This well cause rustfmt to be applied to all the files included
-# in lib.rs (the whole create except for main.rs)
+# `wrap_comments` is unstable so to use you need to use nightly.
+# Uncomment the line below then run `cargo +nightly fmt`
 
 # wrap_comments = true

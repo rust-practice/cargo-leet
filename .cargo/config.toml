@@ -2,4 +2,3 @@
 i = "install --path . --features=tool"
 g = "run --features=tool -- leet gen"
 t = "test --all-features"
-test = "test --all-features"
