@@ -15,7 +15,7 @@ creates a local file where you can develop and test your solution before post it
 
 ## Using Library Support
 
-Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary (automatically added if tool is used to generate the file).
+Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary. The use statements are automatically added if tool is used to generate the file for the problem.
 
 ```toml
 cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop" }
