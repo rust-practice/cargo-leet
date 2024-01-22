@@ -6,7 +6,7 @@ All contributions, bug reports, bug fixes, documentation improvements, enhanceme
 
 The best place to start is to check the [issues](https://github.com/rust-practice/cargo-leet)
 for something that interests you.
-There are also other thing in [discussion](https://github.com/rust-practice/cargo-leet/discussions) feel free to pick from there as well.
+There are also other options in [discussions](https://github.com/rust-practice/cargo-leet/discussions), so feel free to pick from there as well.
 
 ## Bug Reports
 
