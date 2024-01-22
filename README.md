@@ -1,24 +1,25 @@
 ## cargo-leet - A leetcode local development assistant
 
- A program that given the link or slug to a leetcode problem,
- creates a local file where you can develop and test your solution before post it back to leetcode.
+A program that given the link or slug to a leetcode problem,
+creates a local file where you can develop and test your solution before post it back to leetcode.
 
- ## ScreenShots
+## ScreenShots
 
- ### `cargo leet`
- ![ScreenShot](assets/help_scr_shot_top.png)
+### `cargo leet`
 
- ### `cargo leet generate --help`
- ![ScreenShot](assets/help_scr_shot_generate.png)
+![ScreenShot](assets/help_scr_shot_top.png)
 
- ## Using Library Support
+### `cargo leet generate --help`
 
- Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary (automatically added if tool is used to generate the file).
+![ScreenShot](assets/help_scr_shot_generate.png)
 
- ```toml
- cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop" }
- ```
+## Using Library Support
 
+Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary. The use statements are automatically added if tool is used to generate the file for the problem.
+
+```toml
+cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop" }
+```
 
 ## Tool Installation
 
@@ -63,8 +64,6 @@ or using alias from `.cargo/config.toml`
 ```sh
 cargo g
 ```
-
-
 
 ## Tool Uninstallation
 
