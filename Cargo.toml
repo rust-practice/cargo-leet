@@ -2,7 +2,7 @@
 name = "cargo-leet"
 description = "Utility program to help with working on leetcode locally"
 repository = "https://github.com/rust-practice/cargo-leet"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Members of Rust Practice Discord Server"]
 readme = "README.md"
 license = "MIT OR Apache-2.0"
