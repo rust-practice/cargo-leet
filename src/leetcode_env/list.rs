@@ -2,9 +2,12 @@
 
 use std::fmt::{Debug, Formatter};
 
+/// Definition for singly-linked list.
 #[derive(PartialEq, Eq)]
 pub struct ListNode {
+    /// The value stored at this node
     pub val: i32,
+    /// Links to the next node if it exists
     pub next: Option<Box<ListNode>>,
 }
 
@@ -24,6 +27,7 @@ impl Debug for ListNode {
 
 impl ListNode {
     #[inline]
+    /// Creates a new unlinked [ListNode] with the value passed
     pub fn new(val: i32) -> Self {
         ListNode { next: None, val }
     }
@@ -56,18 +60,6 @@ impl From<Option<Box<ListNode>>> for ListHead {
 
 impl From<Vec<i32>> for ListHead {
     fn from(values: Vec<i32>) -> Self {
-        // Reverse version before looking at
-        // https://github.com/zwhitchcox/leetcode/blob/master/src/0002_add_two_numbers.rs
-        // to see how it could be done going forward instead of backward
-        //
-        // let mut last: Option<Box<ListNode>> = None;
-        // for &n in values.iter().rev() {
-        //     let mut temp = ListNode::new(n);
-        //     temp.next = last;
-        //     last = Some(Box::new(temp));
-        // }
-        // ListHead::new(last)
-
         let mut result = Self { head: None };
         let mut curr = &mut result.head;
         for &num in &values {
@@ -88,5 +80,47 @@ impl From<&ListHead> for Vec<i32> {
             curr = &node.next;
         }
         result
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn from_vec_to_linked_list() {
+        // Arrange
+        let start_vec = vec![1, 2, 3, 4, 5];
+        let expected = create_linked_list(1..=5);
+
+        // Act
+        let list_head: ListHead = start_vec.into();
+        let actual: Option<Box<ListNode>> = list_head.into();
+
+        // Assert
+        assert_eq!(actual, expected);
+    }
+
+    fn create_linked_list<I: DoubleEndedIterator<Item = i32>>(values: I) -> Option<Box<ListNode>> {
+        let mut expected = None;
+        for i in values.rev() {
+            let mut new_node = Some(Box::new(ListNode::new(i)));
+            new_node.as_mut().unwrap().next = expected;
+            expected = new_node;
+        }
+        expected
+    }
+
+    #[test]
+    fn from_linked_list_to_vec() {
+        // Arrange
+        let start: ListHead = create_linked_list(1..=5).into();
+        let expected = vec![1, 2, 3, 4, 5];
+
+        // Act
+        let actual: Vec<i32> = (&start).into();
+
+        // Assert
+        assert_eq!(actual, expected);
     }
 }
