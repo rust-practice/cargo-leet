@@ -232,8 +232,7 @@ impl FunctionArgs {
 }
 
 /// Function Arg Type (FAT)
-#[cfg_attr(debug_assertions, derive(strum::EnumIter))]
-#[derive(Debug, Eq, Hash, PartialEq)]
+#[derive(Debug, Eq, Hash, PartialEq, strum::EnumIter)]
 enum FunctionArgType {
     I32,
     I64,
