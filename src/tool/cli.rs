@@ -11,10 +11,11 @@ use log::{debug, info, LevelFilter};
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 pub enum CargoCli {
-    /// This is necessary because it a cargo subcommand so the first argument
+    /// This is necessary because it's a cargo subcommand so the first argument
     /// needs to be the command name
     Leet(Cli),
 }
+
 #[derive(Args, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
