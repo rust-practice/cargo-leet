@@ -32,12 +32,12 @@ leet_env = []
 # Items used when running as a binary
 tool = [
   "anyhow",
+  "clap",
   "convert_case",
   "env_logger",
   "log",
   "regex",
   "serde_flat_path",
-  "clap",
   "serde",
   "ureq",
 ]
