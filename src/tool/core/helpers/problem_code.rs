@@ -234,6 +234,8 @@ impl FunctionArgs {
 /// Function Arg Type (FAT)
 #[derive(Debug, Eq, Hash, PartialEq, strum::EnumIter)]
 enum FunctionArgType {
+    // Search Key: SK_ADD_TYPE
+    // Add type name to enum
     I32,
     I64,
     F64,
@@ -257,6 +259,8 @@ impl FunctionArgType {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
         use FunctionArgType as FAT;
         let result = match self {
+            // Search Key: SK_ADD_TYPE
+            // Add how string of type should be modified for code saved for user
             FAT::String_ | FAT::Bool => Ok(line.to_string()),
             FAT::I32 => match line.parse::<i32>() {
                 Ok(_) => Ok(line.to_string()),
@@ -336,6 +340,8 @@ impl Display for FunctionArgType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         use FunctionArgType as FAT;
         let s = match self {
+            // Search Key: SK_ADD_TYPE
+            // Add string that corresponds to each variant
             FAT::I32 => "i32",
             FAT::I64 => "i64",
             FAT::F64 => "f64",
@@ -639,6 +645,8 @@ impl Solution {
     }
 
     fn create_code_stub_all_arg_types_non_design() -> &'static str {
+        // Search Key: SK_ADD_TYPE
+        // Add a unique argument to the function to test retrieval of the unique argument name (should match the lookup area)
         "
 impl Solution {
     pub fn func_name(
@@ -665,6 +673,8 @@ impl Solution {
 
     fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
         match fat {
+            // Search Key: SK_ADD_TYPE
+            // Add the unique string value as an id (needs to match area where it is set)
             FunctionArgType::I32 => "L2AC6p",
             FunctionArgType::I64 => "q7kv5k",
             FunctionArgType::F64 => "pP7GhC",
@@ -742,6 +752,8 @@ impl Solution {
         // covered
         use FunctionArgType as FAT;
         let inputs = [
+            // Search Key: SK_ADD_TYPE
+            // Create a pair for the new type with a sample input from leetcode
             (FAT::I32, "1"),
             (FAT::I64, "2"),
             (FAT::F64, "2.00000"),
@@ -785,6 +797,8 @@ impl Solution {
 
         for (fat, input) in inputs {
             let expected = match fat {
+                // Search Key: SK_ADD_TYPE
+                // Add the expected output of the input set
                 FAT::I32 => "1",
                 FAT::I64 => "2",
                 FAT::F64 => "2.00000",
