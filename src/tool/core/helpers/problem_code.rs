@@ -75,14 +75,7 @@ impl ProblemCode {
         })
         .context("Failed to parse function arguments")?;
 
-        let return_type: Option<FunctionArgType> = match caps.get(3) {
-            Some(s) => Some(
-                s.as_str()
-                    .try_into()
-                    .context("Failed to convert return type")?,
-            ),
-            None => None,
-        };
+        let return_type: Option<FunctionArgType> = caps.get(3).map(|s| s.as_str().into());
 
         Ok(FunctionInfo {
             name,
@@ -210,12 +203,7 @@ impl FunctionArgs {
         let mut args: Vec<FunctionArg> = vec![];
         for cap in caps {
             let identifier = cap.get(1).expect("Required to match").as_str().to_string();
-            let arg_type = cap
-                .get(2)
-                .expect("Required to match")
-                .as_str()
-                .try_into()
-                .context("Failed to get argument type")?;
+            let arg_type = cap.get(2).expect("Required to match").as_str().into();
 
             args.push(FunctionArg {
                 identifier,
@@ -363,12 +351,10 @@ impl Display for FunctionArgType {
     }
 }
 
-impl TryFrom<&str> for FunctionArgType {
-    type Error = anyhow::Error;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
+impl From<&str> for FunctionArgType {
+    fn from(value: &str) -> Self {
         use FunctionArgType as FAT;
-        Ok(match value.trim() {
+        match value.trim() {
             "i32" => FAT::I32,
             "i64" => FAT::I64,
             "f64" => FAT::F64,
@@ -389,7 +375,7 @@ impl TryFrom<&str> for FunctionArgType {
                     raw: trimmed_value.to_string(),
                 }
             }
-        })
+        }
     }
 }
 
