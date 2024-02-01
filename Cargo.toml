@@ -1,24 +1,24 @@
 [package]
 name = "cargo-leet"
-description = "Utility program to help with working on leetcode locally"
-repository = "https://github.com/rust-practice/cargo-leet"
 version = "0.2.0"
 authors = ["Members of Rust Practice Discord Server"]
-readme = "README.md"
-license = "MIT OR Apache-2.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/rust-practice/cargo-leet"
+description = "Utility program to help with working on leetcode locally"
 
 [dependencies]
 anyhow = { version = "1.0.71", optional = true }
+clap = { version = "4.3.3", features = ["derive", "cargo"], optional = true }
 convert_case = { version = "0.6", optional = true }
 env_logger = { version = "0.11", optional = true }
 log = { version = "0.4.18", optional = true }
 regex = { version = "1.8.4", optional = true }
-serde_flat_path = { version = "0.1.2", optional = true }
-clap = { version = "4.3.3", features = ["derive", "cargo"], optional = true }
 serde = { version = "1.0.164", features = ["derive"], optional = true }
-ureq = { version = "2.6", features = ["json"], optional = true }
+serde_flat_path = { version = "0.1.2", optional = true }
 strum = { version = "0.26", features = ["derive"] }
+ureq = { version = "2.6", features = ["json"], optional = true }
 
 [[bin]]
 name = "cargo-leet"
@@ -31,13 +31,13 @@ default = ["leet_env"]
 leet_env = []
 # Items used when running as a binary
 tool = [
-    "anyhow",
-    "convert_case",
-    "env_logger",
-    "log",
-    "regex",
-    "serde_flat_path",
-    "clap",
-    "serde",
-    "ureq",
+  "anyhow",
+  "convert_case",
+  "env_logger",
+  "log",
+  "regex",
+  "serde_flat_path",
+  "clap",
+  "serde",
+  "ureq",
 ]
