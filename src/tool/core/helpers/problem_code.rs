@@ -3,6 +3,7 @@ use std::fmt::Display;
 use anyhow::{bail, Context};
 use log::{debug, info, warn};
 use regex::Regex;
+use strum::IntoEnumIterator as _;
 
 #[derive(Debug)]
 pub(crate) struct ProblemCode {
@@ -322,6 +323,14 @@ impl FunctionArgType {
     fn is_list(&self) -> bool {
         matches!(self, FunctionArgType::List)
     }
+
+    /// Returns `true` if the function arg type is [`Other`].
+    ///
+    /// [`Other`]: FunctionArgType::Other
+    #[must_use]
+    fn is_other(&self) -> bool {
+        matches!(self, Self::Other { .. })
+    }
 }
 
 impl Display for FunctionArgType {
@@ -353,28 +362,18 @@ impl Display for FunctionArgType {
 
 impl From<&str> for FunctionArgType {
     fn from(value: &str) -> Self {
-        use FunctionArgType as FAT;
-        match value.trim() {
-            "i32" => FAT::I32,
-            "i64" => FAT::I64,
-            "f64" => FAT::F64,
-            "bool" => FAT::Bool,
-            "String" => FAT::String_,
-            "Vec<i32>" => FAT::VecI32,
-            "Vec<f64>" => FAT::VecF64,
-            "Vec<bool>" => FAT::VecBool,
-            "Vec<String>" => FAT::VecString,
-            "Vec<Vec<i32>>" => FAT::VecVecI32,
-            "Vec<Vec<String>>" => FAT::VecVecString,
-            "Vec<Vec<char>>" => FAT::VecVecChar,
-            "Option<Box<ListNode>>" => FAT::List,
-            "Option<Rc<RefCell<TreeNode>>>" => FAT::Tree,
-            trimmed_value => {
-                warn!("Unknown type {trimmed_value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new?&labels=bug&template=missing_type.md");
-                FAT::Other {
-                    raw: trimmed_value.to_string(),
-                }
+        let value = value.trim();
+        // Loop over all variants and see if one matches
+        // This is a more expensive implementation than the previous one which matched
+        // against &str but this way is less likely to lead to bugs and is easier to maintain
+        for fat in FunctionArgType::iter() {
+            if !fat.is_other() && fat.to_string() == value {
+                return fat;
             }
+        }
+        warn!("Unknown type {value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new?&labels=bug&template=missing_type.md");
+        FunctionArgType::Other {
+            raw: value.to_string(),
         }
     }
 }
