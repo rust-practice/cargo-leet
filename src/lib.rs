@@ -13,7 +13,7 @@
 //! The **cargo-leet** subcommand is a command line tool developed with clap and
 //! the associated help is probably the best way to get an idea of how to use
 //! the tool. Screenshots of the help can be found in the
-//! [readme](https://github.com/rust-practice/cargo-leet#screenshots) on github.
+//! [readme](https://github.com/rust-practice/cargo-leet#screenshots) on GitHub.
 //! For the sake of maintainability features added will be documented there
 //! instead of always needing to update multiple places.
 //!
@@ -45,14 +45,15 @@
 //! - `tool`: Enables the code and dependencies used to create the tool.
 
 #[cfg(feature = "leet_env")]
-mod leetcode_env;
-#[cfg(feature = "leet_env")]
 pub use leetcode_env::{
     list::{ListHead, ListNode},
     tree::{TreeNode, TreeRoot},
 };
 
 #[cfg(feature = "tool")]
-mod tool;
-#[cfg(feature = "tool")]
 pub use crate::tool::{cli::CargoCli, core::run, log::init_logging};
+
+#[cfg(feature = "leet_env")]
+mod leetcode_env;
+#[cfg(feature = "tool")]
+mod tool;
