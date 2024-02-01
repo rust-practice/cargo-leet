@@ -256,35 +256,41 @@ impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
-        use FunctionArgType::*;
+        use FunctionArgType as FAT;
         let result = match self {
-            String_ | Bool => Ok(line.to_string()),
-            I32 => match line.parse::<i32>() {
+            FAT::String_ | FAT::Bool => Ok(line.to_string()),
+            FAT::I32 => match line.parse::<i32>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
                     "In testing the test input {line:?} the parsing to i32 failed with error: {e}"
                 )),
             },
-            I64 => match line.parse::<i64>() {
+            FAT::I64 => match line.parse::<i64>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
                     "In testing the test input {line:?} the parsing to i64 failed with error: {e}"
                 )),
             },
-            F64 => match line.parse::<f64>() {
+            FAT::F64 => match line.parse::<f64>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-            VecI32 | VecBool | VecF64 | VecVecI32 | VecString | VecVecString | VecVecChar => {
+            FAT::VecI32
+            | FAT::VecBool
+            | FAT::VecF64
+            | FAT::VecVecI32
+            | FAT::VecString
+            | FAT::VecVecString
+            | FAT::VecVecChar => {
                 match Self::does_pass_basic_vec_tests(line) {
                     Ok(_) => {
                         let mut result = line.to_string();
-                        if [VecString, VecVecString].contains(self) {
+                        if [FAT::VecString, FAT::VecVecString].contains(self) {
                             result = result.replace("\",", "\".into(),"); // Replace ones before end
                             result = result.replace("\"]", "\".into()]"); // Replace end
-                        } else if self == &VecVecChar {
+                        } else if self == &FAT::VecVecChar {
                             result = result.replace('"', "'");
                         }
                         Ok(result.replace('[', "vec!["))
@@ -292,15 +298,15 @@ impl FunctionArgType {
                     Err(e) => Err(e.to_string()),
                 }
             }
-            List => match Self::does_pass_basic_vec_tests(line) {
+            FAT::List => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(format!("ListHead::from(vec!{line}).into()")),
                 Err(e) => Err(e.to_string()),
             },
-            Tree => match Self::does_pass_basic_vec_tests(line) {
+            FAT::Tree => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(format!("TreeRoot::from(\"{line}\").into()")),
                 Err(e) => Err(e.to_string()),
             },
-            Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
+            FAT::Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
         };
         match result {
             Ok(result) => Ok(result),
@@ -329,23 +335,23 @@ impl FunctionArgType {
 
 impl Display for FunctionArgType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        use FunctionArgType::*;
+        use FunctionArgType as FAT;
         let s = match self {
-            I32 => "i32",
-            I64 => "i64",
-            F64 => "f64",
-            Bool => "bool",
-            String_ => "String",
-            VecI32 => "Vec<i32>",
-            VecF64 => "Vec<f64>",
-            VecBool => "Vec<bool>",
-            VecString => "Vec<String>",
-            VecVecI32 => "Vec<Vec<i32>>",
-            VecVecString => "Vec<Vec<String>>",
-            VecVecChar => "Vec<Vec<char>>",
-            List => "Option<Box<ListNode>>",
-            Tree => "Option<Rc<RefCell<TreeNode>>>",
-            Other { raw } => raw,
+            FAT::I32 => "i32",
+            FAT::I64 => "i64",
+            FAT::F64 => "f64",
+            FAT::Bool => "bool",
+            FAT::String_ => "String",
+            FAT::VecI32 => "Vec<i32>",
+            FAT::VecF64 => "Vec<f64>",
+            FAT::VecBool => "Vec<bool>",
+            FAT::VecString => "Vec<String>",
+            FAT::VecVecI32 => "Vec<Vec<i32>>",
+            FAT::VecVecString => "Vec<Vec<String>>",
+            FAT::VecVecChar => "Vec<Vec<char>>",
+            FAT::List => "Option<Box<ListNode>>",
+            FAT::Tree => "Option<Rc<RefCell<TreeNode>>>",
+            FAT::Other { raw } => raw,
         };
 
         write!(f, "{s}")
@@ -356,25 +362,25 @@ impl TryFrom<&str> for FunctionArgType {
     type Error = anyhow::Error;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        use FunctionArgType::*;
+        use FunctionArgType as FAT;
         Ok(match value.trim() {
-            "i32" => I32,
-            "i64" => I64,
-            "f64" => F64,
-            "bool" => Bool,
-            "String" => String_,
-            "Vec<i32>" => VecI32,
-            "Vec<f64>" => VecF64,
-            "Vec<bool>" => VecBool,
-            "Vec<String>" => VecString,
-            "Vec<Vec<i32>>" => VecVecI32,
-            "Vec<Vec<String>>" => VecVecString,
-            "Vec<Vec<char>>" => VecVecChar,
-            "Option<Box<ListNode>>" => List,
-            "Option<Rc<RefCell<TreeNode>>>" => Tree,
+            "i32" => FAT::I32,
+            "i64" => FAT::I64,
+            "f64" => FAT::F64,
+            "bool" => FAT::Bool,
+            "String" => FAT::String_,
+            "Vec<i32>" => FAT::VecI32,
+            "Vec<f64>" => FAT::VecF64,
+            "Vec<bool>" => FAT::VecBool,
+            "Vec<String>" => FAT::VecString,
+            "Vec<Vec<i32>>" => FAT::VecVecI32,
+            "Vec<Vec<String>>" => FAT::VecVecString,
+            "Vec<Vec<char>>" => FAT::VecVecChar,
+            "Option<Box<ListNode>>" => FAT::List,
+            "Option<Rc<RefCell<TreeNode>>>" => FAT::Tree,
             trimmed_value => {
                 warn!("Unknown type {trimmed_value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new?&labels=bug&template=missing_type.md");
-                Other {
+                FAT::Other {
                     raw: trimmed_value.to_string(),
                 }
             }
@@ -735,29 +741,29 @@ impl Solution {
     fn function_arg_type_apply() {
         // Using an array instead of rstest because we need to ensure all inputs are
         // covered
-        use FunctionArgType::*;
+        use FunctionArgType as FAT;
         let inputs = [
-            (I32, "1"),
-            (I64, "2"),
-            (F64, "2.00000"),
-            (Bool, "true"),
-            (String_, "\"leetcode\""),
-            (VecI32, "[1,2,3,4]"),
-            (VecF64, "[6.00000,0.50000,-1.00000,1.00000,-1.00000]"),
-            (VecBool, "[true,false,false,false,false]"),
-            (VecString, "[\"@..aA\",\"..B#.\",\"....b\"]"),
-            (VecVecI32, "[[2,2,3],[7]]"),
+            (FAT::I32, "1"),
+            (FAT::I64, "2"),
+            (FAT::F64, "2.00000"),
+            (FAT::Bool, "true"),
+            (FAT::String_, "\"leetcode\""),
+            (FAT::VecI32, "[1,2,3,4]"),
+            (FAT::VecF64, "[6.00000,0.50000,-1.00000,1.00000,-1.00000]"),
+            (FAT::VecBool, "[true,false,false,false,false]"),
+            (FAT::VecString, "[\"@..aA\",\"..B#.\",\"....b\"]"),
+            (FAT::VecVecI32, "[[2,2,3],[7]]"),
             (
-                VecVecString,
+                FAT::VecVecString,
                 "[[\"java\"],[\"nodejs\"],[\"nodejs\",\"reactjs\"]]",
             ),
             (
-                VecVecChar,
+                FAT::VecVecChar,
                 "[[\"X\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"]]",
             ),
-            (List, "[1,2,4]"),
-            (Tree, "[1,null,2,3]"),
-            (Other { raw: "".into() }, "1"),
+            (FAT::List, "[1,2,4]"),
+            (FAT::Tree, "[1,null,2,3]"),
+            (FAT::Other { raw: "".into() }, "1"),
         ];
 
         // Create hashset and fill with the possible argument types
@@ -780,23 +786,23 @@ impl Solution {
 
         for (fat, input) in inputs {
             let expected = match fat {
-                I32 => "1",
-                I64 => "2",
-                F64 => "2.00000",
-                Bool => "true",
-                String_ => "\"leetcode\"",
-                VecI32 => "vec![1,2,3,4]",
-                VecF64 => "vec![6.00000,0.50000,-1.00000,1.00000,-1.00000]",
-                VecBool => "vec![true,false,false,false,false]",
-                VecString => "vec![\"@..aA\".into(),\"..B#.\".into(),\"....b\".into()]",
-                VecVecI32 => "vec![vec![2,2,3],vec![7]]",
-                VecVecString => {
+                FAT::I32 => "1",
+                FAT::I64 => "2",
+                FAT::F64 => "2.00000",
+                FAT::Bool => "true",
+                FAT::String_ => "\"leetcode\"",
+                FAT::VecI32 => "vec![1,2,3,4]",
+                FAT::VecF64 => "vec![6.00000,0.50000,-1.00000,1.00000,-1.00000]",
+                FAT::VecBool => "vec![true,false,false,false,false]",
+                FAT::VecString => "vec![\"@..aA\".into(),\"..B#.\".into(),\"....b\".into()]",
+                FAT::VecVecI32 => "vec![vec![2,2,3],vec![7]]",
+                FAT::VecVecString => {
                     "vec![vec![\"java\".into()],vec![\"nodejs\".into()],vec![\"nodejs\".into(),\"reactjs\".into()]]"
                 }
-                VecVecChar=>{"vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]"}
-                List => "ListHead::from(vec![1,2,4]).into()",
-                Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
-                Other { raw: _ } => "todo!(\"1\")",
+                FAT::VecVecChar=>{"vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]"}
+                FAT::List => "ListHead::from(vec![1,2,4]).into()",
+                FAT::Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
+                FAT::Other { raw: _ } => "todo!(\"1\")",
             };
             let actual = fat.apply(input).expect("Should be valid input");
             assert_eq!(actual, expected);
