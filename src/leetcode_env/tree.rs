@@ -21,10 +21,8 @@ pub struct TreeNode {
 
 impl TreeNode {
     #[inline]
-    /// Creates a new [TreeNode] with no children and the value passed
-    pub fn new(val: i32) -> Self {
-        TreeNode {
     #[must_use]
+    pub const fn new(val: i32) -> Self {
         Self {
             val,
             left: None,
