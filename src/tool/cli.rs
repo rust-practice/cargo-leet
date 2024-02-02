@@ -51,7 +51,7 @@ impl Cli {
                 env::current_dir()?.display()
             );
         } else {
-            debug!("No user supplied path found. No change")
+            debug!("No user supplied path found. No change");
         }
         Ok(())
     }
@@ -107,6 +107,6 @@ mod tests {
         // Source: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html#testing
         // My understanding it reports most development errors without additional effort
         use clap::CommandFactory;
-        CargoCli::command().debug_assert()
+        CargoCli::command().debug_assert();
     }
 }

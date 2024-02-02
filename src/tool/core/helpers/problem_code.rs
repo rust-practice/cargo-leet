@@ -205,7 +205,7 @@ impl FunctionArgs {
             args.push(FunctionArg {
                 identifier,
                 arg_type,
-            })
+            });
         }
 
         Ok(Self { raw_str, args })
