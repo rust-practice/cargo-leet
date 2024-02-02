@@ -246,6 +246,7 @@ enum FunctionArgType {
     VecString,
     VecVecI32,
     VecVecString,
+    VecVecChar,
     List,
     Tree,
     Other { raw: String },
@@ -276,13 +277,15 @@ impl FunctionArgType {
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-            VecI32 | VecBool | VecF64 | VecVecI32 | VecString | VecVecString => {
+            VecI32 | VecBool | VecF64 | VecVecI32 | VecString | VecVecString | VecVecChar => {
                 match Self::does_pass_basic_vec_tests(line) {
                     Ok(_) => {
                         let mut result = line.to_string();
                         if [VecString, VecVecString].contains(self) {
                             result = result.replace("\",", "\".into(),"); // Replace ones before end
                             result = result.replace("\"]", "\".into()]"); // Replace end
+                        } else if self == &VecVecChar {
+                            result = result.replace('"', "'");
                         }
                         Ok(result.replace('[', "vec!["))
                     }
@@ -339,6 +342,7 @@ impl Display for FunctionArgType {
             VecString => "Vec<String>",
             VecVecI32 => "Vec<Vec<i32>>",
             VecVecString => "Vec<Vec<String>>",
+            VecVecChar => "Vec<Vec<char>>",
             List => "Option<Box<ListNode>>",
             Tree => "Option<Rc<RefCell<TreeNode>>>",
             Other { raw } => raw,
@@ -365,6 +369,7 @@ impl TryFrom<&str> for FunctionArgType {
             "Vec<String>" => VecString,
             "Vec<Vec<i32>>" => VecVecI32,
             "Vec<Vec<String>>" => VecVecString,
+            "Vec<Vec<char>>" => VecVecChar,
             "Option<Box<ListNode>>" => List,
             "Option<Rc<RefCell<TreeNode>>>" => Tree,
             trimmed_value => {
@@ -643,6 +648,7 @@ impl Solution {
         NkCeR6: Vec<String>,
         bBtcWe: Vec<Vec<i32>>,
         ndi4ny: Vec<Vec<String>>,
+        ndi9ny: Vec<Vec<char>>,
         bJy3HH: Option<Box<ListNode>>,
         ndQLTu: Option<Rc<RefCell<TreeNode>>>,
         PRnJhw: UnknownType,
@@ -665,6 +671,7 @@ impl Solution {
             FunctionArgType::VecString => "NkCeR6",
             FunctionArgType::VecVecI32 => "bBtcWe",
             FunctionArgType::VecVecString => "ndi4ny",
+            FunctionArgType::VecVecChar => "ndi9ny",
             FunctionArgType::List => "bJy3HH",
             FunctionArgType::Tree => "ndQLTu",
             FunctionArgType::Other { .. } => "PRnJhw",
@@ -744,6 +751,10 @@ impl Solution {
                 VecVecString,
                 "[[\"java\"],[\"nodejs\"],[\"nodejs\",\"reactjs\"]]",
             ),
+            (
+                VecVecChar,
+                "[[\"X\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"]]",
+            ),
             (List, "[1,2,4]"),
             (Tree, "[1,null,2,3]"),
             (Other { raw: "".into() }, "1"),
@@ -782,6 +793,7 @@ impl Solution {
                 VecVecString => {
                     "vec![vec![\"java\".into()],vec![\"nodejs\".into()],vec![\"nodejs\".into(),\"reactjs\".into()]]"
                 }
+                VecVecChar=>{"vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]"}
                 List => "ListHead::from(vec![1,2,4]).into()",
                 Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
                 Other { raw: _ } => "todo!(\"1\")",
