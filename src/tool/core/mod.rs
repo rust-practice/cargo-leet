@@ -8,6 +8,11 @@ use std::{env, path::Path};
 
 /// Entry point used by the tool. The `main.rs` is pretty thin shim around this
 /// function.
+///
+/// # Errors
+/// - Current directory does not exist.
+/// - There are insufficient permissions to access the current directory.
+/// - Returns an Err if the operation fails.
 pub fn run(cli: &Cli) -> anyhow::Result<()> {
     cli.update_current_working_dir()?;
 

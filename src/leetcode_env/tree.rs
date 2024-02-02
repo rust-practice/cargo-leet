@@ -20,6 +20,7 @@ pub struct TreeNode {
 }
 
 impl TreeNode {
+    /// Creates a new [`TreeNode`] with no children and the value passed
     #[inline]
     #[must_use]
     pub const fn new(val: i32) -> Self {
