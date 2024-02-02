@@ -10,7 +10,7 @@ use log::{debug, info, LevelFilter};
 ///
 /// cargo-leet is not meant to be used directly, please use `cargo leet` instead
 /// without the ` `
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
 pub enum CargoCli {
