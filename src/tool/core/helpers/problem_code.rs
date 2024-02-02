@@ -132,7 +132,7 @@ impl FunctionInfo {
         } else {
             "assert_eq!(actual, expected);"
         }
-        .to_string()
+            .to_string()
     }
 
     pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
@@ -788,7 +788,7 @@ impl Solution {
                 FAT::VecVecString => {
                     "vec![vec![\"java\".into()],vec![\"nodejs\".into()],vec![\"nodejs\".into(),\"reactjs\".into()]]"
                 }
-                FAT::VecVecChar=>{"vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]"}
+                FAT::VecVecChar => { "vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]" }
                 FAT::List => "ListHead::from(vec![1,2,4]).into()",
                 FAT::Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
                 FAT::Other { raw: _ } => "todo!(\"1\")",
