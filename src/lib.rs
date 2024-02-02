@@ -15,8 +15,8 @@
 //!
 //! The **cargo-leet** subcommand is a command line tool developed with clap and
 //! the associated help is probably the best way to get an idea of how to use
-//! the tool. Screenshots of the help can be found in the
-//! [readme](https://github.com/rust-practice/cargo-leet#screenshots) on GitHub.
+//! the tool. Help messages can be found in the
+//! [readme](https://github.com/rust-practice/cargo-leet#Help#Messages) on GitHub.
 //! For the sake of maintainability features added will be documented there
 //! instead of always needing to update multiple places.
 //!
@@ -29,11 +29,12 @@
 //! cases from the text provided by leetcode.
 //!
 //! ## Feature flags
-//!
 //! **cargo-leet** uses feature flags to control which code gets compiled based
 //! on how the crate is being used. This is especially important for the code
-//! imported in the solution repository as this repo may be using a much older
-//! version of the rust toolchain due to the fact that leetcode uses a much
+//! imported in the solution repository as this repo may be using an older
+//! version of the rust toolchain (as of 2024-02-02 the version leetcode uses
+//! is 1.74.1 found in their [Help Center](https://support.leetcode.com/hc/en-us/articles/360011833974-What-are-the-environments-for-the-programming-languages)
+//! ) due to the fact that leetcode uses a much
 //! older version on their servers and some users may want to use the same
 //! version to ensure their code will always work upon upload.
 //! However, because the toolchain used by leetcode cannot compile many of the
