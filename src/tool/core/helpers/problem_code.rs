@@ -331,25 +331,24 @@ impl FunctionArgType {
     }
 
     fn as_str(&self) -> &str {
-        use FunctionArgType as FAT;
         match self {
             // Search Key: SK_ADD_TYPE
             // Add string that corresponds to each variant
-            FAT::I32 => "i32",
-            FAT::I64 => "i64",
-            FAT::F64 => "f64",
-            FAT::Bool => "bool",
-            FAT::String_ => "String",
-            FAT::VecI32 => "Vec<i32>",
-            FAT::VecF64 => "Vec<f64>",
-            FAT::VecBool => "Vec<bool>",
-            FAT::VecString => "Vec<String>",
-            FAT::VecVecI32 => "Vec<Vec<i32>>",
-            FAT::VecVecString => "Vec<Vec<String>>",
-            FAT::VecVecChar => "Vec<Vec<char>>",
-            FAT::List => "Option<Box<ListNode>>",
-            FAT::Tree => "Option<Rc<RefCell<TreeNode>>>",
-            FAT::Other { raw } => raw,
+            Self::I32 => "i32",
+            Self::I64 => "i64",
+            Self::F64 => "f64",
+            Self::Bool => "bool",
+            Self::String_ => "String",
+            Self::VecI32 => "Vec<i32>",
+            Self::VecF64 => "Vec<f64>",
+            Self::VecBool => "Vec<bool>",
+            Self::VecString => "Vec<String>",
+            Self::VecVecI32 => "Vec<Vec<i32>>",
+            Self::VecVecString => "Vec<Vec<String>>",
+            Self::VecVecChar => "Vec<Vec<char>>",
+            Self::List => "Option<Box<ListNode>>",
+            Self::Tree => "Option<Rc<RefCell<TreeNode>>>",
+            Self::Other { raw } => raw,
         }
     }
 }
@@ -358,13 +357,13 @@ impl From<&str> for FunctionArgType {
     fn from(value: &str) -> Self {
         let value = value.trim();
         // Loop over all variants and see if one matches
-        for fat in FunctionArgType::iter() {
+        for fat in Self::iter() {
             if !fat.is_other() && fat.as_str() == value {
                 return fat;
             }
         }
         warn!("Unknown type {value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new?&labels=bug&template=missing_type.md");
-        FunctionArgType::Other {
+        Self::Other {
             raw: value.to_string(),
         }
     }

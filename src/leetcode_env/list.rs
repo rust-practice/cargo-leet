@@ -30,6 +30,7 @@ impl ListNode {
     /// Creates a new unlinked [ListNode] with the value passed
     pub fn new(val: i32) -> Self {
         ListNode { next: None, val }
+        Self { next: None, val }
     }
 }
 
