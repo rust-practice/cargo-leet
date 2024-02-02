@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use anyhow::{bail, Context};
 use log::{debug, info, warn};
 use regex::Regex;
@@ -115,7 +113,7 @@ impl FunctionInfo {
         result.push_str(&self.fn_args.raw_str.replace(',', ", #[case] "));
 
         if let Some(return_type) = self.return_type.as_ref() {
-            result.push_str(&format!(", #[case] expected: {return_type}"))
+            result.push_str(&format!(", #[case] expected: {}", return_type.as_str()))
         }
         result
     }
@@ -331,12 +329,10 @@ impl FunctionArgType {
     fn is_other(&self) -> bool {
         matches!(self, Self::Other { .. })
     }
-}
 
-impl Display for FunctionArgType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn as_str(&self) -> &str {
         use FunctionArgType as FAT;
-        let s = match self {
+        match self {
             // Search Key: SK_ADD_TYPE
             // Add string that corresponds to each variant
             FAT::I32 => "i32",
@@ -354,9 +350,7 @@ impl Display for FunctionArgType {
             FAT::List => "Option<Box<ListNode>>",
             FAT::Tree => "Option<Rc<RefCell<TreeNode>>>",
             FAT::Other { raw } => raw,
-        };
-
-        write!(f, "{s}")
+        }
     }
 }
 
@@ -364,10 +358,8 @@ impl From<&str> for FunctionArgType {
     fn from(value: &str) -> Self {
         let value = value.trim();
         // Loop over all variants and see if one matches
-        // This is a more expensive implementation than the previous one which matched
-        // against &str but this way is less likely to lead to bugs and is easier to maintain
         for fat in FunctionArgType::iter() {
-            if !fat.is_other() && fat.to_string() == value {
+            if !fat.is_other() && fat.as_str() == value {
                 return fat;
             }
         }
@@ -715,14 +707,14 @@ impl Solution {
         assert!(fn_info.return_type.is_none());
         for arg in fn_info.fn_args.args.iter() {
             if !left_to_see.contains(&arg.arg_type) {
-                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type);
+                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type.as_str());
             }
             left_to_see.remove(&arg.arg_type);
             assert_eq!(
                 arg.identifier,
                 fn_type_to_id(&arg.arg_type),
                 "ArgType: {}",
-                arg.arg_type
+                arg.arg_type.as_str()
             );
         }
         assert!(
@@ -771,7 +763,7 @@ impl Solution {
         // Ensure each is there exactly once
         for (fat, _) in inputs.iter() {
             if !left_to_see.contains(fat) {
-                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {fat}");
+                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}", fat.as_str());
             }
             left_to_see.remove(fat);
         }
