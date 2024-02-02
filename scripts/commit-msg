@@ -1,0 +1,15 @@
+#!/bin/sh
+
+regex="^(feat|fix|build|chore|ci|docs|style|refactor|perf|test)(\[.+\])?: .+"
+
+grep -E "$regex" "$1"
+if [ $? != 0 ]
+then
+    echo "[error] Commit message doesn't appear to in the conventional commit format"
+    echo "[info] expecting \"<type>[optional scope]: <description>\""
+    echo "[info] see https://www.conventionalcommits.org/en/v1.0.0/#summary for more info"
+    echo "[debug] using regex: \"$regex\""
+    echo "[debug] on commit message:"
+    cat "$1"
+    exit 1
+fi
