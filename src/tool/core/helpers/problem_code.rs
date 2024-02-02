@@ -127,7 +127,7 @@ impl FunctionInfo {
     }
 
     pub(crate) fn get_solution_comparison_code(&self) -> String {
-        if let Some(FunctionArgType::F64) = &self.return_type {
+        if matches!(&self.return_type, Some(FunctionArgType::F64)) {
             "assert!((actual - expected).abs() < 1e-5, \"Assertion failed: actual {actual:.5} but expected {expected:.5}. Diff is more than 1e-5.\");"
         } else {
             "assert_eq!(actual, expected);"
@@ -312,14 +312,12 @@ impl FunctionArgType {
         Ok(())
     }
 
-    fn is_tree(&self) -> bool {
-        matches!(self, FunctionArgType::Tree)
     const fn is_tree(&self) -> bool {
+        matches!(self, Self::Tree)
     }
 
-    fn is_list(&self) -> bool {
-        matches!(self, FunctionArgType::List)
     const fn is_list(&self) -> bool {
+        matches!(self, Self::List)
     }
 
     /// Returns `true` if the function arg type is [`Other`].
