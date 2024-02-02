@@ -54,10 +54,7 @@ impl ProblemCode {
     }
 
     fn get_fn_info(code: &str) -> anyhow::Result<FunctionInfo> {
-        let re = Regex::new(r#"(?s)\n\s*pub fn ([a-z_0-9]*)\s*\((.*)\)(?: ?-> ?(.*))? \{"#)?;
-        let caps = if let Some(caps) = re.captures(code) {
-            caps
-        } else {
+        let re = Regex::new(r"(?s)\n\s*pub fn ([a-z_0-9]*)\s*\((.*)\)(?: ?-> ?(.*))? \{")?;
         let Some(caps) = re.captures(code) else {
             bail!("Regex failed to match");
         };
@@ -198,7 +195,7 @@ struct FunctionArgs {
 
 impl FunctionArgs {
     fn new(raw_str: String) -> anyhow::Result<Self> {
-        let re = Regex::new(r#"([A-Za-z_0-9]+?)\s*:\s*([A-Za-z0-9<>]*)"#)?;
+        let re = Regex::new(r"([A-Za-z_0-9]+?)\s*:\s*([A-Za-z0-9<>]*)")?;
         let caps: Vec<_> = re.captures_iter(&raw_str).collect();
         let mut args: Vec<FunctionArg> = vec![];
         for cap in caps {
