@@ -4,9 +4,12 @@ use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use log::{debug, info, LevelFilter};
 
-/// Top level entry point for command line arguments parsing
+// Based on example <https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/>
+// Top level entry point for command line arguments parsing
+/// cargo-leet
 ///
-/// Based on example <https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/>
+/// cargo-leet is not meant to be used directly, please use `cargo leet` instead
+/// without the ` `
 #[derive(Parser)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
