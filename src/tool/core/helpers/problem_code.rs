@@ -272,7 +272,7 @@ impl FunctionArgType {
             | Self::VecVecString
             | Self::VecVecChar => {
                 match Self::does_pass_basic_vec_tests(line) {
-                    Ok(_) => {
+                    Ok(()) => {
                         let mut result = line.to_string();
                         if [Self::VecString, Self::VecVecString].contains(self) {
                             result = result.replace("\",", "\".into(),"); // Replace ones before end
@@ -285,14 +285,12 @@ impl FunctionArgType {
                     Err(e) => Err(e.to_string()),
                 }
             }
-            FAT::List => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => Ok(format!("ListHead::from(vec!{line}).into()")),
             Self::List => match Self::does_pass_basic_vec_tests(line) {
+                Ok(()) => Ok(format!("ListHead::from(vec!{line}).into()")),
                 Err(e) => Err(e.to_string()),
             },
-            FAT::Tree => match Self::does_pass_basic_vec_tests(line) {
-                Ok(_) => Ok(format!("TreeRoot::from(\"{line}\").into()")),
             Self::Tree => match Self::does_pass_basic_vec_tests(line) {
+                Ok(()) => Ok(format!("TreeRoot::from(\"{line}\").into()")),
                 Err(e) => Err(e.to_string()),
             },
             Self::Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
