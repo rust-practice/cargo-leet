@@ -725,19 +725,19 @@ impl Solution {
             (FAT::I64, "2"),
             (FAT::F64, "2.00000"),
             (FAT::Bool, "true"),
-            (FAT::String_, "\"leetcode\""),
+            (FAT::String_, r#""leetcode""#),
             (FAT::VecI32, "[1,2,3,4]"),
             (FAT::VecF64, "[6.00000,0.50000,-1.00000,1.00000,-1.00000]"),
             (FAT::VecBool, "[true,false,false,false,false]"),
-            (FAT::VecString, "[\"@..aA\",\"..B#.\",\"....b\"]"),
+            (FAT::VecString, r#"["@..aA","..B#.","....b"]"#),
             (FAT::VecVecI32, "[[2,2,3],[7]]"),
             (
                 FAT::VecVecString,
-                "[[\"java\"],[\"nodejs\"],[\"nodejs\",\"reactjs\"]]",
+                r#"[["java"],["nodejs"],["nodejs","reactjs"]]"#,
             ),
             (
                 FAT::VecVecChar,
-                "[[\"X\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"],[\".\",\".\",\".\",\"X\"]]",
+                r#"[["X",".",".","X"],[".",".",".","X"],[".",".",".","X"]]"#,
             ),
             (FAT::List, "[1,2,4]"),
             (FAT::Tree, "[1,null,2,3]"),
@@ -772,19 +772,21 @@ impl Solution {
                 FAT::I64 => "2",
                 FAT::F64 => "2.00000",
                 FAT::Bool => "true",
-                FAT::String_ => "\"leetcode\"",
+                FAT::String_ => r#""leetcode""#,
                 FAT::VecI32 => "vec![1,2,3,4]",
                 FAT::VecF64 => "vec![6.00000,0.50000,-1.00000,1.00000,-1.00000]",
                 FAT::VecBool => "vec![true,false,false,false,false]",
-                FAT::VecString => "vec![\"@..aA\".into(),\"..B#.\".into(),\"....b\".into()]",
+                FAT::VecString => r#"vec!["@..aA".into(),"..B#.".into(),"....b".into()]"#,
                 FAT::VecVecI32 => "vec![vec![2,2,3],vec![7]]",
                 FAT::VecVecString => {
-                    "vec![vec![\"java\".into()],vec![\"nodejs\".into()],vec![\"nodejs\".into(),\"reactjs\".into()]]"
+                    r#"vec![vec!["java".into()],vec!["nodejs".into()],vec!["nodejs".into(),"reactjs".into()]]"#
                 }
-                FAT::VecVecChar => { "vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]" }
+                FAT::VecVecChar => {
+                    "vec![vec!['X','.','.','X'],vec!['.','.','.','X'],vec!['.','.','.','X']]"
+                }
                 FAT::List => "ListHead::from(vec![1,2,4]).into()",
-                FAT::Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
-                FAT::Other { raw: _ } => "todo!(\"1\")",
+                FAT::Tree => r#"TreeRoot::from("[1,null,2,3]").into()"#,
+                FAT::Other { raw: _ } => r#"todo!("1")"#,
             };
             let actual = fat.apply(input);
             assert_eq!(actual, expected);
