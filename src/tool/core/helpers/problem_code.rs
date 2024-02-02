@@ -704,6 +704,11 @@ impl Solution {
             if !left_to_see.contains(&arg.arg_type) {
                 panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type.as_str());
             }
+            assert!(
+                left_to_see.contains(&arg.arg_type),
+                "Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",
+                arg.arg_type.as_str()
+            );
             left_to_see.remove(&arg.arg_type);
             assert_eq!(
                 arg.identifier,
@@ -760,6 +765,11 @@ impl Solution {
             if !left_to_see.contains(fat) {
                 panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}", fat.as_str());
             }
+            assert!(
+                left_to_see.contains(fat),
+                "Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",
+                fat.as_str()
+            );
             left_to_see.remove(fat);
         }
         assert!(
