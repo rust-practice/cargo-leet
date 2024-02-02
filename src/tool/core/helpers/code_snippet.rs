@@ -5,11 +5,6 @@ use log::info;
 use regex::Regex;
 
 type CodeSnippets = Vec<CodeSnippet>;
-#[derive(serde::Deserialize)]
-struct Question {
-    #[serde(rename = "codeSnippet")] // TODO cw: Fix error created (missing an s)
-    code_snippets: CodeSnippets,
-}
 
 #[derive(serde::Deserialize)]
 struct CodeSnippetResponse {
@@ -24,9 +19,16 @@ impl CodeSnippetResponse {
         self.data.question.code_snippets
     }
 }
+
 #[derive(serde::Deserialize)]
 struct Data {
     question: Question,
+}
+
+#[derive(serde::Deserialize)]
+struct Question {
+    #[serde(rename = "codeSnippet")] // TODO cw: Fix error created (missing an s)
+    code_snippets: CodeSnippets,
 }
 
 #[derive(serde::Deserialize)]
