@@ -56,7 +56,7 @@ pub use leetcode_env::{
 };
 
 #[cfg(feature = "tool")]
-pub use crate::tool::{cli::CargoCli, core::run, log::init_logging};
+pub use crate::tool::{cli::TopLevel, core::run, log::init_logging};
 
 #[cfg(feature = "leet_env")]
 mod leetcode_env;
