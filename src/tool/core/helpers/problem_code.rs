@@ -58,6 +58,7 @@ impl ProblemCode {
         let caps = if let Some(caps) = re.captures(code) {
             caps
         } else {
+        let Some(caps) = re.captures(code) else {
             bail!("Regex failed to match");
         };
 

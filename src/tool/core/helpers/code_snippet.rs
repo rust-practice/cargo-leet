@@ -37,13 +37,12 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
         .into_json::<CodeSnippetResponse>()
         .context("Failed to convert response from json to codes_snippet")?;
 
-    let mut result = match code_snippets_res
+    let Some(mut result) = code_snippets_res
         .code_snippets
         .into_iter()
         .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
-    {
-        Some(result) => result,
-        None => bail!("Rust not supported for this problem"),
+    else {
+        bail!("Rust not supported for this problem")
     };
 
     // Add todo!() placeholders in function bodies
