@@ -51,7 +51,7 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
     // Add todo!() placeholders in function bodies
     let re = Regex::new(r"\{\s*\}")?;
     result = re
-        .replace_all(&result, "{ todo!(\"Fill in body\") }")
+        .replace_all(&result, r#"{ todo!("Fill in body") }"#)
         .to_string();
 
     result.try_into()
