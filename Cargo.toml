@@ -2,13 +2,13 @@
 name = "cargo-leet"
 version = "0.2.0"
 authors = ["Members of Rust Practice Discord Server"]
+categories = ["command-line-utilities"]
 edition = "2021"
+keywords = ["leetcode", "leetcode-cli", "cli"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/rust-practice/cargo-leet"
 description = "Utility program to help with working on leetcode locally"
-keywords = ["leetcode", "leetcode-cli", "cli"]
-categories = ["command-line-utilities"]
 
 [dependencies]
 anyhow = { version = "1.0.71", optional = true }
@@ -33,14 +33,14 @@ default = ["leet_env"]
 leet_env = []
 # Items used when running as a binary
 tool = [
-  "anyhow",
-  "clap",
-  "convert_case",
-  "env_logger",
-  "log",
-  "regex",
-  "serde_flat_path",
-  "serde",
-  "strum",
-  "ureq",
+    "anyhow",
+    "clap",
+    "convert_case",
+    "env_logger",
+    "log",
+    "regex",
+    "serde_flat_path",
+    "serde",
+    "strum",
+    "ureq",
 ]
