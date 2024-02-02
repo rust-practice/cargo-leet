@@ -86,7 +86,7 @@ fn create_module_code(
 
     // Add struct for non design questions
     if problem_code.type_.is_non_design() {
-        code_snippet.push_str("\npub struct Solution;\n")
+        code_snippet.push_str("\npub struct Solution;\n");
     }
 
     // Add leet code types

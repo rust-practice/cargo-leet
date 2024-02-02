@@ -1,7 +1,9 @@
+#![allow(clippy::transmute_ptr_to_ptr)] // clippy::transmute_ptr_to_ptr occurs in the macro #[flat_path] which we can't
+                                        // control
+
 use crate::tool::{config::Config, core::helpers::problem_code::ProblemType};
 use anyhow::Context;
 use log::{debug, info};
-use serde::Deserialize;
 use serde_flat_path::flat_path;
 
 use super::problem_code::{FunctionInfo, ProblemCode};
@@ -9,14 +11,14 @@ use super::problem_code::{FunctionInfo, ProblemCode};
 /// This struct is only used because there are two fields that we are interested
 /// in that start with the same path and flat_path does not support that yet
 #[flat_path]
-#[derive(Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug)]
 struct QuestionWrapper {
     #[flat_path("data.question")]
     inner: ProblemMetadata,
 }
 
 #[flat_path]
-#[derive(Deserialize, Debug)]
+#[derive(serde::Deserialize, Debug)]
 pub(crate) struct ProblemMetadata {
     #[serde(rename = "questionFrontendId")]
     id: String,
@@ -90,11 +92,13 @@ mod tests {{
         .to_string();
 
         // Add test cases
-        for example_test_case_raw in self.example_test_case_list.iter() {
+        // explicit_iter_loop
+        for example_test_case_raw in &self.example_test_case_list {
             let test_case = fn_info
                 .get_test_case(example_test_case_raw)
                 .context("Failed to convert downloaded test case into macro of input")?;
-            result.push_str(&format!("    #[case({})]\n", test_case))
+            // uninlined_format_args
+            result.push_str(&format!("    #[case({test_case})]\n"));
         }
 
         // Add test case function body
@@ -113,6 +117,12 @@ mod tests {{
         Ok(result)
     }
 
+    #[allow(
+        clippy::manual_string_new,
+        clippy::unnecessary_wraps,
+        clippy::unused_self
+    )] // unimplemented question type from leetcode
+       // see: https://leetcode.com/tag/design/
     fn get_test_cases_is_design(&self) -> anyhow::Result<String> {
         Ok("".to_string())
     }
