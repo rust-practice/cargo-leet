@@ -28,10 +28,9 @@ impl Debug for ListNode {
 
 impl ListNode {
     #[inline]
-    /// Creates a new unlinked [ListNode] with the value passed
-    pub fn new(val: i32) -> Self {
-        ListNode { next: None, val }
     #[must_use]
+    /// Creates a new unlinked [`ListNode`] with the value passed
+    pub const fn new(val: i32) -> Self {
         Self { next: None, val }
     }
 }

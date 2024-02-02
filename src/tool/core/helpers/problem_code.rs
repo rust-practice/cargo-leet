@@ -20,7 +20,7 @@ impl ProblemType {
     ///
     /// [`NonDesign`]: ProblemType::NonDesign
     #[must_use]
-    pub(crate) fn is_non_design(&self) -> bool {
+    pub(crate) const fn is_non_design(&self) -> bool {
         matches!(self, Self::NonDesign(..))
     }
 }
@@ -314,17 +314,19 @@ impl FunctionArgType {
 
     fn is_tree(&self) -> bool {
         matches!(self, FunctionArgType::Tree)
+    const fn is_tree(&self) -> bool {
     }
 
     fn is_list(&self) -> bool {
         matches!(self, FunctionArgType::List)
+    const fn is_list(&self) -> bool {
     }
 
     /// Returns `true` if the function arg type is [`Other`].
     ///
     /// [`Other`]: FunctionArgType::Other
     #[must_use]
-    fn is_other(&self) -> bool {
+    const fn is_other(&self) -> bool {
         matches!(self, Self::Other { .. })
     }
 
@@ -375,7 +377,7 @@ mod tests {
 
     use super::*;
 
-    fn get_100_same_tree() -> &'static str {
+    const fn get_100_same_tree() -> &'static str {
         "// Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
 // pub struct TreeNode {
@@ -404,7 +406,7 @@ impl Solution {
 "
     }
 
-    fn get_97_interleaving_string() -> &'static str {
+    const fn get_97_interleaving_string() -> &'static str {
         "impl Solution {
     pub fn is_interleave(s1: String, s2: String, s3: String) -> bool {
 
@@ -413,7 +415,7 @@ impl Solution {
 "
     }
 
-    fn get_706_design_hashmap() -> &'static str {
+    const fn get_706_design_hashmap() -> &'static str {
         "struct MyHashMap {
 
 }
@@ -452,7 +454,7 @@ impl MyHashMap {
 "
     }
 
-    fn get_2_add_two_numbers() -> &'static str {
+    const fn get_2_add_two_numbers() -> &'static str {
         "
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
@@ -618,7 +620,7 @@ impl Solution {
         assert!(actual.is_err());
     }
 
-    fn create_code_stub_all_arg_types_non_design() -> &'static str {
+    const fn create_code_stub_all_arg_types_non_design() -> &'static str {
         // Search Key: SK_ADD_TYPE
         // Add a unique argument to the function to test retrieval of the unique argument name (should match the lookup area)
         "
@@ -645,7 +647,7 @@ impl Solution {
 "
     }
 
-    fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
+    const fn fn_type_to_id(fat: &FunctionArgType) -> &'static str {
         match fat {
             // Search Key: SK_ADD_TYPE
             // Add the unique string value as an id (needs to match area where it is set)
