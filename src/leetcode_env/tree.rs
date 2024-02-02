@@ -23,6 +23,7 @@ impl TreeNode {
     /// Creates a new [TreeNode] with no children and the value passed
     pub fn new(val: i32) -> Self {
         TreeNode {
+        Self {
             val,
             left: None,
             right: None,
@@ -65,6 +66,9 @@ impl Debug for TreeRoot {
     }
 }
 
+#[allow(clippy::fallible_impl_from)] // Using TryFrom doesn't give us any additional benefits and just makes the code
+                                     // more verbose since this code is used in tests and for input.
+                                     // We need the function to fail if it doesn't match the expected format.
 impl From<&TreeRoot> for Vec<Option<i32>> {
     fn from(value: &TreeRoot) -> Self {
         let mut result = vec![];
@@ -87,9 +91,10 @@ impl From<&TreeRoot> for Vec<Option<i32>> {
             }
         }
 
+        // todo!("might be able to use iter+filter")
         // Trim trailing None
-        while let Some(_last) = result.last() {
-            if _last.is_none() {
+        while let Some(last) = result.last() {
+            if last.is_none() {
                 result.pop();
             } else {
                 break;
@@ -105,9 +110,11 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
     }
 }
 
+#[allow(clippy::fallible_impl_from)] // we need the function to fail if it doesn't match the expected format
+                                     // clippy::fallible_impl_from is still in nursery as of 2024-02-02
 impl From<&str> for TreeRoot {
     /// Expects the "[]" around the values, separated by comma "," and only
-    /// integers and "null" (which is the format you'll get on LeetCode)
+    /// integers and "null" (which is the format you'll get on leetcode)
     ///
     /// # Panics
     ///
@@ -125,7 +132,7 @@ impl From<&str> for TreeRoot {
         let value = &value[1..value.len() - 1];
 
         // Separate by comma
-        let values: Vec<&str> = value.split(',').map(|v| v.trim()).collect();
+        let values: Vec<&str> = value.split(',').map(str::trim).collect();
 
         // Convert into values
         result = vec![];
@@ -134,7 +141,7 @@ impl From<&str> for TreeRoot {
                 None
             } else {
                 Some(value.parse().unwrap())
-            })
+            });
         }
 
         result.into()
@@ -143,16 +150,12 @@ impl From<&str> for TreeRoot {
 
 impl Debug for TreeNode {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let left = if let Some(left) = &self.left {
+        let left = self.left.as_ref().map_or("None".to_string(), |left| {
             format!("{:?}", left.as_ref().borrow())
-        } else {
-            "None".to_string()
-        };
-        let right = if let Some(right) = &self.right {
+        });
+        let right = self.right.as_ref().map_or("None".to_string(), |right| {
             format!("{:?}", right.as_ref().borrow())
-        } else {
-            "None".to_string()
-        };
+        });
         write!(f, "{{val:{} left:{} right:{}}}", self.val, left, right)
     }
 }
@@ -173,7 +176,7 @@ impl From<Vec<Option<i32>>> for TreeRoot {
         // Based on https://leetcode.com/problems/recover-binary-search-tree/solutions/32539/Tree-Deserializer-and-Visualizer-for-Python/
 
         if list.is_empty() {
-            return TreeRoot { root: None };
+            return Self { root: None };
         }
 
         let nodes: Vec<Option<Rc<RefCell<TreeNode>>>> = list
@@ -198,7 +201,7 @@ impl From<Vec<Option<i32>>> for TreeRoot {
             }
         }
 
-        TreeRoot { root }
+        Self { root }
     }
 }
 
