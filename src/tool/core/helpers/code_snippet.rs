@@ -36,24 +36,17 @@ struct CodeSnippet {
 }
 
 pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemCode> {
-    info!("Going to get code for {title_slug}");
-    let code_snippets_res = ureq::get(Config::LEETCODE_GRAPH_QL)
-        .send_json(ureq::json!({
-            "query": r"query questionEditorData($titleSlug: String!) {
-                    question(titleSlug: $titleSlug) {
-                        codeSnippets {
-                            lang
-                            code
-                        }
-                    }
-                }",
-            "variables":{"titleSlug": title_slug},
-            "operationName":"questionEditorData"
-        }))
-        .context("Get request for code_snippet failed")?
+    let request_code_snippet = request_code_snippet(title_slug)?;
+
+    // Deserialize from Response to Struct
+    let code_snippets_res = request_code_snippet
         .into_json::<CodeSnippetResponse>()
         .context("Failed to convert response from json to codes_snippet")?;
 
+    extract_rust_code(code_snippets_res)
+}
+
+fn extract_rust_code(code_snippets_res: CodeSnippetResponse) -> anyhow::Result<ProblemCode> {
     let Some(mut result) = code_snippets_res
         .into_code_snippets()
         .into_iter()
@@ -69,4 +62,22 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
         .to_string();
 
     result.try_into()
+}
+
+fn request_code_snippet(title_slug: &str) -> Result<ureq::Response, anyhow::Error> {
+    info!("Going to send request for code for problem with title: {title_slug}");
+    ureq::get(Config::LEETCODE_GRAPH_QL)
+        .send_json(ureq::json!({
+            "query": "query questionEditorData($titleSlug: String!) {
+                    question(titleSlug: $titleSlug) {
+                        codeSnippets {
+                            lang
+                            code
+                        }
+                    }
+                }",
+            "variables":{"titleSlug": title_slug},
+            "operationName":"questionEditorData"
+        }))
+        .context("Get request for code_snippet failed")
 }
