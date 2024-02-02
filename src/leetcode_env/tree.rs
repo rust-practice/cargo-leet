@@ -54,13 +54,7 @@ impl Debug for TreeRoot {
 
         let vec: Vec<String> = vec
             .iter()
-            .map(|x| {
-                if let Some(x) = x {
-                    format!("{x}")
-                } else {
-                    "None".to_string()
-                }
-            })
+            .map(|x| x.as_ref().map_or("None".to_string(), |x| format!("{x}")))
             .collect();
         write!(f, "{vec:?}")
     }
