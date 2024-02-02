@@ -689,9 +689,7 @@ impl Solution {
         });
 
         // Add special handling for Other variant
-        left_to_see.remove(&FunctionArgType::Other {
-            raw: "".to_string(),
-        });
+        left_to_see.remove(&FunctionArgType::Other { raw: String::new() });
         left_to_see.insert(FunctionArgType::Other {
             raw: "UnknownType".to_string(),
         });
@@ -748,7 +746,7 @@ impl Solution {
             ),
             (FAT::List, "[1,2,4]"),
             (FAT::Tree, "[1,null,2,3]"),
-            (FAT::Other { raw: "".into() }, "1"),
+            (FAT::Other { raw: String::new() }, "1"),
         ];
 
         // Create hashset and fill with the possible argument types
