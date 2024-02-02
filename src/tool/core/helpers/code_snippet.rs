@@ -3,16 +3,16 @@ use crate::tool::config::Config;
 use anyhow::{bail, Context};
 use log::info;
 use regex::Regex;
-use serde::Deserialize;
 use serde_flat_path::flat_path;
 
 #[flat_path]
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 struct CodeSnippetResponse {
     #[flat_path("data.question.codeSnippets")]
     code_snippets: Vec<CodeSnippet>,
 }
-#[derive(Deserialize)]
+
+#[derive(serde::Deserialize)]
 struct CodeSnippet {
     lang: String,
     code: String,

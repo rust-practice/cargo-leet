@@ -1,11 +1,10 @@
 use anyhow::Context;
-use serde::Deserialize;
 use serde_flat_path::flat_path;
 
 use crate::tool::config::Config;
 
 #[flat_path]
-#[derive(Deserialize)]
+#[derive(serde::Deserialize)]
 struct DailyChallengeResponse {
     #[flat_path("data.activeDailyCodingChallengeQuestion.question.titleSlug")]
     title_slug: String,
