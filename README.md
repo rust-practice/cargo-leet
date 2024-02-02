@@ -3,24 +3,63 @@
 A program that given the link or slug to a leetcode problem,
 creates a local file where you can develop and test your solution before post it back to leetcode.
 
-## ScreenShots
+## Help Messages
 
 ### `cargo leet -h`
 
-![ScreenShot](assets/help_scr_shot_top.png)
+```
+cargo-leet
+
+Usage: cargo <COMMAND>
+
+Commands:
+  leet  This is necessary because it's a cargo subcommand so the first argument needs to be the command name
+  help  Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help  Print help (see more with '--help')
+```
 
 ### `cargo leet generate --help`
 
-![ScreenShot](assets/help_scr_shot_generate.png)
+```
+Usage: cargo leet {generate|-g} [OPTIONS] [PROBLEM]
+
+Arguments:
+  [PROBLEM]
+          Question slug or url (If none specified then daily challenge is used)
+
+Options:
+  -n, --number_in_name
+          If set the module name generated includes the number for the problem
+
+  -p, --path <FOLDER>
+          Specify the path to the project root (If not provided uses current working directory)
+
+  -l, --log-level <LOG_LEVEL>
+          Set logging level to use
+
+          [default: warn]
+
+          Possible values:
+          - off:   Nothing emitted in this mode
+          - error
+          - warn
+          - info
+          - debug
+          - trace
+
+  -h, --help
+          Print help (see a summary with '-h')
+```
 
 ## Using Library Support
 
-Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary. The use statements are automatically added if tool is used to generate the file for the problem.
 Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as
 necessary. The use statements are automatically added if tool is used to generate the file for the problem.
 
 ```toml
-cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop" }
+cargo-leet = "0.2.0"
 ```
 
 ## Tool Installation
