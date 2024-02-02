@@ -153,11 +153,7 @@ impl FunctionInfo {
             .zip(self.fn_args.args.iter().map(|arg| &arg.arg_type))
             .enumerate()
         {
-            result.push_str(
-                &arg_type
-                    .apply(line)
-                    .context("Failed to apply type information to the example from leetcode")?,
-            );
+            result.push_str(&arg_type.apply(line));
 
             if i < n - 1 {
                 result.push_str(", ");
@@ -240,7 +236,7 @@ enum FunctionArgType {
 
 impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
-    fn apply(&self, line: &str) -> anyhow::Result<String> {
+    fn apply(&self, line: &str) -> String {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
         let result = match self {
             // Search Key: SK_ADD_TYPE
@@ -295,13 +291,10 @@ impl FunctionArgType {
             },
             Self::Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
         };
-        match result {
-            Ok(result) => Ok(result),
-            Err(e) => {
-                warn!("Type Mismatch? Type detected as '{self:?}' but got argument value of {line:?}. Error: {e}");
-                Ok(format!("todo!({line:?})"))
-            }
-        }
+        result.unwrap_or_else(|e| {
+            warn!("Type Mismatch? Type detected as '{self:?}' but got argument value of {line:?}. Error: {e}");
+            format!("todo!({line:?})")
+        })
     }
 
     fn does_pass_basic_vec_tests(s: &str) -> anyhow::Result<()> {
@@ -793,7 +786,7 @@ impl Solution {
                 FAT::Tree => "TreeRoot::from(\"[1,null,2,3]\").into()",
                 FAT::Other { raw: _ } => "todo!(\"1\")",
             };
-            let actual = fat.apply(input).expect("Should be valid input");
+            let actual = fat.apply(input);
             assert_eq!(actual, expected);
         }
     }
