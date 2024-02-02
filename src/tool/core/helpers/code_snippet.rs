@@ -1,18 +1,32 @@
-#![allow(clippy::transmute_ptr_to_ptr)] // clippy::transmute_ptr_to_ptr occurs in the macro #[flat_path] which we can't
-                                        // control
-
 use super::problem_code::ProblemCode;
 use crate::tool::config::Config;
 use anyhow::{bail, Context};
 use log::info;
 use regex::Regex;
-use serde_flat_path::flat_path;
 
-#[flat_path]
+type CodeSnippets = Vec<CodeSnippet>;
+#[derive(serde::Deserialize)]
+struct Question {
+    #[serde(rename = "codeSnippet")] // TODO cw: Fix error created (missing an s)
+    code_snippets: CodeSnippets,
+}
+
 #[derive(serde::Deserialize)]
 struct CodeSnippetResponse {
-    #[flat_path("data.question.codeSnippets")]
-    code_snippets: Vec<CodeSnippet>,
+    data: Data,
+}
+impl CodeSnippetResponse {
+    /// Consumes self and returns the snippets
+    ///
+    /// Was only being called once and couldn't justify allocating a new string
+    /// when this one wasn't needed anymore
+    fn into_code_snippets(self) -> CodeSnippets {
+        self.data.question.code_snippets
+    }
+}
+#[derive(serde::Deserialize)]
+struct Data {
+    question: Question,
 }
 
 #[derive(serde::Deserialize)]
@@ -41,7 +55,7 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
         .context("Failed to convert response from json to codes_snippet")?;
 
     let Some(mut result) = code_snippets_res
-        .code_snippets
+        .into_code_snippets()
         .into_iter()
         .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
     else {
