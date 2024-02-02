@@ -1,3 +1,6 @@
+#![allow(clippy::transmute_ptr_to_ptr)] // clippy::transmute_ptr_to_ptr occurs in the macro #[flat_path] which we can't
+                                        // control
+
 use anyhow::Context;
 use serde_flat_path::flat_path;
 
