@@ -18,10 +18,9 @@ impl Debug for ListNode {
             f,
             "{} -> {}",
             self.val,
-            match self.next.as_ref() {
-                Some(next) => format!("{next:?}"),
-                None => "None".to_owned(),
-            }
+            self.next
+                .as_ref()
+                .map_or("None".to_owned(), |next| format!("{next:?}"))
         )
     }
 }
