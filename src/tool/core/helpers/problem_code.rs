@@ -242,43 +242,42 @@ impl FunctionArgType {
     /// Applies any special changes needed to the value based on the type
     fn apply(&self, line: &str) -> anyhow::Result<String> {
         debug!("Going to apply changes to argument input for {self:#?} to {line:?}");
-        use FunctionArgType as FAT;
         let result = match self {
             // Search Key: SK_ADD_TYPE
             // Add how string of type should be modified for code saved for user
-            FAT::String_ | FAT::Bool => Ok(line.to_string()),
-            FAT::I32 => match line.parse::<i32>() {
+            Self::String_ | Self::Bool => Ok(line.to_string()),
+            Self::I32 => match line.parse::<i32>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
                     "In testing the test input {line:?} the parsing to i32 failed with error: {e}"
                 )),
             },
-            FAT::I64 => match line.parse::<i64>() {
+            Self::I64 => match line.parse::<i64>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
                     "In testing the test input {line:?} the parsing to i64 failed with error: {e}"
                 )),
             },
-            FAT::F64 => match line.parse::<f64>() {
+            Self::F64 => match line.parse::<f64>() {
                 Ok(_) => Ok(line.to_string()),
                 Err(e) => Err(format!(
                     "In testing the test input {line:?} the parsing to f64 failed with error: {e}"
                 )),
             },
-            FAT::VecI32
-            | FAT::VecBool
-            | FAT::VecF64
-            | FAT::VecVecI32
-            | FAT::VecString
-            | FAT::VecVecString
-            | FAT::VecVecChar => {
+            Self::VecI32
+            | Self::VecBool
+            | Self::VecF64
+            | Self::VecVecI32
+            | Self::VecString
+            | Self::VecVecString
+            | Self::VecVecChar => {
                 match Self::does_pass_basic_vec_tests(line) {
                     Ok(_) => {
                         let mut result = line.to_string();
-                        if [FAT::VecString, FAT::VecVecString].contains(self) {
+                        if [Self::VecString, Self::VecVecString].contains(self) {
                             result = result.replace("\",", "\".into(),"); // Replace ones before end
                             result = result.replace("\"]", "\".into()]"); // Replace end
-                        } else if self == &FAT::VecVecChar {
+                        } else if self == &Self::VecVecChar {
                             result = result.replace('"', "'");
                         }
                         Ok(result.replace('[', "vec!["))
@@ -288,13 +287,15 @@ impl FunctionArgType {
             }
             FAT::List => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(format!("ListHead::from(vec!{line}).into()")),
+            Self::List => match Self::does_pass_basic_vec_tests(line) {
                 Err(e) => Err(e.to_string()),
             },
             FAT::Tree => match Self::does_pass_basic_vec_tests(line) {
                 Ok(_) => Ok(format!("TreeRoot::from(\"{line}\").into()")),
+            Self::Tree => match Self::does_pass_basic_vec_tests(line) {
                 Err(e) => Err(e.to_string()),
             },
-            FAT::Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
+            Self::Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
         };
         match result {
             Ok(result) => Ok(result),
