@@ -13,7 +13,7 @@ use log::{debug, info, LevelFilter};
 #[derive(Parser, Debug)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
-pub enum CargoCli {
+pub enum TopLevel {
     /// This is necessary because it's a cargo subcommand so the first argument
     /// needs to be the command name
     Leet(Cli),
@@ -107,6 +107,6 @@ mod tests {
         // Source: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html#testing
         // My understanding it reports most development errors without additional effort
         use clap::CommandFactory;
-        CargoCli::command().debug_assert();
+        TopLevel::command().debug_assert();
     }
 }
