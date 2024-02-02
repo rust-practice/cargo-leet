@@ -81,3 +81,25 @@ fn request_code_snippet(title_slug: &str) -> Result<ureq::Response, anyhow::Erro
         }))
         .context("Get request for code_snippet failed")
 }
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use std::io::Write as _;
+
+    use crate::tool::core::helpers::code_snippet::request_code_snippet;
+
+    #[test]
+    fn test_name() {
+        let slug = "two-sum";
+        let response = request_code_snippet(slug).unwrap();
+        let s = response.into_string().unwrap();
+        let mut file = std::fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open("output.json")
+            .unwrap();
+        file.write_all(s.as_bytes()).unwrap();
+    }
+}
