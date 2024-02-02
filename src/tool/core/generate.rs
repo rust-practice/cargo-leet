@@ -23,9 +23,9 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
         Cow::Owned(slug)
     };
 
-    let (module_name, module_code) = create_module_code(title_slug, args)
+    let (module_name, module_code) = create_module_code(&title_slug, args)
         .context("Failed to generate the name and module code")?;
-    write_to_disk::write_file(&module_name, module_code).context("Failed to write to disk")?;
+    write_to_disk::write_file(&module_name, &module_code).context("Failed to write to disk")?;
     println!("Generated module: {module_name}");
     Ok(())
 }
@@ -51,13 +51,13 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
 /// NB: Did not return `Cow` because `module_name` is always a modified version
 /// of the input
 fn create_module_code(
-    title_slug: Cow<String>,
+    title_slug: &str,
     args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {
     info!("Building module contents for {title_slug}");
 
     let meta_data =
-        get_problem_metadata(&title_slug).context("Failed to retrieve problem meta data")?;
+        get_problem_metadata(title_slug).context("Failed to retrieve problem meta data")?;
 
     // Add problem URL
     let mut code_snippet = format!(
@@ -77,7 +77,7 @@ fn create_module_code(
     code_snippet.push('\n');
 
     // Get code snippet
-    let problem_code = get_code_snippet_for_problem(&title_slug)?;
+    let problem_code = get_code_snippet_for_problem(title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
     code_snippet.push_str(
