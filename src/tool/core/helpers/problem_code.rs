@@ -111,7 +111,7 @@ impl FunctionInfo {
         result.push_str(&self.fn_args.raw_str.replace(',', ", #[case] "));
 
         if let Some(return_type) = self.return_type.as_ref() {
-            result.push_str(&format!(", #[case] expected: {}", return_type.as_str()))
+            result.push_str(&format!(", #[case] expected: {}", return_type.as_str()));
         }
         result
     }
