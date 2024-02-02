@@ -700,10 +700,7 @@ impl Solution {
         // Assert
         assert_eq!(fn_info.name, "func_name");
         assert!(fn_info.return_type.is_none());
-        for arg in fn_info.fn_args.args.iter() {
-            if !left_to_see.contains(&arg.arg_type) {
-                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",arg.arg_type.as_str());
-            }
+        for arg in &fn_info.fn_args.args {
             assert!(
                 left_to_see.contains(&arg.arg_type),
                 "Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",
@@ -761,10 +758,7 @@ impl Solution {
         });
 
         // Ensure each is there exactly once
-        for (fat, _) in inputs.iter() {
-            if !left_to_see.contains(fat) {
-                panic!("Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}", fat.as_str());
-            }
+        for (fat, _) in &inputs {
             assert!(
                 left_to_see.contains(fat),
                 "Duplicate type seen. Each type should show up EXACTLY ONCE. Duplicate type: {}",
