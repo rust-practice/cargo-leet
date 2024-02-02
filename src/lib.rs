@@ -2,6 +2,8 @@
 #![warn(missing_docs)]
 #![warn(rustdoc::missing_crate_level_docs)]
 #![warn(unreachable_pub)]
+#![warn(missing_debug_implementations)]
+#![warn(clippy::pedantic)]
 #![cfg_attr(test, deny(warnings))]
 
 //! The main aim of **cargo-leet** is to make it easier to develop solutions to
