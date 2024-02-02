@@ -24,6 +24,7 @@ impl TreeNode {
     /// Creates a new [TreeNode] with no children and the value passed
     pub fn new(val: i32) -> Self {
         TreeNode {
+    #[must_use]
         Self {
             val,
             left: None,
