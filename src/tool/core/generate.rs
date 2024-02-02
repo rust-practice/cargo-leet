@@ -15,7 +15,7 @@ use crate::tool::{
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         get_slug_from_args(specific_problem)
-            .with_context(|| format!("Expected URL or slug but got {specific_problem}"))?
+            .with_context(|| format!("expected URL or slug but got {specific_problem}"))?
     } else {
         // Daily problem
         let slug = daily_challenge::get_daily_challenge_slug()?;
@@ -23,9 +23,10 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
         Cow::Owned(slug)
     };
 
-    let (module_name, module_code) = create_module_code(&title_slug, args)
-        .context("Failed to generate the name and module code")?;
-    write_to_disk::write_file(&module_name, &module_code).context("Failed to write to disk")?;
+    let (module_name, module_code) = create_module_code(&title_slug, args).with_context(|| {
+        format!("failed to generate the name and module code for {title_slug:?}")
+    })?;
+    write_to_disk::write_file(&module_name, &module_code).context("failed to write to disk")?;
     println!("Generated module: {module_name}");
     Ok(())
 }
@@ -57,7 +58,7 @@ fn create_module_code(
     info!("Building module contents for {title_slug}");
 
     let meta_data =
-        get_problem_metadata(title_slug).context("Failed to retrieve problem meta data")?;
+        get_problem_metadata(title_slug).context("failed to retrieve problem meta data")?;
 
     // Add problem URL
     let mut code_snippet = format!(
