@@ -5,7 +5,7 @@ creates a local file where you can develop and test your solution before post it
 
 ## ScreenShots
 
-### `cargo leet`
+### `cargo leet -h`
 
 ![ScreenShot](assets/help_scr_shot_top.png)
 
@@ -16,6 +16,8 @@ creates a local file where you can develop and test your solution before post it
 ## Using Library Support
 
 Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as necessary. The use statements are automatically added if tool is used to generate the file for the problem.
+Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as
+necessary. The use statements are automatically added if tool is used to generate the file for the problem.
 
 ```toml
 cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch = "develop" }
@@ -23,7 +25,9 @@ cargo-leet = { git = "https://github.com/rust-practice/cargo-leet.git", branch =
 
 ## Tool Installation
 
-NB: If cargo-leet is already installed you do the install it will just replace it even it it was previously installed from a different source. For example if you install it from a clone then run the command to install from git it will replace the existing version that is installed (they will not both be installed).
+NB: If cargo-leet is already installed, and you install it again, it will just replace it even if it was previously
+installed from a different source. For example if you install it from a clone then run the command to install from git
+it will replace the existing version that is installed (they will not both be installed).
 
 ### From GitHub
 
@@ -48,10 +52,10 @@ cargo i
 ## Running Directly from source without install (When developing the tool)
 
 These commands allow you to run the tool directly from the source code without installation.
-By default they will run the tool on the current working directory.
+By default, they will run the tool on the current working directory.
 This means that it will run in the current project folder for cargo-leet.
-This may be fine for testing but if you want to be able to actually run the code,
-it might be more appropriate to pass the path parameter and specify the path to the repository you want to to run against.
+This may be fine for testing but if you want to be able to actually run the code, it might be more appropriate to pass
+the path parameter and specify the path to the repository you want to run against.
 Eg. `cargo g --path $TEST_REPO`
 For more options see [generate help](#cargo-leet-generate---help)
 
@@ -80,8 +84,8 @@ All code in this repository is dual-licensed under either:
 
 at your option.
 This means you can select the license you prefer!
-This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are very good reasons to include both as noted in
-this [issue](https://github.com/bevyengine/bevy/issues/2373) on [Bevy](https://bevyengine.org)'s repo.
+This dual-licensing approach is the de-facto standard in the Rust ecosystem and there are very good reasons to include
+both as noted in this [issue](https://github.com/bevyengine/bevy/issues/2373) on [Bevy](https://bevyengine.org)'s repo.
 
 ### Contribution
 

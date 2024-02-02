@@ -35,12 +35,12 @@
 //! imported in the solution repository as this repo may be using a much older
 //! version of the rust toolchain due to the fact that leetcode uses a much
 //! older version on their servers and some users may want to use the same
-//! version to ensure their code will always work upon upload. However, because
-//! it is such an old version many of the crates used in the development of the
-//! tool are not able to be compiled with that toolchain and as such they being
-//! only compiled behind a feature flag makes that a non-issue. It also allows
-//! users to not compile the code only needed to support leetcode solution
-//! development when working on or using the tool.
+//! version to ensure their code will always work upon upload.
+//! However, because the toolchain used by leetcode cannot compile many of the
+//! crates used in the development of the tool due to leetcode's old version,
+//! compiling them only behind a feature flag makes that a non-issue. It also
+//! allows users to not compile the code only needed to support leetcode
+//! solution development when working on or using the tool.
 //!
 //! - `default`: Enables the `leet_env` feature as this is the most common use
 //!   case

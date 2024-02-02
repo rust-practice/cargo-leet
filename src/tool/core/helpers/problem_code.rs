@@ -622,7 +622,8 @@ impl Solution {
 
     const fn create_code_stub_all_arg_types_non_design() -> &'static str {
         // Search Key: SK_ADD_TYPE
-        // Add a unique argument to the function to test retrieval of the unique argument name (should match the lookup area)
+        // Add a unique argument to the function to test retrieval of the unique
+        // argument name (should match the lookup area)
         "
 impl Solution {
     pub fn func_name(
