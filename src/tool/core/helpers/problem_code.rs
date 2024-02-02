@@ -286,10 +286,10 @@ impl FunctionArgType {
                 Err(e) => Err(e.to_string()),
             },
             Self::Tree => match Self::does_pass_basic_vec_tests(line) {
-                Ok(()) => Ok(format!("TreeRoot::from(\"{line}\").into()")),
+                Ok(()) => Ok(format!(r#"TreeRoot::from("{line}").into()"#)),
                 Err(e) => Err(e.to_string()),
             },
-            Self::Other { raw: _ } => Ok(format!("todo!(\"{line}\")")),
+            Self::Other { raw: _ } => Ok(format!(r#"todo!("{line}")"#)),
         };
         result.unwrap_or_else(|e| {
             warn!("Type Mismatch? Type detected as '{self:?}' but got argument value of {line:?}. Error: {e}");
@@ -586,7 +586,7 @@ impl Solution {
     #[test]
     fn get_test_case_ok() {
         // Arrange
-        let expected = "7, vec![2,3,1,2,4,3], todo!(\"Expected Result\")";
+        let expected = r#"7, vec![2,3,1,2,4,3], todo!("Expected Result")"#;
         let fn_info = get_fn_info_min_sub_array_len();
         let input = "7\n[2,3,1,2,4,3]";
 
