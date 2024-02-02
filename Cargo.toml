@@ -7,6 +7,7 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/rust-practice/cargo-leet"
 description = "Utility program to help with working on leetcode locally"
+keywords = ["leetcode", "leetcode-cli", "cli"]
 
 [dependencies]
 anyhow = { version = "1.0.71", optional = true }
