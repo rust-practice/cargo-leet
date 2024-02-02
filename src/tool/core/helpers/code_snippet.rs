@@ -11,12 +11,22 @@ struct CodeSnippetResponse {
     data: Data,
 }
 impl CodeSnippetResponse {
-    /// Consumes self and returns the snippets
-    ///
-    /// Was only being called once and couldn't justify allocating a new string
-    /// when this one wasn't needed anymore
-    fn into_code_snippets(self) -> CodeSnippets {
-        self.data.question.code_snippets
+    fn into_rust_problem_code(self) -> anyhow::Result<ProblemCode> {
+        let code_snippet = self.data.question.code_snippets;
+        let Some(mut result) = code_snippet
+            .into_iter()
+            .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
+        else {
+            bail!("Rust not supported for this problem")
+        };
+
+        // Add todo!() placeholders in function bodies
+        let re = Regex::new(r"\{\s*\}")?;
+        result = re
+            .replace_all(&result, r#"{ todo!("Fill in body") }"#)
+            .to_string();
+
+        result.try_into()
     }
 }
 
@@ -45,25 +55,7 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
         .into_json::<CodeSnippetResponse>()
         .context("Failed to convert response from json to codes_snippet")?;
 
-    extract_rust_code(code_snippets_res)
-}
-
-fn extract_rust_code(code_snippets_res: CodeSnippetResponse) -> anyhow::Result<ProblemCode> {
-    let Some(mut result) = code_snippets_res
-        .into_code_snippets()
-        .into_iter()
-        .find_map(|cs| (cs.lang == "Rust").then_some(cs.code))
-    else {
-        bail!("Rust not supported for this problem")
-    };
-
-    // Add todo!() placeholders in function bodies
-    let re = Regex::new(r"\{\s*\}")?;
-    result = re
-        .replace_all(&result, r#"{ todo!("Fill in body") }"#)
-        .to_string();
-
-    result.try_into()
+    code_snippets_res.into_rust_problem_code()
 }
 
 fn request_code_snippet(title_slug: &str) -> Result<ureq::Response, anyhow::Error> {
