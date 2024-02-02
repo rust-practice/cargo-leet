@@ -34,6 +34,12 @@ jobs:
           components: rustfmt
       - name: Enforce formatting
         run: cargo fmt --check
+        
+  dprint_formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dprint/check@v2.2
 
   clippy:
     name: Clippy
