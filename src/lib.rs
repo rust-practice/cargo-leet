@@ -4,6 +4,7 @@
 #![warn(unreachable_pub)]
 #![warn(missing_debug_implementations)]
 #![warn(clippy::pedantic)]
+#![warn(clippy::cargo)]
 #![cfg_attr(test, deny(warnings))]
 
 //! The main aim of **cargo-leet** is to make it easier to develop solutions to
