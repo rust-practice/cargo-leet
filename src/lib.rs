@@ -2,6 +2,7 @@
 #![warn(missing_docs)]
 #![warn(rustdoc::missing_crate_level_docs)]
 #![warn(unreachable_pub)]
+#![cfg_attr(test, deny(warnings))]
 
 //! The main aim of **cargo-leet** is to make it easier to develop solutions to
 //! leetcode problems locally on your machine. And as such it is composed of two
