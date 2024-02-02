@@ -1,4 +1,5 @@
 //! Leetcode Lists Support
+#![allow(clippy::module_name_repetitions)] // the type name is from leetcode, so we cannot modify it
 
 use std::fmt::{Debug, Formatter};
 
