@@ -44,7 +44,7 @@ impl Cli {
         );
         if let Some(path) = &self.path {
             info!("Going to update working directory to to '{path}'");
-            std::env::set_current_dir(path)
+            env::set_current_dir(path)
                 .with_context(|| format!("Failed to set current dir to: '{path}'"))?;
             info!(
                 "After updating current dir, it is: '{}'",
