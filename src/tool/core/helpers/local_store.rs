@@ -15,13 +15,21 @@ pub(crate) fn path_local_store_code_snippet<P: AsRef<Path>>(path: P) -> PathBuf 
 
 #[cfg(test)]
 pub(crate) mod tests {
+    use rand::{thread_rng, Rng};
     use rstest::fixture;
 
     pub(crate) type SlugList = &'static [&'static str];
 
     // Don't want to send them too fast and not at the same time for all tests so random in range
-    pub(crate) const SECONDS_DELAY_BETWEEN_REQUESTS_MIN: u8 = 5;
-    pub(crate) const SECONDS_DELAY_BETWEEN_REQUESTS_MAX: u8 = 9;
+    const MILLISECONDS_DELAY_BETWEEN_REQUESTS_MIN: u64 = 5000;
+    const MILLISECONDS_DELAY_BETWEEN_REQUESTS_MAX: u64 = 9000;
+
+    pub(crate) fn get_rnd_request_delay() -> u64 {
+        let mut rng = thread_rng();
+        rng.gen_range(
+            MILLISECONDS_DELAY_BETWEEN_REQUESTS_MIN..MILLISECONDS_DELAY_BETWEEN_REQUESTS_MAX,
+        )
+    }
 
     #[fixture]
     pub(crate) fn title_slugs() -> SlugList {
