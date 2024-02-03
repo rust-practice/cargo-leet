@@ -1,15 +1,16 @@
 //! Facilitates testing by providing local copies of responses from leetcode
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 const NAME_TEST_FOLDER: &str = "tests";
 const NAME_LOCAL_STORE: &str = "local_store";
 const NAME_LOCAL_STORE_CODE_SNIPPET: &str = "code_snippet";
 
-pub(crate) fn path_local_store_code_snippet() -> PathBuf {
+pub(crate) fn path_local_store_code_snippet<P: AsRef<Path>>(path: P) -> PathBuf {
     PathBuf::from(NAME_TEST_FOLDER)
         .join(NAME_LOCAL_STORE)
         .join(NAME_LOCAL_STORE_CODE_SNIPPET)
+        .join(path)
 }
 
 #[cfg(test)]
