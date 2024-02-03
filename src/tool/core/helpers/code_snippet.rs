@@ -48,6 +48,7 @@ struct CodeSnippet {
 }
 
 pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemCode> {
+    info!("Attempting to get code snippet for {title_slug:?}");
     get_code_snippets_response(title_slug)?.into_rust_problem_code()
 }
 
