@@ -2,7 +2,7 @@ use crate::tool::config::Config;
 use anyhow::Context;
 use log::info;
 
-use super::local_store::path_local_store_problem_metadata;
+use super::{get_response, local_store::path_local_store_problem_metadata};
 
 pub(crate) mod data_structure;
 
@@ -16,15 +16,11 @@ pub(crate) fn get_problem_metadata(
 fn get_problem_metadata_response(
     title_slug: &str,
 ) -> anyhow::Result<data_structure::ProblemMetaDataResponse> {
-    // TODO Onè: Merge three functions with this tag WeNeedToBeInSync
-    let json = if cfg!(test) {
-        local_store_request_problem_metadata(title_slug)
-    } else {
-        external_request_problem_metadata(title_slug)
-    }?;
-    let result = serde_json::from_str(&json)
-        .context("failed to convert from String as json to ProblemMetaDataResponse")?;
-    Ok(result)
+    get_response(
+        title_slug,
+        local_store_request_problem_metadata,
+        external_request_problem_metadata,
+    )
 }
 
 fn local_store_request_problem_metadata(title_slug: &str) -> anyhow::Result<String> {

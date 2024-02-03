@@ -3,7 +3,7 @@ use log::info;
 
 use crate::tool::config::Config;
 
-use super::local_store::path_local_store_daily_challenge;
+use super::{get_response, local_store::path_local_store_daily_challenge};
 
 #[derive(serde::Deserialize, Debug)]
 struct DailyChallengeResponse {
@@ -41,23 +41,19 @@ pub(crate) fn get_daily_challenge_slug() -> anyhow::Result<String> {
 }
 
 fn get_daily_challenge_response() -> anyhow::Result<DailyChallengeResponse> {
-    // TODO Onè: Merge three functions with this tag WeNeedToBeInSync
-    let json = if cfg!(test) {
-        local_store_request_daily_challenge()
-    } else {
-        external_request_daily_challenge()
-    }?;
-    let result = serde_json::from_str(&json)
-        .context("failed to convert from String as json to DailyChallengeResponse")?;
-    Ok(result)
+    get_response(
+        "unused_just_to_match_sig",
+        local_store_request_daily_challenge,
+        external_request_daily_challenge,
+    )
 }
 
-fn local_store_request_daily_challenge() -> anyhow::Result<String> {
+fn local_store_request_daily_challenge(_needed_to_match_signature: &str) -> anyhow::Result<String> {
     let path = path_local_store_daily_challenge();
     std::fs::read_to_string(&path).with_context(|| format!("failed to read string from {path:?}"))
 }
 
-fn external_request_daily_challenge() -> anyhow::Result<String> {
+fn external_request_daily_challenge(_needed_to_match_signature: &str) -> anyhow::Result<String> {
     info!("[External] Going to send request of daily challenge");
     ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({

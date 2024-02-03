@@ -1,4 +1,4 @@
-use super::{local_store::path_local_store_code_snippet, problem_code::ProblemCode};
+use super::{get_response, local_store::path_local_store_code_snippet, problem_code::ProblemCode};
 use crate::tool::config::Config;
 use anyhow::{bail, Context};
 use log::info;
@@ -53,15 +53,11 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
 }
 
 fn get_code_snippets_response(title_slug: &str) -> anyhow::Result<CodeSnippetResponse> {
-    // TODO Onè: Merge three functions with this tag WeNeedToBeInSync
-    let json = if cfg!(test) {
-        local_store_request_code_snippet(title_slug)
-    } else {
-        external_request_code_snippet(title_slug)
-    }?;
-    let result = serde_json::from_str(&json)
-        .context("failed to convert from String as json to CodeSnippetResponse")?;
-    Ok(result)
+    get_response(
+        title_slug,
+        local_store_request_code_snippet,
+        external_request_code_snippet,
+    )
 }
 
 fn local_store_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
