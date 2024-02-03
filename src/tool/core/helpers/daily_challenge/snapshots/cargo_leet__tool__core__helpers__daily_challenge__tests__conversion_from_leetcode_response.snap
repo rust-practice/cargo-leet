@@ -1,0 +1,14 @@
+---
+source: src/tool/core/helpers/daily_challenge/tests.rs
+assertion_line: 35
+expression: get_daily_challenge_response().unwrap()
+---
+DailyChallengeResponse {
+    data: Data {
+        active_daily_coding_challenge_question: ActiveDailyCodingChallengeQuestion {
+            question: Question {
+                title_slug: "partition-array-for-maximum-sum",
+            },
+        },
+    },
+}
