@@ -72,8 +72,5 @@ fn external_request_daily_challenge() -> anyhow::Result<String> {
         .context("failed to convert response into String")
 }
 
-        .context("Get request for daily challenge failed")?
-        .into_json::<DailyChallengeResponse>()
-        .context("Failed to convert response for daily challenge from json")?;
-    Ok(daily_challenge_response.title_slug)
-}
+#[cfg(test)]
+mod tests;
