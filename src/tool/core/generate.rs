@@ -67,12 +67,7 @@ fn create_module_code(
     );
 
     // Add problem number and title
-    code_snippet.push_str(&format!(
-        "//! {}\n",
-        meta_data
-            .get_num_and_title()
-            .context("Failed to get problem number and title")?
-    ));
+    code_snippet.push_str(&format!("//! {}\n", meta_data.get_num_and_title()));
 
     // Add blank line between docstring and code
     code_snippet.push('\n');
@@ -99,17 +94,13 @@ fn create_module_code(
     }
 
     // Add tests
-    let tests = meta_data.get_test_cases(&problem_code)?;
+    let tests = meta_data.get_test_cases(&problem_code);
     code_snippet.push_str(&tests);
 
     // Set module name
     let module_name = if args.should_include_problem_number {
         info!("Including problem number in module name");
-        format!(
-            "_{}_{}",
-            meta_data.get_id()?,
-            title_slug.to_case(Case::Snake)
-        )
+        format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
         info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)

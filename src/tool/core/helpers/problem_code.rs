@@ -1,5 +1,5 @@
 use anyhow::{bail, Context};
-use log::{debug, info, warn};
+use log::{debug, error, info, warn};
 use regex::Regex;
 use strum::IntoEnumIterator as _;
 
@@ -135,17 +135,24 @@ impl FunctionInfo {
             .to_string()
     }
 
-    pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> anyhow::Result<String> {
+    pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> String {
         let mut result = String::new();
         let n = self.fn_args.len();
         let lines: Vec<_> = example_test_case_raw.lines().collect();
 
         if lines.len() != self.fn_args.len() {
-            bail!(
-                "Expected number of augments ({}) to match the number of lines download ({})",
+            let err_msg = format!(
+                "expected number of augments ({}) to match the number of lines downloaded ({})",
                 self.fn_args.len(),
                 lines.len()
-            )
+            );
+            debug!("FunctionInfo:\n{self:#?}");
+            error!("{err_msg}");
+            // In use a while and this doesn't happen. So at least still return but just the error message
+            // and the original input
+            return format!(
+                "/* Error: {err_msg}\nRaw example test cases:\n{example_test_case_raw} */"
+            );
         }
 
         for (i, (&line, arg_type)) in lines
@@ -165,7 +172,7 @@ impl FunctionInfo {
             result.push_str(", todo!(\"Expected Result\")");
         }
 
-        Ok(result)
+        result
     }
 
     fn has_tree(&self) -> bool {
@@ -591,7 +598,7 @@ impl Solution {
         let input = "7\n[2,3,1,2,4,3]";
 
         // Act
-        let actual = fn_info.get_test_case(input).expect("Expected Ok");
+        let actual = fn_info.get_test_case(input);
 
         // Assert
         assert_eq!(actual, expected);
@@ -607,7 +614,7 @@ impl Solution {
         let actual = fn_info.get_test_case(input);
 
         // Assert
-        assert!(actual.is_err());
+        insta::assert_snapshot!(actual);
     }
 
     const fn create_code_stub_all_arg_types_non_design() -> &'static str {
