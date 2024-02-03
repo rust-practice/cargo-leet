@@ -21,7 +21,7 @@ serde = { version = "1.0.164", features = ["derive"], optional = true }
 serde_flat_path = { version = "0.1.2", optional = true }
 serde_json = { version = "1.0.113", optional = true }
 strum = { version = "0.26", features = ["derive"], optional = true }
-ureq = { version = "2.6", features = ["json"], optional = true } # TODO Onè: Remove json feature
+ureq = { version = "2.6", features = ["json"], optional = true }
 
 [[bin]]
 name = "cargo-leet"
