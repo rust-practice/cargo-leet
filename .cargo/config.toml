@@ -2,3 +2,4 @@
 i = "install --path . --features=tool"
 g = "run --features=tool -- leet gen"
 t = "test --all-features"
+update_local_code_snippets = "test --features=tool -- tool::core::helpers::code_snippet::tests::download_response_from_leetcode --exact --nocapture --ignored "
