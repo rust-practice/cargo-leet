@@ -6,6 +6,7 @@ const NAME_TEST_FOLDER: &str = "tests";
 const NAME_LOCAL_STORE: &str = "local_store";
 const NAME_LOCAL_STORE_CODE_SNIPPET: &str = "code_snippet";
 const NAME_LOCAL_STORE_DAILY_CHALLENGE: &str = "daily_challenge";
+const NAME_LOCAL_STORE_PROBLEM_METADATA: &str = "problem_metadata";
 
 pub(crate) fn path_local_store_code_snippet<P: AsRef<Path>>(path: P) -> PathBuf {
     PathBuf::from(NAME_TEST_FOLDER)
@@ -18,6 +19,13 @@ pub(crate) fn path_local_store_daily_challenge() -> PathBuf {
     PathBuf::from(NAME_TEST_FOLDER)
         .join(NAME_LOCAL_STORE)
         .join(NAME_LOCAL_STORE_DAILY_CHALLENGE)
+}
+
+pub(crate) fn path_local_store_problem_metadata<P: AsRef<Path>>(path: P) -> PathBuf {
+    PathBuf::from(NAME_TEST_FOLDER)
+        .join(NAME_LOCAL_STORE)
+        .join(NAME_LOCAL_STORE_PROBLEM_METADATA)
+        .join(path)
 }
 
 #[cfg(test)]
