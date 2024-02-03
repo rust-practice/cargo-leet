@@ -58,7 +58,7 @@ fn get_code_snippets_response(title_slug: &str) -> anyhow::Result<CodeSnippetRes
         external_request_code_snippet(title_slug)
     }?;
     let result = serde_json::from_str(&json)
-        .context("failed to convert from String to CodeSnippetResponse as json")?;
+        .context("failed to convert from String as json to CodeSnippetResponse")?;
     Ok(result)
 }
 
