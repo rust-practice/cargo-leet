@@ -1,4 +1,4 @@
-use super::problem_code::ProblemCode;
+use super::{local_store::path_local_store_code_snippet, problem_code::ProblemCode};
 use crate::tool::config::Config;
 use anyhow::{bail, Context};
 use log::info;
@@ -63,7 +63,7 @@ fn get_code_snippets_response(title_slug: &str) -> anyhow::Result<CodeSnippetRes
 }
 
 fn local_store_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
-    let path = super::local_store::path_local_store_code_snippet(title_slug);
+    let path = path_local_store_code_snippet(title_slug);
     std::fs::read_to_string(&path).with_context(|| format!("failed to read string from {path:?}"))
 }
 
