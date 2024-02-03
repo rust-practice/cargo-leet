@@ -1,4 +1,5 @@
 use anyhow::Context;
+use log::info;
 
 use crate::tool::config::Config;
 
@@ -35,6 +36,7 @@ struct Question {
 }
 
 pub(crate) fn get_daily_challenge_slug() -> anyhow::Result<String> {
+    info!("Attempting to get daily challenge");
     Ok(get_daily_challenge_response()?.into_title_slug())
 }
 
@@ -55,6 +57,7 @@ fn local_store_request_daily_challenge() -> anyhow::Result<String> {
 }
 
 fn external_request_daily_challenge() -> anyhow::Result<String> {
+    info!("[External] Going to send request of daily challenge");
     ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
             "query": "query questionOfToday {
