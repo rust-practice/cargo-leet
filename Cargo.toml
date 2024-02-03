@@ -19,8 +19,9 @@ log = { version = "0.4.18", optional = true }
 regex = { version = "1.8.4", optional = true }
 serde = { version = "1.0.164", features = ["derive"], optional = true }
 serde_flat_path = { version = "0.1.2", optional = true }
+serde_json = { version = "1.0.113", optional = true }
 strum = { version = "0.26", features = ["derive"], optional = true }
-ureq = { version = "2.6", features = ["json"], optional = true }
+ureq = { version = "2.6", features = ["json"], optional = true } # TODO Onè: Remove json feature
 
 [[bin]]
 name = "cargo-leet"
@@ -40,7 +41,12 @@ tool = [
     "log",
     "regex",
     "serde_flat_path",
+    "serde_json",
     "serde",
     "strum",
     "ureq",
 ]
+
+[dev-dependencies]
+insta = "1.34.0" # TODO Onè: Create end to end tests using insta
+rstest = "0.18.2"

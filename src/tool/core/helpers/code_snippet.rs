@@ -37,7 +37,7 @@ struct Data {
 
 #[derive(serde::Deserialize)]
 struct Question {
-    #[serde(rename = "codeSnippet")] // TODO cw: Fix error created (missing an s)
+    #[serde(rename = "codeSnippet")] // TODO Onè: Fix error created (missing an s)
     code_snippets: CodeSnippets,
 }
 
@@ -48,18 +48,27 @@ struct CodeSnippet {
 }
 
 pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<ProblemCode> {
-    let request_code_snippet = request_code_snippet(title_slug)?;
-
-    // Deserialize from Response to Struct
-    let code_snippets_res = request_code_snippet
-        .into_json::<CodeSnippetResponse>()
-        .context("Failed to convert response from json to codes_snippet")?;
-
-    code_snippets_res.into_rust_problem_code()
+    get_code_snippets_response(title_slug)?.into_rust_problem_code()
 }
 
-fn request_code_snippet(title_slug: &str) -> Result<ureq::Response, anyhow::Error> {
-    info!("Going to send request for code for problem with title: {title_slug}");
+fn get_code_snippets_response(title_slug: &str) -> anyhow::Result<CodeSnippetResponse> {
+    let json = if cfg!(test) {
+        local_store_request_code_snippet(title_slug)
+    } else {
+        external_request_code_snippet(title_slug)
+    }?;
+    let result = serde_json::from_str(&json)
+        .context("failed to convert from String to CodeSnippetResponse as json")?;
+    Ok(result)
+}
+
+fn local_store_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
+    let path = super::local_store::path_local_store_code_snippet().join(title_slug);
+    std::fs::read_to_string(&path).with_context(|| format!("failed to read string from {path:?}"))
+}
+
+fn external_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
+    info!("[External] Going to send request for code for problem with title: {title_slug}");
     ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
             "query": "query questionEditorData($titleSlug: String!) {
@@ -73,27 +82,27 @@ fn request_code_snippet(title_slug: &str) -> Result<ureq::Response, anyhow::Erro
             "variables":{"titleSlug": title_slug},
             "operationName":"questionEditorData"
         }))
-        .context("Get request for code_snippet failed")
+        .context("failed to get request for code_snippet failed")?
+        .into_string()
+        .context("failed to convert response into String")
 }
 
 #[cfg(test)]
 mod tests {
-    // use super::*;
 
-    use std::io::Write as _;
+    use rstest::rstest;
 
-    use crate::tool::core::helpers::code_snippet::request_code_snippet;
+    use crate::tool::core::helpers::local_store::tests::{title_slugs, SlugList};
 
-    #[test]
-    fn test_name() {
-        let slug = "two-sum";
-        let response = request_code_snippet(slug).unwrap();
-        let s = response.into_string().unwrap();
-        let mut file = std::fs::OpenOptions::new()
-            .write(true)
-            .create(true)
-            .open("output.json")
-            .unwrap();
-        file.write_all(s.as_bytes()).unwrap();
+    // TODO Onè: Create an ignored test to download the data for testing
+
+    #[rstest]
+    fn conversion_from_leetcode_response(title_slugs: SlugList) {
+        // TODO Onè: Implement test using locally stored data
+        for title in title_slugs {
+            dbg!(title);
+        }
+
+        todo!("Onè")
     }
 }
