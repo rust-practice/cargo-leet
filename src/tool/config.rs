@@ -12,7 +12,7 @@ mod tests {
 
     #[test]
     fn problem_url_ends_with_slash() {
-        // TODO: Switch to using https://docs.rs/static_assertions/latest/static_assertions/
+        // TODO Onè: Switch to using https://docs.rs/static_assertions/latest/static_assertions/
         assert!(Config::LEETCODE_PROBLEM_URL.ends_with('/'));
     }
 
