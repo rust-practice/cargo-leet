@@ -6,7 +6,7 @@ use regex::Regex;
 
 type CodeSnippets = Vec<CodeSnippet>;
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct CodeSnippetResponse {
     data: Data,
 }
@@ -30,18 +30,18 @@ impl CodeSnippetResponse {
     }
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct Data {
     question: Question,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct Question {
     #[serde(rename = "codeSnippet")] // TODO Onè: Fix error created (missing an s)
     code_snippets: CodeSnippets,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct CodeSnippet {
     lang: String,
     code: String,
@@ -88,21 +88,4 @@ fn external_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
 }
 
 #[cfg(test)]
-mod tests {
-
-    use rstest::rstest;
-
-    use crate::tool::core::helpers::local_store::tests::{title_slugs, SlugList};
-
-    // TODO Onè: Create an ignored test to download the data for testing
-
-    #[rstest]
-    fn conversion_from_leetcode_response(title_slugs: SlugList) {
-        // TODO Onè: Implement test using locally stored data
-        for title in title_slugs {
-            dbg!(title);
-        }
-
-        todo!("Onè")
-    }
-}
+mod tests;

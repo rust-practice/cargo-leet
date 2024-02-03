@@ -48,5 +48,5 @@ tool = [
 ]
 
 [dev-dependencies]
-insta = "1.34.0" # TODO Onè: Create end to end tests using insta
+insta = { version = "1.34.0", default-features = false }
 rstest = "0.18.2"
