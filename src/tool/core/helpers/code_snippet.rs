@@ -37,7 +37,7 @@ struct Data {
 
 #[derive(serde::Deserialize, Debug)]
 struct Question {
-    #[serde(rename = "codeSnippet")] // TODO Onè: Fix error created (missing an s)
+    #[serde(rename = "codeSnippets")]
     code_snippets: CodeSnippets,
 }
 
