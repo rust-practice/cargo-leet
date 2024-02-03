@@ -1,0 +1,8 @@
+---
+source: src/tool/core/helpers/problem_code.rs
+assertion_line: 617
+expression: actual
+---
+/* Error: expected number of augments (2) to match the number of lines downloaded (1)
+Raw example test cases:
+[2,3,1,2,4,3] */
