@@ -41,6 +41,7 @@ pub(crate) fn get_daily_challenge_slug() -> anyhow::Result<String> {
 }
 
 fn get_daily_challenge_response() -> anyhow::Result<DailyChallengeResponse> {
+    // TODO Onè: Merge three functions with this tag WeNeedToBeInSync
     let json = if cfg!(test) {
         local_store_request_daily_challenge()
     } else {
