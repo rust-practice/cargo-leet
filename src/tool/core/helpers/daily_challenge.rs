@@ -30,7 +30,7 @@ struct ActiveDailyCodingChallengeQuestion {
 
 #[derive(serde::Deserialize, Debug)]
 struct Question {
-    #[serde(rename = "titleSlu")] // TODO Onè: Fix error (missing g)
+    #[serde(rename = "titleSlug")]
     title_slug: String,
 }
 
