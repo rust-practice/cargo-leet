@@ -119,8 +119,8 @@ mod tests {{
         result
     }
 
-    #[allow(clippy::unused_self)] // TODO Onè: implement question type from leetcode
-                                  // see: https://leetcode.com/tag/design/
+    #[allow(clippy::unused_self, clippy::missing_const_for_fn)] // TODO Onè: implement question type from leetcode
+                                                                // see: https://leetcode.com/tag/design/
     fn get_test_cases_is_design(&self) -> String {
         String::new()
     }
