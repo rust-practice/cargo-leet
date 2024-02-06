@@ -5,7 +5,7 @@
 #![warn(missing_debug_implementations)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::cargo)]
-#![cfg_attr(test, deny(warnings))]
+#![warn(clippy::nursery)] // these might be false positives, so we need to check these on a case-by-case basis
 
 //! The main aim of **cargo-leet** is to make it easier to develop solutions to
 //! leetcode problems locally on your machine. And as such it is composed of two
