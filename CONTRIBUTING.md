@@ -92,10 +92,15 @@ If new files were created that and are not tracked by git they can be added by r
 git add .
 ```
 
+We are trying to use the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) format.
+You can find more info about it [here](https://www.conventionalcommits.org/en/v1.0.0/).
+We try to use the same types as the angular project, which can be found [here](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type).
+Don't stress too much about the commit messages we can always clean them up after.
+
 Now you can commit your changes in your local repository:
 
 ```sh
-git commit -am 'Some short helpful message to describe your changes'
+git commit -am 'feat: title of changes'
 ```
 
 ## Push your changes
