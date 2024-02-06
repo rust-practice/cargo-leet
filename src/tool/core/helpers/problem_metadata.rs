@@ -92,12 +92,10 @@ mod tests {{
         .to_string();
 
         // Add test cases
-        // explicit_iter_loop
         for example_test_case_raw in &self.example_test_case_list {
             let test_case = fn_info
                 .get_test_case(example_test_case_raw)
                 .context("Failed to convert downloaded test case into macro of input")?;
-            // uninlined_format_args
             result.push_str(&format!("    #[case({test_case})]\n"));
         }
 
