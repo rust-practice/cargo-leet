@@ -86,7 +86,7 @@ impl From<&TreeRoot> for Vec<Option<i32>> {
             }
         }
 
-        // todo!("might be able to use iter+filter")
+        // todo!("kat: might be able to use iter+filter")
         // Trim trailing None
         while let Some(last) = result.last() {
             if last.is_none() {
