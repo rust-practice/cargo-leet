@@ -34,7 +34,8 @@
 //! on how the crate is being used. This is especially important for the code
 //! imported in the solution repository as this repo may be using an older
 //! version of the rust toolchain (as of 2024-02-02 the version leetcode uses
-//! is 1.74.1 found in their [Help Center](https://support.leetcode.com/hc/en-us/articles/360011833974-What-are-the-environments-for-the-programming-languages)
+//! is 1.74.1 found in their
+//! [Help Center](https://support.leetcode.com/hc/en-us/articles/360011833974-What-are-the-environments-for-the-programming-languages)
 //! ) due to the fact that leetcode uses a much
 //! older version on their servers and some users may want to use the same
 //! version to ensure their code will always work upon upload.
