@@ -130,13 +130,13 @@ pub(crate) fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMe
     info!("Going to get problem metadata");
     let QuestionWrapper { inner: result } = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
-            "query": r#"query consolePanelConfig($titleSlug: String!) {
+            "query": r"query consolePanelConfig($titleSlug: String!) {
             question(titleSlug: $titleSlug) {
                 questionFrontendId
                 questionTitle
                 exampleTestcaseList
             }
-        }"#,
+        }",
             "variables":{"titleSlug": title_slug},
             "operationName":"consolePanelConfig"
         }))

@@ -25,14 +25,14 @@ pub(crate) fn get_code_snippet_for_problem(title_slug: &str) -> anyhow::Result<P
     info!("Going to get code for {title_slug}");
     let code_snippets_res = ureq::get(Config::LEETCODE_GRAPH_QL)
         .send_json(ureq::json!({
-            "query": r#"query questionEditorData($titleSlug: String!) {
+            "query": r"query questionEditorData($titleSlug: String!) {
                     question(titleSlug: $titleSlug) {
                         codeSnippets {
                             lang
                             code
                         }
                     }
-                }"#,
+                }",
             "variables":{"titleSlug": title_slug},
             "operationName":"questionEditorData"
         }))
