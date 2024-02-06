@@ -6,6 +6,7 @@
 #![warn(clippy::pedantic)]
 #![warn(clippy::cargo)]
 #![warn(clippy::nursery)] // these might be false positives, so we need to check these on a case-by-case basis
+#![allow(clippy::redundant_pub_crate)] // this lint is giving too many false positives
 
 //! The main aim of **cargo-leet** is to make it easier to develop solutions to
 //! leetcode problems locally on your machine. And as such it is composed of two
