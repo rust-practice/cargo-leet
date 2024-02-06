@@ -10,9 +10,7 @@ use std::{env, path::Path};
 /// function.
 ///
 /// # Errors
-/// - Current directory does not exist.
-/// - There are insufficient permissions to access the current directory.
-/// - Returns an Err if the operation fails.
+/// Too numerous to mention. ;-)
 pub fn run(cli: &Cli) -> anyhow::Result<()> {
     cli.update_current_working_dir()?;
 
