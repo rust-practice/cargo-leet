@@ -1,6 +1,5 @@
 ---
-source: src/tool/core/helpers/daily_challenge/tests.rs
-assertion_line: 35
+source: src/tool/core/helpers/daily_challenge.rs
 expression: get_daily_challenge_response().unwrap()
 ---
 DailyChallengeResponse {
