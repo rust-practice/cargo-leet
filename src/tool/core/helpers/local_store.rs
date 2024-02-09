@@ -33,6 +33,10 @@ pub(crate) mod tests {
     use rand::{thread_rng, Rng};
     use rstest::fixture;
 
+    const NAME_SNAPSHOT_FOLDER: &str = "snapshots";
+
+    use super::NAME_TEST_FOLDER;
+
     pub(crate) type SlugList = &'static [&'static str];
 
     // Don't want to send them too fast and not at the same time for all tests so random in range
@@ -49,5 +53,14 @@ pub(crate) mod tests {
     #[fixture]
     pub(crate) fn title_slugs() -> SlugList {
         &["two-sum", "add-two-numbers", "validate-binary-search-tree"]
+    }
+
+    #[fixture]
+    pub(crate) fn insta_settings() -> insta::Settings {
+        let mut result = insta::Settings::clone_current();
+        let cwd = std::env::current_dir().expect("failed to get cwd");
+        let path = cwd.join(NAME_TEST_FOLDER).join(NAME_SNAPSHOT_FOLDER);
+        result.set_snapshot_path(path);
+        result
     }
 }
