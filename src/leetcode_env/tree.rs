@@ -179,11 +179,8 @@ impl From<Vec<Option<i32>>> for TreeRoot {
             .map(|x| TreeNode::wrapped_node_maybe(*x))
             .collect();
 
-        let mut kids: Vec<Option<Rc<RefCell<TreeNode>>>> = nodes
-            .iter()
-            .rev()
-            .map(|x| x.as_ref().map(Rc::clone))
-            .collect();
+        let mut kids: Vec<Option<Rc<RefCell<TreeNode>>>> =
+            nodes.iter().rev().map(std::clone::Clone::clone).collect();
 
         let root = kids.pop().expect("Check for empty done at top");
 

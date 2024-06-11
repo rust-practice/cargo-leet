@@ -3,6 +3,9 @@ use convert_case::{Case, Casing};
 use log::info;
 use std::borrow::Cow;
 
+pub(crate) const SEPARATOR: &str =
+    "// << ---------------- Code below here is only for local use ---------------- >>";
+
 use crate::tool::{
     cli,
     config::Config,
@@ -76,9 +79,7 @@ fn create_module_code(
     let problem_code = get_code_snippet_for_problem(title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    code_snippet.push_str(
-        "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
-    );
+    code_snippet.push_str(format!("\n\n{SEPARATOR}\n").as_str());
 
     // Add struct for non design questions
     if problem_code.type_.is_non_design() {

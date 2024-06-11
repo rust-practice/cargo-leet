@@ -1,4 +1,4 @@
-use std::env;
+use std::{env, path::PathBuf};
 
 use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
@@ -28,7 +28,7 @@ pub struct Cli {
     /// Specify the path to the project root (If not provided uses current
     /// working directory)
     #[arg(long, short, global = true, value_name = "FOLDER")]
-    path: Option<String>,
+    pub path: Option<PathBuf>,
 
     /// Set logging level to use
     #[arg(long, short, global = true, value_enum, default_value_t = LogLevel::Warn)]
@@ -43,9 +43,9 @@ impl Cli {
             env::current_dir()?.display()
         );
         if let Some(path) = &self.path {
-            info!("Going to update working directory to to '{path}'");
+            info!("Going to update working directory to to '{path:?}'");
             env::set_current_dir(path)
-                .with_context(|| format!("Failed to set current dir to: '{path}'"))?;
+                .with_context(|| format!("Failed to set current dir to: '{path:?}'"))?;
             info!(
                 "After updating current dir, it is: '{}'",
                 env::current_dir()?.display()
@@ -61,6 +61,7 @@ impl Cli {
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
     Generate(GenerateArgs),
+    Copy,
 }
 
 #[derive(Args, Debug)]
