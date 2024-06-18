@@ -28,7 +28,7 @@ pub struct Cli {
     /// Specify the path to the project root (If not provided uses current
     /// working directory)
     #[arg(long, short, global = true, value_name = "FOLDER")]
-    pub path: Option<PathBuf>,
+    path: Option<PathBuf>,
 
     /// Set logging level to use
     #[arg(long, short, global = true, value_enum, default_value_t = LogLevel::Warn)]

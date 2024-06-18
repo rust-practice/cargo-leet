@@ -20,7 +20,7 @@ pub fn run(cli: &Cli) -> anyhow::Result<()> {
 
     match &cli.command {
         cli::Commands::Generate(args) => do_generate(args),
-        &cli::Commands::Copy => copy(),
+        cli::Commands::Copy => copy(),
     }
 }
 
