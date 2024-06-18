@@ -50,6 +50,7 @@ pub(crate) fn copy() -> Result<()> {
         })
         .filter_map(Result::ok)
         .join("\n");
+    let contents = contents.trim();
 
     debug!("File contents read ({} bytes)", contents.len());
 
