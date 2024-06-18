@@ -7,10 +7,14 @@ use std::{
 use anyhow::{Context, Result};
 use arboard::Clipboard;
 use itertools::Itertools;
+use log::{debug, info};
 
 use super::generate::SEPARATOR;
 
 pub(crate) fn copy() -> Result<()> {
+    // Logging
+    info!("Starting copy function");
+
     // Find the first file in src/ that is not lib.rs
     let src_dir = Path::new("src");
     let file_name = fs::read_dir(src_dir)
@@ -28,10 +32,15 @@ pub(crate) fn copy() -> Result<()> {
         })
         .context("No file beside lib.rs found in src/")?;
 
+    debug!("Found file: {:?}", file_name);
+
     let file_path = src_dir.join(file_name);
     let file = fs::File::open(&file_path)
         .context(format!("Couldn't open file {}", file_path.display()))?;
     let reader = BufReader::new(file);
+
+    // Logging
+    debug!("Reading file contents");
 
     let contents: String = reader
         .lines()
@@ -42,10 +51,15 @@ pub(crate) fn copy() -> Result<()> {
         .filter_map(Result::ok)
         .join("\n");
 
+    debug!("File contents read ({} bytes)", contents.len());
+
     let mut clipboard = Clipboard::new().context("Couldn't initialize clipboard")?;
     clipboard
         .set_text(contents)
         .context("Couldn't set text to clipboard")?;
+
+    // Logging
+    info!("Copied contents to clipboard");
 
     Ok(())
 }
