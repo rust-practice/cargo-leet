@@ -61,6 +61,7 @@ impl Cli {
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
     Generate(GenerateArgs),
+     /// Copies the code from ??? to your clipboard for pasting on leetcode
     Copy,
 }
 
