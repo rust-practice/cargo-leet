@@ -61,6 +61,10 @@ impl Cli {
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
     Generate(GenerateArgs),
+    /// Either prints the active problem or sets it to the argument
+    Active(ActiveArgs),
+    /// Tests the active problem
+    Test,
 }
 
 #[derive(Args, Debug)]
@@ -70,6 +74,11 @@ pub struct GenerateArgs {
     /// If set the module name generated includes the number for the problem
     #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
     pub should_include_problem_number: bool,
+}
+
+#[derive(Args, Debug)]
+pub struct ActiveArgs {
+    pub problem_slug: Option<String>,
 }
 
 /// Exists to provide better help messages variants copied from [`LevelFilter`]

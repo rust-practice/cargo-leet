@@ -12,6 +12,9 @@ use crate::tool::{
     },
 };
 
+pub(crate) const SEPARATOR: &str =
+    "// << ---------------- Code below here is only for local use ---------------- >>";
+
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         get_slug_from_args(specific_problem)
@@ -67,7 +70,7 @@ fn create_module_code(
     );
 
     // Add problem number and title
-    code_snippet.push_str(&format!("//! {}\n", meta_data.get_num_and_title()));
+    code_snippet.push_str(format!("\n\n{SEPARATOR}\n").as_str());
 
     // Add blank line between docstring and code
     code_snippet.push('\n');

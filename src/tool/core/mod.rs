@@ -1,10 +1,14 @@
+mod active;
 mod generate;
 mod helpers;
+mod test;
 
 use self::generate::do_generate;
 use crate::tool::cli::{self, Cli};
+use active::do_active;
 use anyhow::{bail, Context};
 use std::{env, path::Path};
+use test::do_test;
 
 /// Entry point used by the tool. The `main.rs` is pretty thin shim around this
 /// function.
@@ -18,6 +22,8 @@ pub fn run(cli: &Cli) -> anyhow::Result<()> {
 
     match &cli.command {
         cli::Commands::Generate(args) => do_generate(args),
+        cli::Commands::Active(args) => do_active(args),
+        cli::Commands::Test => do_test(),
     }
 }
 
