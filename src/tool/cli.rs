@@ -60,10 +60,11 @@ impl Cli {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
+    /// Generates the module for the problem
     Generate(GenerateArgs),
     /// Either prints the active problem or sets it to the argument
     Active(ActiveArgs),
-    /// Tests the active problem
+    /// Run tests on active problem
     Test,
 }
 
