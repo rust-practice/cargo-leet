@@ -6,6 +6,7 @@ use std::borrow::Cow;
 use crate::tool::{
     cli,
     config::Config,
+    config_file::ConfigFile,
     core::helpers::{
         code_snippet::get_code_snippet_for_problem, daily_challenge,
         problem_metadata::get_problem_metadata, write_to_disk,
@@ -31,6 +32,11 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     })?;
     write_to_disk::write_file(&module_name, &module_code).context("failed to write to disk")?;
     println!("Generated module: {module_name}");
+
+    let mut config = ConfigFile::load().context("failed to load config")?;
+    config.active = Some(module_name);
+    config.save().context("failed to save config")?;
+
     Ok(())
 }
 
