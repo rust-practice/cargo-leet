@@ -76,7 +76,7 @@ fn create_module_code(
     );
 
     // Add problem number and title
-    code_snippet.push_str(format!("\n\n{SEPARATOR}\n").as_str());
+    code_snippet.push_str(&format!("//! {}\n", meta_data.get_num_and_title()));
 
     // Add blank line between docstring and code
     code_snippet.push('\n');
@@ -85,9 +85,7 @@ fn create_module_code(
     let problem_code = get_code_snippet_for_problem(title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    code_snippet.push_str(
-        "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
-    );
+    code_snippet.push_str(format!("\n\n{SEPARATOR}\n").as_str());
 
     // Add struct for non design questions
     if problem_code.type_.is_non_design() {
