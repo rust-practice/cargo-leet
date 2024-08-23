@@ -1,6 +1,6 @@
 #!/bin/sh
 
-regex="^(feat|fix|build|chore|ci|docs|style|refactor|perf|test)(\[.+\])?: .+"
+regex="^(feat|fix|build|chore|ci|docs|style|refactor|perf|test|revert)(\[.+\])?: .+"
 
 grep -E "$regex" "$1"
 if [ $? != 0 ]
