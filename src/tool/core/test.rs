@@ -14,7 +14,7 @@ pub(crate) fn do_test() -> anyhow::Result<()> {
 
     let lib_rs = fs::read_to_string("src/lib.rs").context("failed to read src/lib.rs")?;
 
-    let exp = Regex::new("mod ([a-zA-Z\\-\\_0-9]+);").context("failed to create regex")?;
+    let exp = Regex::new("(?:pub )?mod ([a-zA-Z\\-\\_0-9]+);").context("failed to create regex")?;
 
     let new_lib_rs = lib_rs
         .lines()
