@@ -42,7 +42,7 @@ fn external_request_problem_metadata(title_slug: &str) -> anyhow::Result<String>
             "variables":{"titleSlug": title_slug},
             "operationName":"consolePanelConfig"
         }))
-        .context("failed to get request for code_snippet failed")?
+        .context("failed to get request for meta data failed")?
         .into_string()
         .context("failed to convert response into String")
 }
