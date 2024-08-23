@@ -9,7 +9,8 @@ use crate::tool::{
     config_file::ConfigFile,
     core::helpers::{
         code_snippet::get_code_snippet_for_problem, daily_challenge,
-        problem_metadata::get_problem_metadata, write_to_disk,
+        problem_description::get_problem_description, problem_metadata::get_problem_metadata,
+        write_to_disk,
     },
 };
 
@@ -68,6 +69,9 @@ fn create_module_code(
 
     let meta_data =
         get_problem_metadata(title_slug).context("failed to retrieve problem meta data")?;
+
+    let description =
+        get_problem_description(title_slug).context("failed to retrieve problem description")?;
 
     // Add problem URL
     let mut code_snippet = format!(
