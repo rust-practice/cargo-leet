@@ -29,6 +29,7 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
 pub(crate) fn write_file(module_name: &str, module_code: &str) -> anyhow::Result<()> {
     info!("Writing code to disk for module {module_name}");
     let path = PathBuf::from(format!("src/{module_name}.rs"));
+    // TODO: Ask user if they want to overwrite the file
     let mut file = OpenOptions::new()
         .write(true)
         .create_new(true)
