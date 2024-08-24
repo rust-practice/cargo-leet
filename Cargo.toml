@@ -12,6 +12,7 @@ description = "Utility program to help with working on leetcode locally"
 
 [dependencies]
 anyhow = { version = "1.0.71", optional = true }
+cargo-generate = "0.21.3"
 clap = { version = "4.3.3", features = ["derive", "cargo"], optional = true }
 convert_case = { version = "0.6", optional = true }
 env_logger = { version = "0.11", optional = true }

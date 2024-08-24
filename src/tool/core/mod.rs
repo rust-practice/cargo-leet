@@ -1,12 +1,14 @@
 mod active;
 mod generate;
 mod helpers;
+mod new;
 mod test;
 
 use self::generate::do_generate;
 use crate::tool::cli::{self, Cli};
 use active::do_active;
 use anyhow::{bail, Context};
+use new::do_new;
 use std::{env, path::Path};
 use test::do_test;
 
@@ -18,12 +20,20 @@ use test::do_test;
 pub fn run(cli: &Cli) -> anyhow::Result<()> {
     cli.update_current_working_dir()?;
 
-    working_directory_validation()?;
-
     match &cli.command {
-        cli::Commands::Generate(args) => do_generate(args),
-        cli::Commands::Active(args) => do_active(args),
-        cli::Commands::Test => do_test(),
+        cli::Commands::Generate(args) => {
+            working_directory_validation()?;
+            do_generate(args)
+        }
+        cli::Commands::Active(args) => {
+            working_directory_validation()?;
+            do_active(args)
+        }
+        cli::Commands::Test => {
+            working_directory_validation()?;
+            do_test()
+        }
+        cli::Commands::New(args) => do_new(args),
     }
 }
 
