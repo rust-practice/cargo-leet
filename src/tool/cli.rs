@@ -66,6 +66,8 @@ pub enum Commands {
     Active(ActiveArgs),
     /// Run tests on active problem
     Test,
+    /// Creates a new pre-configured project from a template for use with cargo-leet
+    New(NewArgs),
 }
 
 #[derive(Args, Debug)]
@@ -80,6 +82,12 @@ pub struct GenerateArgs {
 #[derive(Args, Debug)]
 pub struct ActiveArgs {
     pub problem_slug: Option<String>,
+}
+
+#[derive(Args, Debug)]
+pub struct NewArgs {
+    /// Name of the new project
+    pub name: Option<String>,
 }
 
 /// Exists to provide better help messages variants copied from [`LevelFilter`]
