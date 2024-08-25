@@ -1,6 +1,6 @@
 use crate::tool::config::Config;
 use anyhow::Context;
-use log::info;
+use log::{debug, info};
 
 use super::{get_response, local_store::path_local_store_problem_metadata};
 
@@ -10,7 +10,9 @@ pub(crate) fn get_problem_metadata(
     title_slug: &str,
 ) -> anyhow::Result<data_structure::ProblemMetadata> {
     info!("Attempting to get problem metadata");
-    get_problem_metadata_response(title_slug)?.into_problem_metadata()
+    let result = get_problem_metadata_response(title_slug)?.into_problem_metadata()?;
+    debug!("ProblemMetadata built: {result:#?}");
+    Ok(result)
 }
 
 fn get_problem_metadata_response(
