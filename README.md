@@ -15,28 +15,28 @@ cargo leet [OPTIONS] <COMMAND>
 
 ### Commands
 
-- **new**  
+- **new**
   Creates a new pre-configured project based on a template, which can be used with `cargo-leet`.
 
   ```sh
   cargo leet new [OPTIONS] [NAME]
   ```
 
-- **generate, -g, gen**  
+- **generate, -g, gen**
   Generates a module for the specified problem, allowing you to start working on the solution locally. You can provide a LeetCode problem slug or URL, or leave it blank to use the daily challenge.
 
   ```sh
   cargo leet generate [OPTIONS] [PROBLEM]
   ```
 
-- **active**  
+- **active**
   Prints the currently active problem or sets the active problem to the provided problem slug.
 
   ```sh
   cargo leet active [OPTIONS] [PROBLEM_SLUG]
   ```
 
-- **test**  
+- **test**
   Runs tests on the currently active problem to verify your solution.
 
   ```sh
@@ -45,7 +45,7 @@ cargo leet [OPTIONS] <COMMAND>
 
 ### Options
 
-- **-p, --path \<FOLDER\>**  
+- **-p, --path \<FOLDER\>**
   Specify the path to the project root. If not provided, the current working directory is used.
 - **-l, --log-level \<LOG_LEVEL\>**  
   Set the logging level. Default is `warn`. Available levels:
@@ -55,9 +55,9 @@ cargo leet [OPTIONS] <COMMAND>
   - `info`
   - `debug`
   - `trace`
-- **-h, --help**  
+- **-h, --help**
   Displays help information.
-- **-V, --version**  
+- **-V, --version**
   Prints the version of `cargo leet`.
 
 ### Examples
