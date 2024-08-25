@@ -122,6 +122,30 @@ You can also install `cargo-leet` directly from crates.io. However, please note 
 cargo install cargo-leet -F tool
 ```
 
+### Running Directly from Source without Installation (For Development)
+
+When developing the tool, you can run it directly from the source code without needing to install it. By default, these commands will execute the tool within the current working directory, meaning it will interact with the current project folder for `cargo-leet`.
+
+#### Running in the Current Directory
+
+Running the tool this way is useful for testing but may not be ideal if you need to target a specific project or repository. In such cases, you can specify the path to the desired repository using the `--path` option.
+
+For example, to run the tool against a specific test repository:
+
+```sh
+cargo run -F tool -- leet gen --path $TEST_REPO
+```
+
+#### Using an Alias
+
+If you have an alias configured in `.cargo/config.toml`, you can simplify the command:
+
+```sh
+cargo g
+```
+
+For additional options and usage details, refer to the [generate help](#cargo-leet-generate---help).
+
 ## Using as a Library
 
 You can use `cargo-leet` as a library to mimic the LeetCode environment in your own projects. To do so, add it as a dependency in your `Cargo.toml` file using
