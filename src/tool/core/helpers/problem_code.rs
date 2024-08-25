@@ -148,8 +148,8 @@ impl FunctionInfo {
             );
             debug!("FunctionInfo:\n{self:#?}");
             error!("{err_msg}");
-            // In use a while and this doesn't happen. So at least still return but just the error message
-            // and the original input
+            // In use a while and this doesn't happen. So at least still return but just the
+            // error message and the original input
             return format!(
                 "/* Error: {err_msg}\nRaw example test cases:\n{example_test_case_raw} */"
             );
@@ -575,7 +575,8 @@ impl Solution {
     }
 
     /// Returns the [`FunctionInfo`] for <https://leetcode.com/problems/minimum-array-changes-to-make-differences-equal/description/>
-    /// bug given the long name we're using the function name instead of the actual problem name
+    /// bug given the long name we're using the function name instead of the
+    /// actual problem name
     fn get_fn_info_3224_min_changes() -> FunctionInfo {
         FunctionInfo {
             name: "min_changes".into(),
