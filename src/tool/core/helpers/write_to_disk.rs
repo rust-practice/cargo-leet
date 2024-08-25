@@ -1,4 +1,4 @@
-use anyhow::Context;
+use anyhow::{bail, Context};
 use log::{error, info};
 use std::{
     env,
@@ -7,6 +7,8 @@ use std::{
     path::PathBuf,
     process::Command,
 };
+
+use crate::tool::does_user_confirm;
 
 fn update_lib(module_name: &str) -> anyhow::Result<()> {
     info!("Adding {module_name} to libs.rs");
@@ -29,10 +31,14 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
 pub(crate) fn write_file(module_name: &str, module_code: &str) -> anyhow::Result<()> {
     info!("Writing code to disk for module {module_name}");
     let path = PathBuf::from(format!("src/{module_name}.rs"));
-    // TODO: Ask user if they want to overwrite the file
+    // This creates a TOCTOU but the window is small
+    if path.exists() && !(does_user_confirm(format!("{path:?} already exists. Overwrite?"))?) {
+        bail!("aborted at user request");
+    }
     let mut file = OpenOptions::new()
         .write(true)
-        .create_new(true)
+        .create(true)
+        .truncate(true)
         .open(&path)
         .with_context(|| format!("Failed to create '{}'", path.display()))?;
     file.write_all(module_code.as_bytes())
