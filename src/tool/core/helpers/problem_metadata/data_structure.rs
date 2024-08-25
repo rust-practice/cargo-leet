@@ -1,9 +1,11 @@
 use super::super::problem_code::FunctionInfo;
 
-use crate::tool::core::helpers::problem_code::ProblemType;
+use crate::tool::core::helpers::{
+    problem_code::ProblemType, problem_description::data_structure::ProblemDescription,
+};
 
 use anyhow::Context;
-use log::info;
+use log::{error, info};
 
 use super::super::problem_code::ProblemCode;
 
@@ -56,7 +58,11 @@ impl ProblemMetadata {
         format!("{}. {}", self.id, self.title)
     }
 
-    pub(crate) fn get_test_cases(&self, problem_code: &ProblemCode) -> String {
+    pub(crate) fn get_test_cases(
+        &self,
+        problem_code: &ProblemCode,
+        description: &ProblemDescription,
+    ) -> String {
         info!("Going to get tests");
 
         let mut imports = String::new();
@@ -72,7 +78,14 @@ impl ProblemMetadata {
                 }
 
                 // Add actual test cases
-                self.get_test_cases_is_not_design(fn_info)
+                let solutions = match description.get_solutions().context("failed to extract solutions") {
+                    Ok(x) => x,
+                    Err(e) => {
+                        error!("Extraction failed: {e:?}");
+                        Vec::new()
+                    },
+                };
+                self.get_test_cases_is_not_design(fn_info, solutions)
             }
             ProblemType::Design => self.get_test_cases_is_design(),
         };
@@ -90,16 +103,30 @@ mod tests {{
         )
     }
 
-    fn get_test_cases_is_not_design(&self, fn_info: &FunctionInfo) -> String {
+    fn get_test_cases_is_not_design(
+        &self,
+        fn_info: &FunctionInfo,
+        mut solutions: Vec<String>,
+    ) -> String {
         let mut result = "use rstest::rstest;
 
     #[rstest]
 "
         .to_string();
 
+        if solutions.len() != self.example_test_case_list.len() {
+            error!(
+                "Number of solutions ({}) does not match the number of test cases ({}). Falling back to no solutions. Solutions were: {solutions:?}", 
+                solutions.len(), 
+                self.example_test_case_list.len()
+            );
+            solutions = self.example_test_case_list.iter().map(|_| "todo!(\"Failed to get solutions\"".to_string()).collect();
+        }
+        assert_eq!(solutions.len(), self.example_test_case_list.len());
+
         // Add test cases
-        for example_test_case_raw in &self.example_test_case_list {
-            let test_case = fn_info.get_test_case(example_test_case_raw);
+        for (example_test_case_raw, solution) in self.example_test_case_list.iter().zip(solutions) {
+            let test_case = fn_info.get_test_case(example_test_case_raw, &solution);
             result.push_str(&format!("    #[case({test_case})]\n"));
         }
 
