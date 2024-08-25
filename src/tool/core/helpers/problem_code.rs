@@ -570,19 +570,21 @@ impl Solution {
         assert_eq!(fn_info.get_args_names(), "s1, s2, s3");
     }
 
-    fn get_fn_info_min_sub_array_len() -> FunctionInfo {
+    /// Returns the [`FunctionInfo`] for <https://leetcode.com/problems/minimum-array-changes-to-make-differences-equal/description/>
+    /// bug given the long name we're using the function name instead of the actual problem name
+    fn get_fn_info_3224_min_changes() -> FunctionInfo {
         FunctionInfo {
-            name: "min_sub_array_len".into(),
+            name: "min_changes".into(),
             fn_args: FunctionArgs {
-                raw_str: "target: i32, nums: Vec<i32>".into(),
+                raw_str: "nums: Vec<i32>, k: i32".into(),
                 args: vec![
-                    FunctionArg {
-                        identifier: "target".into(),
-                        arg_type: FunctionArgType::I32,
-                    },
                     FunctionArg {
                         identifier: "nums".into(),
                         arg_type: FunctionArgType::VecI32,
+                    },
+                    FunctionArg {
+                        identifier: "k".into(),
+                        arg_type: FunctionArgType::I32,
                     },
                 ],
             },
@@ -593,9 +595,9 @@ impl Solution {
     #[test]
     fn get_test_case_ok() {
         // Arrange
-        let expected = r#"7, vec![2,3,1,2,4,3], todo!("Expected Result")"#;
-        let fn_info = get_fn_info_min_sub_array_len();
-        let input = "7\n[2,3,1,2,4,3]";
+        let expected = r#"vec![1,0,1,2,4,3], 4, todo!("Expected Result")"#;
+        let fn_info = get_fn_info_3224_min_changes();
+        let input = "[1,0,1,2,4,3]\n4";
 
         // Act
         let actual = fn_info.get_test_case(input);
@@ -607,8 +609,8 @@ impl Solution {
     #[test]
     fn get_test_case_invalid_num_args() {
         // Arrange
-        let fn_info = get_fn_info_min_sub_array_len();
-        let input = "[2,3,1,2,4,3]";
+        let fn_info = get_fn_info_3224_min_changes();
+        let input = "[1,0,1,2,4,3]";
 
         // Act
         let actual = fn_info.get_test_case(input);
