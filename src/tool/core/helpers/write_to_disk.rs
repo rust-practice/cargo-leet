@@ -24,6 +24,7 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
                     .join(lib_path)
             )
         })?;
+    // TODO Onè: Not duplicate module add if it already exists
     let _ = lib.write(format!("pub mod {module_name};").as_bytes())?;
     Ok(())
 }
