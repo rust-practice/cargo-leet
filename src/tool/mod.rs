@@ -21,5 +21,5 @@ fn does_user_confirm<S: Display>(prompt: S) -> anyhow::Result<bool> {
         .read_line(&mut user_input)
         .context("failed to read user input")?;
 
-    Ok(user_input.to_lowercase().starts_with("y"))
+    Ok(user_input.to_lowercase().starts_with('y'))
 }
