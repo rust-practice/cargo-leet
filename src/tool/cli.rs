@@ -66,7 +66,8 @@ pub enum Commands {
     Active(ActiveArgs),
     /// Run tests on active problem
     Test,
-    /// Creates a new pre-configured project from a template for use with cargo-leet
+    /// Creates a new pre-configured project from a template for use with
+    /// cargo-leet
     New(NewArgs),
 }
 

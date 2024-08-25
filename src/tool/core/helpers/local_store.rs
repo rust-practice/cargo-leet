@@ -47,7 +47,8 @@ pub(crate) mod tests {
 
     pub(crate) type SlugList = &'static [&'static str];
 
-    // Don't want to send them too fast and not at the same time for all tests so random in range
+    // Don't want to send them too fast and not at the same time for all tests so
+    // random in range
     const MILLISECONDS_DELAY_BETWEEN_REQUESTS_MIN: u64 = 5000;
     const MILLISECONDS_DELAY_BETWEEN_REQUESTS_MAX: u64 = 9000;
 
