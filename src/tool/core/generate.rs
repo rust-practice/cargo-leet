@@ -143,6 +143,11 @@ fn url_to_slug(url: &str) -> anyhow::Result<String> {
 
 #[cfg(test)]
 mod tests {
+    use cli::GenerateArgs;
+    use rstest::rstest;
+
+    use crate::tool::core::helpers::local_store::tests::{insta_settings, title_slugs, SlugList};
+
     use super::*;
 
     #[test]
@@ -166,5 +171,20 @@ mod tests {
         let url = "http://leetcode.com/problems/two-sum/".to_string();
         let actual = get_slug_from_args(&url);
         assert!(actual.is_err());
+    }
+
+    #[rstest]
+    fn extract_solutions_from_description(title_slugs: SlugList, insta_settings: insta::Settings) {
+        let args = GenerateArgs {
+            problem: None,
+            should_include_problem_number: false,
+        };
+
+        for title_slug in title_slugs {
+            insta_settings.bind(|| {
+                let (_, code_generated) = create_module_code(title_slug, &args).unwrap();
+                insta::assert_snapshot!(code_generated);
+            });
+        }
     }
 }
