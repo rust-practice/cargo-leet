@@ -93,4 +93,14 @@ mod tests {
             });
         }
     }
+
+    #[rstest]
+    fn extract_solutions_from_description(title_slugs: SlugList, insta_settings: insta::Settings) {
+        for title_slug in title_slugs {
+            insta_settings.bind(|| {
+                let problem_description = get_problem_description(title_slug).unwrap();
+                insta::assert_debug_snapshot!(problem_description.get_solutions());
+            });
+        }
+    }
 }

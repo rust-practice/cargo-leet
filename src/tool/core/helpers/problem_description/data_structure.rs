@@ -1,4 +1,3 @@
-use anyhow::bail;
 use log::info;
 use regex::Regex;
 
@@ -23,14 +22,12 @@ pub(crate) struct ProblemDescription {
 }
 
 impl ProblemDescription {
-    pub(crate) fn get_solutions(&self) -> anyhow::Result<Vec<String>> {
+    pub(crate) fn get_solutions(&self) -> Vec<String> {
         info!("Extracting solutions from description");
-        let re = Regex::new(r"Output:<\/strong> (.*?)\\n")?;
-        let Some(caps) = re.captures(&self.content) else {
-            bail!("Regex failed to match");
-        };
-        dbg!(caps);
-        todo!()
+        let re = Regex::new(r"Output:<\/strong> (.+?)\n").expect("compiling static regex");
+        re.captures_iter(&self.content)
+            .map(|mat| mat[1].to_string())
+            .collect()
     }
 }
 
