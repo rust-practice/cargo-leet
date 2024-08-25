@@ -1,4 +1,6 @@
+use anyhow::bail;
 use log::info;
+use regex::Regex;
 
 #[derive(serde::Deserialize, Debug)]
 pub(crate) struct ProblemDescriptionResponse {
@@ -21,8 +23,13 @@ pub(crate) struct ProblemDescription {
 }
 
 impl ProblemDescription {
-    pub(crate) fn get_solutions(&self) -> Vec<String> {
+    pub(crate) fn get_solutions(&self) -> anyhow::Result<Vec<String>> {
         info!("Extracting solutions from description");
+        let re = Regex::new(r"Output:<\/strong> (.*?)\\n")?;
+        let Some(caps) = re.captures(&self.content) else {
+            bail!("Regex failed to match");
+        };
+        dbg!(caps);
         todo!()
     }
 }

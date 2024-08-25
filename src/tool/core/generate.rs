@@ -105,7 +105,7 @@ fn create_module_code(
     }
 
     // Add tests
-    let tests = meta_data.get_test_cases(&problem_code);
+    let tests = meta_data.get_test_cases(&problem_code, &description);
     code_snippet.push_str(&tests);
 
     // Set module name

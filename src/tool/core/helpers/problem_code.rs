@@ -135,7 +135,7 @@ impl FunctionInfo {
             .to_string()
     }
 
-    pub(crate) fn get_test_case(&self, example_test_case_raw: &str) -> String {
+    pub(crate) fn get_test_case(&self, example_test_case_raw: &str, solution: &str) -> String {
         let mut result = String::new();
         let n = self.fn_args.len();
         let lines: Vec<_> = example_test_case_raw.lines().collect();
@@ -169,7 +169,8 @@ impl FunctionInfo {
 
         // Include return type
         if self.return_type.is_some() {
-            result.push_str(", todo!(\"Expected Result\")");
+            // TODO Chè: Figure out how to ensure solution is converted when necessary
+            result.push_str(format!(", {solution}").as_str());
         }
 
         result
@@ -595,12 +596,13 @@ impl Solution {
     #[test]
     fn get_test_case_ok() {
         // Arrange
-        let expected = r#"vec![1,0,1,2,4,3], 4, todo!("Expected Result")"#;
+        let expected = "vec![1,0,1,2,4,3], 4, 2";
         let fn_info = get_fn_info_3224_min_changes();
         let input = "[1,0,1,2,4,3]\n4";
+        let solution = "2";
 
         // Act
-        let actual = fn_info.get_test_case(input);
+        let actual = fn_info.get_test_case(input, solution);
 
         // Assert
         assert_eq!(actual, expected);
@@ -611,9 +613,10 @@ impl Solution {
         // Arrange
         let fn_info = get_fn_info_3224_min_changes();
         let input = "[1,0,1,2,4,3]";
+        let solution = "2";
 
         // Act
-        let actual = fn_info.get_test_case(input);
+        let actual = fn_info.get_test_case(input, solution);
 
         // Assert
         insta::assert_snapshot!(actual);
