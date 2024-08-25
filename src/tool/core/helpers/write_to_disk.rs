@@ -2,7 +2,7 @@ use anyhow::{bail, Context};
 use log::{error, info};
 use std::{
     env,
-    fs::{remove_file, OpenOptions},
+    fs::{self, remove_file, OpenOptions},
     io::Write,
     path::PathBuf,
     process::Command,
@@ -10,9 +10,27 @@ use std::{
 
 use crate::tool::does_user_confirm;
 
-fn update_lib(module_name: &str) -> anyhow::Result<()> {
+/// Updates lib.rs by adding a module declaration for `module_name` only check
+/// for possible duplication if `is_likely_already_exists` is true because it
+/// opens the file twice in that case to avoid reading from and writing to the
+/// file when the common case is expected to be append only
+fn update_lib(module_name: &str, is_likely_already_exist: bool) -> anyhow::Result<()> {
     info!("Adding {module_name} to libs.rs");
     let lib_path = PathBuf::from("src/lib.rs");
+
+    // Check to avoid duplicating module declaration
+    if is_likely_already_exist {
+        // Note this does not handle multi-line comments with /* */
+        let contents = fs::read_to_string(&lib_path)
+            .context("failed to read from lib.rs to check for existing mod declaration")?;
+        for line in contents.lines() {
+            if !line.trim().starts_with('/') && line.contains(module_name) {
+                info!("lib.rs already contains {module_name} skipping update");
+                return Ok(());
+            }
+        }
+    }
+
     let mut lib = OpenOptions::new()
         .append(true)
         .open(&lib_path)
@@ -24,7 +42,7 @@ fn update_lib(module_name: &str) -> anyhow::Result<()> {
                     .join(lib_path)
             )
         })?;
-    // TODO Onè: Not duplicate module add if it already exists
+
     lib.write_all(format!("pub mod {module_name};").as_bytes())
         .context("write to lib.rs failed")?;
     Ok(())
@@ -34,7 +52,10 @@ pub(crate) fn write_file(module_name: &str, module_code: &str) -> anyhow::Result
     info!("Writing code to disk for module {module_name}");
     let path = PathBuf::from(format!("src/{module_name}.rs"));
     // This creates a TOCTOU but the window is small
-    if path.exists() && !(does_user_confirm(format!("{path:?} already exists. Overwrite?"))?) {
+    let did_file_already_exist = path.exists();
+    if did_file_already_exist
+        && !(does_user_confirm(format!("{path:?} already exists. Overwrite?"))?)
+    {
         bail!("aborted at user request");
     }
     let mut file = OpenOptions::new()
@@ -45,7 +66,7 @@ pub(crate) fn write_file(module_name: &str, module_code: &str) -> anyhow::Result
         .with_context(|| format!("Failed to create '{}'", path.display()))?;
     file.write_all(module_code.as_bytes())
         .with_context(|| format!("Failed writing to '{}'", path.display()))?;
-    let lib_update_status = update_lib(module_name);
+    let lib_update_status = update_lib(module_name, did_file_already_exist);
     if lib_update_status.is_err() {
         error!("Failed to update lib.rs: Performing cleanup of partially completed command");
         // clean up
