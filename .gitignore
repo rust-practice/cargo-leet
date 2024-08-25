@@ -1,3 +1,7 @@
 /target
+
+# User preferences
 .leet.toml
+
+# New snapshot files
 *.snap.new
