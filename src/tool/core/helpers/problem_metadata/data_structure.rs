@@ -78,13 +78,7 @@ impl ProblemMetadata {
                 }
 
                 // Add actual test cases
-                let solutions = match description.get_solutions().context("failed to extract solutions") {
-                    Ok(x) => x,
-                    Err(e) => {
-                        error!("Extraction failed: {e:?}");
-                        Vec::new()
-                    },
-                };
+                let solutions = description.get_solutions();
                 self.get_test_cases_is_not_design(fn_info, solutions)
             }
             ProblemType::Design => self.get_test_cases_is_design(),
@@ -117,10 +111,14 @@ mod tests {{
         if solutions.len() != self.example_test_case_list.len() {
             error!(
                 "Number of solutions ({}) does not match the number of test cases ({}). Falling back to no solutions. Solutions were: {solutions:?}", 
-                solutions.len(), 
+                solutions.len(),
                 self.example_test_case_list.len()
             );
-            solutions = self.example_test_case_list.iter().map(|_| "todo!(\"Failed to get solutions\"".to_string()).collect();
+            solutions = self
+                .example_test_case_list
+                .iter()
+                .map(|_| "todo!(\"Failed to get solutions\"".to_string())
+                .collect();
         }
         assert_eq!(solutions.len(), self.example_test_case_list.len());
 
