@@ -168,9 +168,10 @@ impl FunctionInfo {
         }
 
         // Include return type
-        if self.return_type.is_some() {
-            // TODO Chè: Figure out how to ensure solution is converted when necessary
-            result.push_str(format!(", {solution}").as_str());
+        if let Some(ret_type) = &self.return_type {
+            let sol = ret_type.apply(solution);
+            result.push_str(", ");
+            result.push_str(&sol);
         }
 
         result
