@@ -144,7 +144,7 @@ If you have an alias configured in `.cargo/config.toml`, you can simplify the co
 cargo g
 ```
 
-For additional options and usage details, refer to the [generate help](#cargo-leet-generate---help).
+For additional options and usage details, refer to the generate help in [commands](#commands).
 
 ## Using as a Library
 
