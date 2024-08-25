@@ -372,6 +372,8 @@ impl From<&str> for FunctionArgType {
 mod tests {
     use std::collections::HashSet;
 
+    use crate::tool::core::helpers::local_store::tests::insta_settings;
+    use rstest::rstest;
     use strum::IntoEnumIterator;
 
     use super::*;
@@ -609,8 +611,8 @@ impl Solution {
         assert_eq!(actual, expected);
     }
 
-    #[test]
-    fn get_test_case_invalid_num_args() {
+    #[rstest]
+    fn get_test_case_invalid_num_args(insta_settings: insta::Settings) {
         // Arrange
         let fn_info = get_fn_info_3224_min_changes();
         let input = "[1,0,1,2,4,3]";
@@ -620,7 +622,9 @@ impl Solution {
         let actual = fn_info.get_test_case(input, solution);
 
         // Assert
-        insta::assert_snapshot!(actual);
+        insta_settings.bind(|| {
+            insta::assert_snapshot!(actual);
+        });
     }
 
     const fn create_code_stub_all_arg_types_non_design() -> &'static str {
