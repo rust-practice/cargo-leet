@@ -47,7 +47,7 @@ cargo leet [OPTIONS] <COMMAND>
 
 - **-p, --path \<FOLDER\>**
   Specify the path to the project root. If not provided, the current working directory is used.
-- **-l, --log-level \<LOG_LEVEL\>**  
+- **-l, --log-level \<LOG_LEVEL\>**
   Set the logging level. Default is `warn`. Available levels:
   - `off`: No logging
   - `error`
