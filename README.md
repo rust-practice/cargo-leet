@@ -1,11 +1,10 @@
 # `cargo-leet` - A leetcode local development assistant
 
-A program that given the link or slug to a leetcode problem,
-creates a local file where you can develop and test your solution before post it back to leetcode.
+The `cargo leet` program helps you streamline your workflow with LeetCode problem local file where you can develop and test your solution before post it back to leetcode.
 
 ## Usage
 
-The `cargo leet` program helps you streamline your workflow with LeetCode problems by generating local files for solution development and testing before submitting them back to LeetCode. Below is a summary of how to use the various commands and options available in `cargo leet`.
+Below is a summary of how to use the various commands and options available in `cargo leet`.
 
 ### General Usage
 
