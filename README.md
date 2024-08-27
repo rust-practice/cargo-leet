@@ -1,118 +1,159 @@
-## cargo-leet - A leetcode local development assistant
+# `cargo-leet` - A leetcode local development assistant
 
-A program that given the link or slug to a leetcode problem,
-creates a local file where you can develop and test your solution before post it back to leetcode.
+The `cargo leet` program helps you streamline your workflow with LeetCode problem local file where you can develop and test your solution before post it back to leetcode.
 
-## Help Messages
+## Usage
 
-### `cargo leet -h`
+Below is a summary of how to use the various commands and options available in `cargo leet`.
 
-```
-cargo-leet
-
-Usage: cargo <COMMAND>
-
-Commands:
-  leet  This is necessary because it's a cargo subcommand so the first argument needs to be the command name
-  help  Print this message or the help of the given subcommand(s)
-
-Options:
-  -h, --help  Print help (see more with '--help')
-```
-
-### `cargo leet generate --help`
-
-```
-Usage: cargo leet {generate|-g} [OPTIONS] [PROBLEM]
-
-Arguments:
-  [PROBLEM]
-          Question slug or url (If none specified then daily challenge is used)
-
-Options:
-  -n, --number_in_name
-          If set the module name generated includes the number for the problem
-
-  -p, --path <FOLDER>
-          Specify the path to the project root (If not provided uses current working directory)
-
-  -l, --log-level <LOG_LEVEL>
-          Set logging level to use
-
-          [default: warn]
-
-          Possible values:
-          - off:   Nothing emitted in this mode
-          - error
-          - warn
-          - info
-          - debug
-          - trace
-
-  -h, --help
-          Print help (see a summary with '-h')
-```
-
-## Using Library Support
-
-Using the library to "mimic" leetcode environment. Add library as a dependency as below. Then add use statements as
-necessary. The use statements are automatically added if tool is used to generate the file for the problem.
-
-```toml
-cargo-leet = "0.2.0"
-```
-
-## Tool Installation
-
-NB: If cargo-leet is already installed, and you install it again, it will just replace it even if it was previously
-installed from a different source. For example if you install it from a clone then run the command to install from git
-it will replace the existing version that is installed (they will not both be installed).
-
-### From GitHub
+### General Usage
 
 ```sh
-cargo install --git https://github.com/rust-practice/cargo-leet.git --branch main --features=tool
+cargo leet [OPTIONS] <COMMAND>
 ```
 
-### From Clone
+### Commands
 
-After cloning the repo run
+- **new**
+  Creates a new pre-configured project based on a template, which can be used with `cargo-leet`.
+
+  ```sh
+  cargo leet new [OPTIONS] [NAME]
+  ```
+
+- **generate, -g, gen**
+  Generates a module for the specified problem, allowing you to start working on the solution locally. You can provide a LeetCode problem slug or URL, or leave it blank to use the daily challenge.
+
+  ```sh
+  cargo leet generate [OPTIONS] [PROBLEM]
+  ```
+
+- **active**
+  Prints the currently active problem or sets the active problem to the provided problem slug.
+
+  ```sh
+  cargo leet active [OPTIONS] [PROBLEM_SLUG]
+  ```
+
+- **test**
+  Runs tests on the currently active problem to verify your solution.
+
+  ```sh
+  cargo leet test [OPTIONS]
+  ```
+
+### Options
+
+- **-p, --path \<FOLDER\>**
+  Specify the path to the project root. If not provided, the current working directory is used.
+- **-l, --log-level \<LOG_LEVEL\>**
+  Set the logging level. Default is `warn`. Available levels:
+  - `off`: No logging
+  - `error`
+  - `warn`
+  - `info`
+  - `debug`
+  - `trace`
+- **-h, --help**
+  Displays help information.
+- **-V, --version**
+  Prints the version of `cargo leet`.
+
+### Examples
+
+- **Create a new project**:
+
+  ```sh
+  cargo leet new my-leetcode-project
+  ```
+
+- **Change into the directory**
+
+  ```sh
+  cd my-leetcode-project
+  ```
+
+- **Generate a module for a specific problem**:
+
+  ```sh
+  cargo leet generate two-sum
+  ```
+
+- **Set the active problem (done automatically by `cargo leet gen`)**:
+
+  ```sh
+  cargo leet active two-sum
+  ```
+
+- **Run tests on the active problem**:
+
+  ```sh
+  cargo leet test
+  ```
+
+## Installation
+
+Note: If `cargo-leet` is already installed and you install it again, the existing installation will be replaced, even if it was originally installed from a different source. For instance, if you first install it from a local clone and then reinstall it from a Git repository, the new installation will overwrite the previous one (you won't have both versions installed).
+
+### Build from Source
+
+You can build `cargo-leet` from source using two different channels:
+
+- **Stable (main)**
+
+  ```sh
+  cargo install --git https://github.com/rust-practice/cargo-leet.git --branch main -F tool
+  ```
+
+  This installs the stable version of `cargo-leet` from the `main` branch.
+
+- **Development (develop)**
+  ```sh
+  cargo install --git https://github.com/rust-practice/cargo-leet.git --branch develop -F tool
+  ```
+  This installs the latest development version from the `develop` branch, which may include new features or changes that are still being tested.
+
+### Install from crates.io
+
+You can also install `cargo-leet` directly from crates.io. However, please note that the crates.io release may not always reflect the latest updates.
 
 ```sh
-cargo install --path . --features=tool
+cargo install cargo-leet -F tool
 ```
 
-or using alias from `.cargo/config.toml`
+### Running Directly from Source without Installation (For Development)
+
+When developing the tool, you can run it directly from the source code without needing to install it. By default, these commands will execute the tool within the current working directory, meaning it will interact with the current project folder for `cargo-leet`.
+
+#### Running in the Current Directory
+
+Running the tool this way is useful for testing but may not be ideal if you need to target a specific project or repository. In such cases, you can specify the path to the desired repository using the `--path` option.
+
+For example, to run the tool against a specific test repository:
 
 ```sh
-cargo i
+cargo run -F tool -- leet gen --path $TEST_REPO
 ```
 
-## Running Directly from source without install (When developing the tool)
+#### Using an Alias
 
-These commands allow you to run the tool directly from the source code without installation.
-By default, they will run the tool on the current working directory.
-This means that it will run in the current project folder for cargo-leet.
-This may be fine for testing but if you want to be able to actually run the code, it might be more appropriate to pass
-the path parameter and specify the path to the repository you want to run against.
-Eg. `cargo g --path $TEST_REPO`
-For more options see [generate help](#cargo-leet-generate---help)
-
-```sh
-cargo run --features=tool -- leet gen
-```
-
-or using alias from `.cargo/config.toml`
+If you have an alias configured in `.cargo/config.toml`, you can simplify the command:
 
 ```sh
 cargo g
 ```
 
-## Tool Uninstallation
+For additional options and usage details, refer to the generate help in [commands](#commands).
+
+## Using as a Library
+
+You can use `cargo-leet` as a library to mimic the LeetCode environment in your own projects. To do so, add it as a dependency in your `Cargo.toml` file using
 
 ```sh
-cargo uninstall cargo-leet
+cargo add cargo-leet
 ```
+
+For more information, see [the documentation](https://docs.rs/cargo-leet/).
 
 ## License
 
