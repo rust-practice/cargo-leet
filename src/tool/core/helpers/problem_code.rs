@@ -126,6 +126,8 @@ impl FunctionInfo {
         names.join(", ")
     }
 
+    // Allow warning because this is actually code to be inserted into the generated code
+    #[allow(clippy::literal_string_with_formatting_args)]
     pub(crate) fn get_solution_comparison_code(&self) -> String {
         if matches!(&self.return_type, Some(FunctionArgType::F64)) {
             "assert!((actual - expected).abs() < 1e-5, \"Assertion failed: actual {actual:.5} but expected {expected:.5}. Diff is more than 1e-5.\");"
