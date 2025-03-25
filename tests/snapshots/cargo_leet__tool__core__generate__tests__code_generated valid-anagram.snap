@@ -1,0 +1,30 @@
+---
+source: src/tool/core/generate.rs
+expression: code_generated
+---
+//! Solution for https://leetcode.com/problems/valid-anagram
+//! 242. Valid Anagram
+
+impl Solution {
+    pub fn is_anagram(s: String, t: String) -> bool { todo!("Fill in body") }
+}
+
+// << ---------------- Code below here is only for local use ---------------- >>
+
+pub struct Solution;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+
+    use rstest::rstest;
+
+    #[rstest]
+    #[case("anagram", "nagaram", true)]
+    #[case("rat", "car", false)]
+    fn case(#[case] s: String, #[case]  t: String, #[case] expected: bool) {
+        let actual = Solution::is_anagram(s, t);
+        assert_eq!(actual, expected);
+    }
+}

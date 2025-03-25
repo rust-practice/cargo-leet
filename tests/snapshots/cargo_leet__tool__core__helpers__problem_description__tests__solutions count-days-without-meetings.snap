@@ -1,0 +1,9 @@
+---
+source: src/tool/core/helpers/problem_description.rs
+expression: problem_description.get_solutions()
+---
+[
+    "2",
+    "1",
+    "0",
+]
