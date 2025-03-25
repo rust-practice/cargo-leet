@@ -1,7 +1,5 @@
 # Contributing
 
-<!-- TODO (Chè): Add instructions on how to add new test problems -->
-
 ## Where to start
 
 All contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
@@ -16,7 +14,24 @@ There are lots of ways to get involved a few of them are:
 
 Please see the [issue templates](https://github.com/rust-practice/cargo-leet/issues/new/choose) that describe the types of information that we are looking for but no worries just fill it the best you can and we'll go from there.
 
-## General tips for beginners (Not strict rules just a guide)
+## Adding more problems to run snapshots on
+
+If we need a fix for a particular problem it's a good idea to add that problem to the list we keep snapshots for to ensure the problem stays fixed.
+It also makes it easier to iterate on testing your fix as you can just use the tests to get a new snapshot.
+
+Steps to add a new problem:
+
+1. Add the problem's slug to the `title_slugs` fixture in `src/tool/core/helpers/local_store.rs`
+2. Download local copies of the problem info from leetcode.
+   - See `.cargo/config.toml` for the list of commands that you can use with `cargo`
+   - Example of a command is `cargo update_local_code_snippets`
+3. Commit the information downloaded
+4. Generate and review snapshots
+   - `cargo insta_test` to generate snapshots
+   - `cargo insta review` to review the snapshots generated
+5. If snapshots are correct commit the snapshots otherwise repeat the previous step
+
+## General tips for beginners (Not strict rules just a suggested approach)
 
 ### Fork the project
 
