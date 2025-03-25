@@ -1,0 +1,88 @@
+---
+source: src/tool/core/helpers/code_snippet.rs
+expression: get_code_snippets_response(title_slug).unwrap()
+---
+CodeSnippetResponse {
+    data: Data {
+        question: Question {
+            code_snippets: [
+                CodeSnippet {
+                    lang: "C++",
+                    code: "class Solution {\npublic:\n    int countDays(int days, vector<vector<int>>& meetings) {\n        \n    }\n};",
+                },
+                CodeSnippet {
+                    lang: "Java",
+                    code: "class Solution {\n    public int countDays(int days, int[][] meetings) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Python",
+                    code: "class Solution(object):\n    def countDays(self, days, meetings):\n        \"\"\"\n        :type days: int\n        :type meetings: List[List[int]]\n        :rtype: int\n        \"\"\"\n        ",
+                },
+                CodeSnippet {
+                    lang: "Python3",
+                    code: "class Solution:\n    def countDays(self, days: int, meetings: List[List[int]]) -> int:\n        ",
+                },
+                CodeSnippet {
+                    lang: "C",
+                    code: "int countDays(int days, int** meetings, int meetingsSize, int* meetingsColSize) {\n    \n}",
+                },
+                CodeSnippet {
+                    lang: "C#",
+                    code: "public class Solution {\n    public int CountDays(int days, int[][] meetings) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "JavaScript",
+                    code: "/**\n * @param {number} days\n * @param {number[][]} meetings\n * @return {number}\n */\nvar countDays = function(days, meetings) {\n    \n};",
+                },
+                CodeSnippet {
+                    lang: "TypeScript",
+                    code: "function countDays(days: number, meetings: number[][]): number {\n    \n};",
+                },
+                CodeSnippet {
+                    lang: "PHP",
+                    code: "class Solution {\n\n    /**\n     * @param Integer $days\n     * @param Integer[][] $meetings\n     * @return Integer\n     */\n    function countDays($days, $meetings) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Swift",
+                    code: "class Solution {\n    func countDays(_ days: Int, _ meetings: [[Int]]) -> Int {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Kotlin",
+                    code: "class Solution {\n    fun countDays(days: Int, meetings: Array<IntArray>): Int {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Dart",
+                    code: "class Solution {\n  int countDays(int days, List<List<int>> meetings) {\n    \n  }\n}",
+                },
+                CodeSnippet {
+                    lang: "Go",
+                    code: "func countDays(days int, meetings [][]int) int {\n    \n}",
+                },
+                CodeSnippet {
+                    lang: "Ruby",
+                    code: "# @param {Integer} days\n# @param {Integer[][]} meetings\n# @return {Integer}\ndef count_days(days, meetings)\n    \nend",
+                },
+                CodeSnippet {
+                    lang: "Scala",
+                    code: "object Solution {\n    def countDays(days: Int, meetings: Array[Array[Int]]): Int = {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Rust",
+                    code: "impl Solution {\n    pub fn count_days(days: i32, meetings: Vec<Vec<i32>>) -> i32 {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Racket",
+                    code: "(define/contract (count-days days meetings)\n  (-> exact-integer? (listof (listof exact-integer?)) exact-integer?)\n  )",
+                },
+                CodeSnippet {
+                    lang: "Erlang",
+                    code: "-spec count_days(Days :: integer(), Meetings :: [[integer()]]) -> integer().\ncount_days(Days, Meetings) ->\n  .",
+                },
+                CodeSnippet {
+                    lang: "Elixir",
+                    code: "defmodule Solution do\n  @spec count_days(days :: integer, meetings :: [[integer]]) :: integer\n  def count_days(days, meetings) do\n    \n  end\nend",
+                },
+            ],
+        },
+    },
+}

@@ -1,0 +1,88 @@
+---
+source: src/tool/core/helpers/code_snippet.rs
+expression: get_code_snippets_response(title_slug).unwrap()
+---
+CodeSnippetResponse {
+    data: Data {
+        question: Question {
+            code_snippets: [
+                CodeSnippet {
+                    lang: "C++",
+                    code: "class Solution {\npublic:\n    string smallestNumber(string pattern) {\n        \n    }\n};",
+                },
+                CodeSnippet {
+                    lang: "Java",
+                    code: "class Solution {\n    public String smallestNumber(String pattern) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Python",
+                    code: "class Solution(object):\n    def smallestNumber(self, pattern):\n        \"\"\"\n        :type pattern: str\n        :rtype: str\n        \"\"\"\n        ",
+                },
+                CodeSnippet {
+                    lang: "Python3",
+                    code: "class Solution:\n    def smallestNumber(self, pattern: str) -> str:\n        ",
+                },
+                CodeSnippet {
+                    lang: "C",
+                    code: "char* smallestNumber(char* pattern) {\n    \n}",
+                },
+                CodeSnippet {
+                    lang: "C#",
+                    code: "public class Solution {\n    public string SmallestNumber(string pattern) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "JavaScript",
+                    code: "/**\n * @param {string} pattern\n * @return {string}\n */\nvar smallestNumber = function(pattern) {\n    \n};",
+                },
+                CodeSnippet {
+                    lang: "TypeScript",
+                    code: "function smallestNumber(pattern: string): string {\n    \n};",
+                },
+                CodeSnippet {
+                    lang: "PHP",
+                    code: "class Solution {\n\n    /**\n     * @param String $pattern\n     * @return String\n     */\n    function smallestNumber($pattern) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Swift",
+                    code: "class Solution {\n    func smallestNumber(_ pattern: String) -> String {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Kotlin",
+                    code: "class Solution {\n    fun smallestNumber(pattern: String): String {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Dart",
+                    code: "class Solution {\n  String smallestNumber(String pattern) {\n    \n  }\n}",
+                },
+                CodeSnippet {
+                    lang: "Go",
+                    code: "func smallestNumber(pattern string) string {\n    \n}",
+                },
+                CodeSnippet {
+                    lang: "Ruby",
+                    code: "# @param {String} pattern\n# @return {String}\ndef smallest_number(pattern)\n    \nend",
+                },
+                CodeSnippet {
+                    lang: "Scala",
+                    code: "object Solution {\n    def smallestNumber(pattern: String): String = {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Rust",
+                    code: "impl Solution {\n    pub fn smallest_number(pattern: String) -> String {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Racket",
+                    code: "(define/contract (smallest-number pattern)\n  (-> string? string?)\n  )",
+                },
+                CodeSnippet {
+                    lang: "Erlang",
+                    code: "-spec smallest_number(Pattern :: unicode:unicode_binary()) -> unicode:unicode_binary().\nsmallest_number(Pattern) ->\n  .",
+                },
+                CodeSnippet {
+                    lang: "Elixir",
+                    code: "defmodule Solution do\n  @spec smallest_number(pattern :: String.t) :: String.t\n  def smallest_number(pattern) do\n    \n  end\nend",
+                },
+            ],
+        },
+    },
+}
