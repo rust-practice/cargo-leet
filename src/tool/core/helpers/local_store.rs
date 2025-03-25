@@ -61,7 +61,17 @@ pub(crate) mod tests {
 
     #[fixture]
     pub(crate) fn title_slugs() -> SlugList {
-        &["two-sum", "add-two-numbers", "validate-binary-search-tree"]
+        &[
+            "add-two-numbers",
+            "construct-smallest-number-from-di-string",
+            "count-days-without-meetings",
+            "count-of-substrings-containing-every-vowel-and-k-consonants-ii",
+            "flood-fill",
+            "two-sum",
+            "valid-anagram",
+            "valid-parentheses",
+            "validate-binary-search-tree",
+        ]
     }
 
     #[fixture]
