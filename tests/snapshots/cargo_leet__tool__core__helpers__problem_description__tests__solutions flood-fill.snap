@@ -1,0 +1,8 @@
+---
+source: src/tool/core/helpers/problem_description.rs
+expression: problem_description.get_solutions()
+---
+[
+    "[[2,2,2],[2,2,0],[2,0,1]]",
+    "[[0,0,0],[0,0,0]]",
+]
