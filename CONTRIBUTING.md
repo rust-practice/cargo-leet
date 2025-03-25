@@ -1,5 +1,7 @@
 # Contributing
 
+<!-- TODO (Chè): Add instructions on how to add new test problems -->
+
 ## Where to start
 
 All contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
