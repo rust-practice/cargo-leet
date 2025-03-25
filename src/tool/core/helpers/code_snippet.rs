@@ -126,7 +126,10 @@ mod tests {
     fn conversion_from_leetcode_response(title_slugs: SlugList, insta_settings: insta::Settings) {
         for title_slug in title_slugs {
             insta_settings.bind(|| {
-                insta::assert_debug_snapshot!(get_code_snippets_response(title_slug).unwrap());
+                insta::assert_debug_snapshot!(
+                    format!("response {title_slug}"),
+                    get_code_snippets_response(title_slug).unwrap()
+                );
             });
         }
     }

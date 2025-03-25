@@ -1,6 +1,5 @@
 ---
 source: src/tool/core/helpers/problem_metadata.rs
-assertion_line: 94
 expression: get_problem_metadata(title_slug).unwrap()
 ---
 ProblemMetadata {

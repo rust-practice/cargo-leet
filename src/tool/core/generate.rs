@@ -183,7 +183,7 @@ mod tests {
         for title_slug in title_slugs {
             insta_settings.bind(|| {
                 let (_, code_generated) = create_module_code(title_slug, &args).unwrap();
-                insta::assert_snapshot!(code_generated);
+                insta::assert_snapshot!(format!("code_generated {title_slug}"), code_generated);
             });
         }
     }

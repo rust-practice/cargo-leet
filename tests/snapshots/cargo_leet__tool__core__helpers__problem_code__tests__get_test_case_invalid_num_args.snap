@@ -1,6 +1,5 @@
 ---
 source: src/tool/core/helpers/problem_code.rs
-assertion_line: 626
 expression: actual
 ---
 /* Error: expected number of augments (2) to match the number of lines downloaded (1)
