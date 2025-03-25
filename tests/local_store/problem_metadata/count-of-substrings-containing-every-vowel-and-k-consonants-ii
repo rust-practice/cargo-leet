@@ -1,0 +1,1 @@
+{"data":{"question":{"questionFrontendId":"3306","questionTitle":"Count of Substrings Containing Every Vowel and K Consonants II","exampleTestcaseList":["\"aeioqq\"\n1","\"aeiou\"\n0","\"ieaouqqieaouqq\"\n1"]}}}
