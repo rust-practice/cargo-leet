@@ -1,0 +1,12 @@
+---
+source: src/tool/core/helpers/problem_metadata.rs
+expression: get_problem_metadata(title_slug).unwrap()
+---
+ProblemMetadata {
+    id: 733,
+    title: "Flood Fill",
+    example_test_case_list: [
+        "[[1,1,1],[1,1,0],[1,0,1]]\n1\n1\n2",
+        "[[0,0,0],[0,0,0]]\n0\n0\n0",
+    ],
+}

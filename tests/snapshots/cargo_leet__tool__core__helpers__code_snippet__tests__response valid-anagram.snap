@@ -1,0 +1,88 @@
+---
+source: src/tool/core/helpers/code_snippet.rs
+expression: get_code_snippets_response(title_slug).unwrap()
+---
+CodeSnippetResponse {
+    data: Data {
+        question: Question {
+            code_snippets: [
+                CodeSnippet {
+                    lang: "C++",
+                    code: "class Solution {\npublic:\n    bool isAnagram(string s, string t) {\n        \n    }\n};",
+                },
+                CodeSnippet {
+                    lang: "Java",
+                    code: "class Solution {\n    public boolean isAnagram(String s, String t) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Python",
+                    code: "class Solution(object):\n    def isAnagram(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        ",
+                },
+                CodeSnippet {
+                    lang: "Python3",
+                    code: "class Solution:\n    def isAnagram(self, s: str, t: str) -> bool:\n        ",
+                },
+                CodeSnippet {
+                    lang: "C",
+                    code: "bool isAnagram(char* s, char* t) {\n    \n}",
+                },
+                CodeSnippet {
+                    lang: "C#",
+                    code: "public class Solution {\n    public bool IsAnagram(string s, string t) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "JavaScript",
+                    code: "/**\n * @param {string} s\n * @param {string} t\n * @return {boolean}\n */\nvar isAnagram = function(s, t) {\n    \n};",
+                },
+                CodeSnippet {
+                    lang: "TypeScript",
+                    code: "function isAnagram(s: string, t: string): boolean {\n    \n};",
+                },
+                CodeSnippet {
+                    lang: "PHP",
+                    code: "class Solution {\n\n    /**\n     * @param String $s\n     * @param String $t\n     * @return Boolean\n     */\n    function isAnagram($s, $t) {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Swift",
+                    code: "class Solution {\n    func isAnagram(_ s: String, _ t: String) -> Bool {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Kotlin",
+                    code: "class Solution {\n    fun isAnagram(s: String, t: String): Boolean {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Dart",
+                    code: "class Solution {\n  bool isAnagram(String s, String t) {\n    \n  }\n}",
+                },
+                CodeSnippet {
+                    lang: "Go",
+                    code: "func isAnagram(s string, t string) bool {\n    \n}",
+                },
+                CodeSnippet {
+                    lang: "Ruby",
+                    code: "# @param {String} s\n# @param {String} t\n# @return {Boolean}\ndef is_anagram(s, t)\n    \nend",
+                },
+                CodeSnippet {
+                    lang: "Scala",
+                    code: "object Solution {\n    def isAnagram(s: String, t: String): Boolean = {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Rust",
+                    code: "impl Solution {\n    pub fn is_anagram(s: String, t: String) -> bool {\n        \n    }\n}",
+                },
+                CodeSnippet {
+                    lang: "Racket",
+                    code: "(define/contract (is-anagram s t)\n  (-> string? string? boolean?)\n  )",
+                },
+                CodeSnippet {
+                    lang: "Erlang",
+                    code: "-spec is_anagram(S :: unicode:unicode_binary(), T :: unicode:unicode_binary()) -> boolean().\nis_anagram(S, T) ->\n  .",
+                },
+                CodeSnippet {
+                    lang: "Elixir",
+                    code: "defmodule Solution do\n  @spec is_anagram(s :: String.t, t :: String.t) :: boolean\n  def is_anagram(s, t) do\n    \n  end\nend",
+                },
+            ],
+        },
+    },
+}
