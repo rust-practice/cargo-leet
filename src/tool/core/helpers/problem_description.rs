@@ -89,7 +89,10 @@ mod tests {
     fn conversion_from_leetcode_response(title_slugs: SlugList, insta_settings: insta::Settings) {
         for title_slug in title_slugs {
             insta_settings.bind(|| {
-                insta::assert_debug_snapshot!(get_problem_description(title_slug).unwrap());
+                insta::assert_debug_snapshot!(
+                    format!("description {title_slug}"),
+                    get_problem_description(title_slug).unwrap()
+                );
             });
         }
     }
@@ -99,7 +102,10 @@ mod tests {
         for title_slug in title_slugs {
             insta_settings.bind(|| {
                 let problem_description = get_problem_description(title_slug).unwrap();
-                insta::assert_debug_snapshot!(problem_description.get_solutions());
+                insta::assert_debug_snapshot!(
+                    format!("solutions {title_slug}"),
+                    problem_description.get_solutions()
+                );
             });
         }
     }

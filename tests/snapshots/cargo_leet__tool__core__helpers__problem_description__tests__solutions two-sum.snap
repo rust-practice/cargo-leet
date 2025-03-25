@@ -1,6 +1,5 @@
 ---
 source: src/tool/core/helpers/problem_description.rs
-assertion_line: 102
 expression: problem_description.get_solutions()
 ---
 [

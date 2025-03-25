@@ -93,7 +93,10 @@ mod tests {
     fn conversion_from_leetcode_response(title_slugs: SlugList, insta_settings: insta::Settings) {
         for title_slug in title_slugs {
             insta_settings.bind(|| {
-                insta::assert_debug_snapshot!(get_problem_metadata(title_slug).unwrap());
+                insta::assert_debug_snapshot!(
+                    format!("metadata {title_slug}"),
+                    get_problem_metadata(title_slug).unwrap()
+                );
             });
         }
     }
