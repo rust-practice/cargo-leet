@@ -26,7 +26,13 @@ impl ProblemDescription {
         info!("Extracting solutions from description");
         let re = Regex::new(r"Output:<\/strong> (.+?)\n").expect("compiling static regex");
         re.captures_iter(&self.content)
-            .map(|mat| mat[1].to_string())
+            .map(|cap| {
+                let sol = &cap[1];
+
+                // Remove any tags captured
+                let re = Regex::new(r"&quot;|<.+?>").expect("compiling static regex");
+                re.replace_all(sol, "").to_string()
+            })
             .collect()
     }
 }
