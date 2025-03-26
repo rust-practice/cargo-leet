@@ -1,6 +1,6 @@
 [package]
 name = "cargo-leet"
-version = "0.2.0-dev"
+version = "0.2.1"
 authors = ["Members of Rust Practice Discord Server"]
 categories = ["command-line-utilities"]
 edition = "2021"
