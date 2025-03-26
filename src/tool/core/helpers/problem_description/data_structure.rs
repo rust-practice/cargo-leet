@@ -30,8 +30,11 @@ impl ProblemDescription {
                 let sol = &cap[1];
 
                 // Remove any tags captured
-                let re = Regex::new(r"&quot;|<.+?>").expect("compiling static regex");
-                re.replace_all(sol, "").to_string()
+                let re = Regex::new(r"<.+?>").expect("compiling static regex");
+                let sol = re.replace_all(sol, "");
+
+                // Replace Quote HTML Character Entity with literal
+                sol.replace("&quot;", "\"")
             })
             .collect()
     }
