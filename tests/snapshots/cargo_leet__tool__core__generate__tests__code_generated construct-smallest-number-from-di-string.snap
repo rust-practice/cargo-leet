@@ -21,8 +21,8 @@ mod tests {
     use rstest::rstest;
 
     #[rstest]
-    #[case("IIIDIDDD", 123549876)]
-    #[case("DDD", 4321)]
+    #[case("IIIDIDDD", "123549876")]
+    #[case("DDD", "4321")]
     fn case(#[case] pattern: String, #[case] expected: String) {
         let actual = Solution::smallest_number(pattern);
         assert_eq!(actual, expected);
