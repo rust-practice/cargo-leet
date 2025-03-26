@@ -67,8 +67,8 @@ fn local_store_request_code_snippet(title_slug: &str) -> anyhow::Result<String> 
 
 fn external_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
     info!("[External] Going to send request for code for problem with title: {title_slug}");
-    ureq::get(Config::LEETCODE_GRAPH_QL)
-        .send_json(ureq::json!({
+    ureq::post(Config::LEETCODE_GRAPH_QL)
+        .send_json(serde_json::json!({
             "query": "query questionEditorData($titleSlug: String!) {
                     question(titleSlug: $titleSlug) {
                         codeSnippets {
@@ -81,7 +81,8 @@ fn external_request_code_snippet(title_slug: &str) -> anyhow::Result<String> {
             "operationName":"questionEditorData"
         }))
         .context("failed to get request for code_snippet failed")?
-        .into_string()
+        .body_mut()
+        .read_to_string()
         .context("failed to convert response into String")
 }
 

@@ -38,7 +38,7 @@ pub(crate) fn path_local_store_problem_description<P: AsRef<Path>>(path: P) -> P
 
 #[cfg(test)]
 pub(crate) mod tests {
-    use rand::{thread_rng, Rng};
+    use rand::{rng, Rng};
     use rstest::fixture;
 
     const NAME_SNAPSHOT_FOLDER: &str = "snapshots";
@@ -53,8 +53,8 @@ pub(crate) mod tests {
     const MILLISECONDS_DELAY_BETWEEN_REQUESTS_MAX: u64 = 9000;
 
     pub(crate) fn get_rnd_request_delay() -> u64 {
-        let mut rng = thread_rng();
-        rng.gen_range(
+        let mut rng = rng();
+        rng.random_range(
             MILLISECONDS_DELAY_BETWEEN_REQUESTS_MIN..MILLISECONDS_DELAY_BETWEEN_REQUESTS_MAX,
         )
     }

@@ -32,8 +32,8 @@ fn local_store_request_problem_metadata(title_slug: &str) -> anyhow::Result<Stri
 
 fn external_request_problem_metadata(title_slug: &str) -> anyhow::Result<String> {
     info!("[External] Going to send request for problem meta data for problem with title: {title_slug}");
-    ureq::get(Config::LEETCODE_GRAPH_QL)
-        .send_json(ureq::json!({
+    ureq::post(Config::LEETCODE_GRAPH_QL)
+        .send_json(serde_json::json!({
             "query": r"query consolePanelConfig($titleSlug: String!) {
             question(titleSlug: $titleSlug) {
                 questionFrontendId
@@ -45,7 +45,8 @@ fn external_request_problem_metadata(title_slug: &str) -> anyhow::Result<String>
             "operationName":"consolePanelConfig"
         }))
         .context("failed to get request for meta data failed")?
-        .into_string()
+        .body_mut()
+        .read_to_string()
         .context("failed to convert response into String")
 }
 

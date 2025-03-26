@@ -30,8 +30,8 @@ fn local_store_request_problem_description(title_slug: &str) -> anyhow::Result<S
 
 fn external_request_problem_description(title_slug: &str) -> anyhow::Result<String> {
     info!("[External] Going to send request for problem description for problem with title: {title_slug}");
-    ureq::get(Config::LEETCODE_GRAPH_QL)
-        .send_json(ureq::json!({
+    ureq::post(Config::LEETCODE_GRAPH_QL)
+        .send_json(serde_json::json!({
             "query": r"query questionContent($titleSlug: String!) {
             question(titleSlug: $titleSlug) {
                 content
@@ -41,7 +41,8 @@ fn external_request_problem_description(title_slug: &str) -> anyhow::Result<Stri
             "operationName":"questionContent"
         }))
         .context("failed to get request for description failed")?
-        .into_string()
+        .body_mut()
+        .read_to_string()
         .context("failed to convert response into String")
 }
 
