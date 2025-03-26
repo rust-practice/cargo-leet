@@ -34,6 +34,9 @@ pub(crate) fn do_new(args: &NewArgs) -> anyhow::Result<()> {
         overwrite: false,
         skip_submodules: true,
         other_args: None,
+        quiet: false,
+        continue_on_error: true,
+        gitconfig: None,
     })
     .context("failed to generate cargo project")?;
 

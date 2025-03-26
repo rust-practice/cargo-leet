@@ -55,8 +55,8 @@ fn local_store_request_daily_challenge(_needed_to_match_signature: &str) -> anyh
 
 fn external_request_daily_challenge(_needed_to_match_signature: &str) -> anyhow::Result<String> {
     info!("[External] Going to send request of daily challenge");
-    ureq::get(Config::LEETCODE_GRAPH_QL)
-        .send_json(ureq::json!({
+    ureq::post(Config::LEETCODE_GRAPH_QL)
+        .send_json(serde_json::json!({
             "query": "query questionOfToday {
                 activeDailyCodingChallengeQuestion {
                     question {
@@ -68,7 +68,8 @@ fn external_request_daily_challenge(_needed_to_match_signature: &str) -> anyhow:
             "operationName":"questionOfToday"
         }))
         .context("get request for daily challenge failed")?
-        .into_string()
+        .body_mut()
+        .read_to_string()
         .context("failed to convert response into String")
 }
 
