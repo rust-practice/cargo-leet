@@ -1,4 +1,4 @@
-use cargo_leet::{init_logging, run, TopLevel};
+use cargo_leet::{TopLevel, init_logging, run};
 use clap::Parser;
 
 fn main() -> anyhow::Result<()> {

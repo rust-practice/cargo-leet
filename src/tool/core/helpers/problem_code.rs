@@ -1,4 +1,4 @@
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 use log::{debug, error, info, warn};
 use regex::Regex;
 use strum::IntoEnumIterator as _;
@@ -363,7 +363,9 @@ impl From<&str> for FunctionArgType {
                 return fat;
             }
         }
-        warn!("Unknown type {value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new?&labels=bug&template=missing_type.md");
+        warn!(
+            "Unknown type {value:?} found please report this in an issue https://github.com/rust-practice/cargo-leet/issues/new?&labels=bug&template=missing_type.md"
+        );
         Self::Other {
             raw: value.to_string(),
         }
