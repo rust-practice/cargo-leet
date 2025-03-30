@@ -1,4 +1,4 @@
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 use convert_case::{Case, Casing};
 use log::info;
 use std::borrow::Cow;
@@ -146,7 +146,7 @@ mod tests {
     use cli::GenerateArgs;
     use rstest::rstest;
 
-    use crate::tool::core::helpers::local_store::tests::{insta_settings, title_slugs, SlugList};
+    use crate::tool::core::helpers::local_store::tests::{SlugList, insta_settings, title_slugs};
 
     use super::*;
 

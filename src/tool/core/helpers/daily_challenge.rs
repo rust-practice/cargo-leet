@@ -90,9 +90,9 @@ mod tests {
     fn download_response_from_leetcode() {
         let sleep_delay = std::time::Duration::from_millis(get_rnd_request_delay());
         println!(
-        "Going to sleep for {} milliseconds before requesting and trying to save daily_challenge",
-        sleep_delay.as_millis()
-    );
+            "Going to sleep for {} milliseconds before requesting and trying to save daily_challenge",
+            sleep_delay.as_millis()
+        );
         std::thread::sleep(sleep_delay); // Sleep to not go too hard on leetcode API
         let response_string = external_request_daily_challenge("unneeded").unwrap();
         let path = super::path_local_store_daily_challenge();

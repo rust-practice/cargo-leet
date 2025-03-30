@@ -1,6 +1,6 @@
 use super::{get_response, local_store::path_local_store_code_snippet, problem_code::ProblemCode};
 use crate::tool::config::Config;
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 use log::info;
 use regex::Regex;
 
@@ -95,7 +95,7 @@ mod tests {
 
     use crate::tool::core::helpers::{
         code_snippet::{external_request_code_snippet, get_code_snippets_response},
-        local_store::tests::{get_rnd_request_delay, insta_settings, title_slugs, SlugList},
+        local_store::tests::{SlugList, get_rnd_request_delay, insta_settings, title_slugs},
     };
 
     #[rstest]
@@ -104,9 +104,9 @@ mod tests {
         for title_slug in title_slugs {
             let sleep_delay = std::time::Duration::from_millis(get_rnd_request_delay());
             println!(
-            "Going to sleep for {} milliseconds before requesting and trying to save {title_slug}",
-            sleep_delay.as_millis()
-        );
+                "Going to sleep for {} milliseconds before requesting and trying to save {title_slug}",
+                sleep_delay.as_millis()
+            );
             std::thread::sleep(sleep_delay); // Sleep to not go too hard on leetcode API
             let response_string = external_request_code_snippet(title_slug).unwrap();
             let path = super::path_local_store_code_snippet(title_slug);

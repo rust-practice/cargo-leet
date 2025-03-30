@@ -38,7 +38,7 @@ pub(crate) fn path_local_store_problem_description<P: AsRef<Path>>(path: P) -> P
 
 #[cfg(test)]
 pub(crate) mod tests {
-    use rand::{rng, Rng};
+    use rand::{Rng, rng};
     use rstest::fixture;
 
     const NAME_SNAPSHOT_FOLDER: &str = "snapshots";

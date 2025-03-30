@@ -29,7 +29,9 @@ fn local_store_request_problem_description(title_slug: &str) -> anyhow::Result<S
 }
 
 fn external_request_problem_description(title_slug: &str) -> anyhow::Result<String> {
-    info!("[External] Going to send request for problem description for problem with title: {title_slug}");
+    info!(
+        "[External] Going to send request for problem description for problem with title: {title_slug}"
+    );
     ureq::post(Config::LEETCODE_GRAPH_QL)
         .send_json(serde_json::json!({
             "query": r"query questionContent($titleSlug: String!) {
@@ -56,7 +58,7 @@ mod tests {
     use crate::tool::core::helpers::{
         local_store::{
             path_local_store_problem_description,
-            tests::{get_rnd_request_delay, insta_settings, title_slugs, SlugList},
+            tests::{SlugList, get_rnd_request_delay, insta_settings, title_slugs},
         },
         problem_description::{external_request_problem_description, get_problem_description},
     };
@@ -67,9 +69,9 @@ mod tests {
         for title_slug in title_slugs {
             let sleep_delay = std::time::Duration::from_millis(get_rnd_request_delay());
             println!(
-            "Going to sleep for {} milliseconds before requesting and trying to save {title_slug}",
-            sleep_delay.as_millis()
-        );
+                "Going to sleep for {} milliseconds before requesting and trying to save {title_slug}",
+                sleep_delay.as_millis()
+            );
             std::thread::sleep(sleep_delay); // Sleep to not go too hard on leetcode API
             let response_string = external_request_problem_description(title_slug).unwrap();
             let path = path_local_store_problem_description(title_slug);

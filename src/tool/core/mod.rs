@@ -7,7 +7,7 @@ mod test;
 use self::generate::do_generate;
 use crate::tool::cli::{self, Cli};
 use active::do_active;
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 use new::do_new;
 use std::{env, path::Path};
 use test::do_test;

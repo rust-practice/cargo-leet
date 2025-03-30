@@ -1,8 +1,8 @@
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 use log::{error, info};
 use std::{
     env,
-    fs::{self, remove_file, OpenOptions},
+    fs::{self, OpenOptions, remove_file},
     io::Write,
     path::PathBuf,
     process::Command,

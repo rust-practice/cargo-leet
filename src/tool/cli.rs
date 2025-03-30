@@ -2,7 +2,7 @@ use std::env;
 
 use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
-use log::{debug, info, LevelFilter};
+use log::{LevelFilter, debug, info};
 
 // Based on example <https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/>
 // Top level entry point for command line arguments parsing

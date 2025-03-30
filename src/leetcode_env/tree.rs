@@ -62,8 +62,8 @@ impl Debug for TreeRoot {
 }
 
 #[allow(clippy::fallible_impl_from)] // Using TryFrom doesn't give us any additional benefits and just makes the code
-                                     // more verbose since this code is used in tests and for input.
-                                     // We need the function to fail if it doesn't match the expected format.
+// more verbose since this code is used in tests and for input.
+// We need the function to fail if it doesn't match the expected format.
 impl From<&TreeRoot> for Vec<Option<i32>> {
     fn from(value: &TreeRoot) -> Self {
         let mut result = vec![];
@@ -106,7 +106,7 @@ impl From<Option<Rc<RefCell<TreeNode>>>> for TreeRoot {
 }
 
 #[allow(clippy::fallible_impl_from)] // we need the function to fail if it doesn't match the expected format
-                                     // clippy::fallible_impl_from is still in nursery as of 2024-02-02
+// clippy::fallible_impl_from is still in nursery as of 2024-02-02
 impl From<&str> for TreeRoot {
     /// Expects the "[]" around the values, separated by comma "," and only
     /// integers and "null" (which is the format you'll get on leetcode)
@@ -222,7 +222,7 @@ mod tests {
     ///  / \         / \   / \
     /// - 4       -   - 8   -
     #[allow(unused_mut)] // It's easier to read the code if they all line up but the leaves  don't need
-                         // to be mutable
+    // to be mutable
     fn test_tree() -> Option<Rc<RefCell<TreeNode>>> {
         let mut node1 = Some(Rc::new(RefCell::new(TreeNode::new(1))));
         let mut node2 = Some(Rc::new(RefCell::new(TreeNode::new(2))));

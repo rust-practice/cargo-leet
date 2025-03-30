@@ -60,8 +60,8 @@ impl From<Option<Box<ListNode>>> for ListHead {
 }
 
 #[allow(clippy::fallible_impl_from)] // Using TryFrom doesn't give us any additional benefits and just makes the code
-                                     // more verbose since this code is used in tests and for input.
-                                     // We need the function to fail if it doesn't match the expected format.
+// more verbose since this code is used in tests and for input.
+// We need the function to fail if it doesn't match the expected format.
 impl From<Vec<i32>> for ListHead {
     fn from(values: Vec<i32>) -> Self {
         let mut result = Self { head: None };

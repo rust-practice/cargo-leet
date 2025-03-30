@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use anyhow::{bail, Context};
+use anyhow::{Context, bail};
 
 use crate::tool::{cli, config_file::ConfigFile};
 

@@ -110,7 +110,7 @@ mod tests {{
 
         if solutions.len() != self.example_test_case_list.len() {
             error!(
-                "Number of solutions ({}) does not match the number of test cases ({}). Falling back to no solutions. Solutions were: {solutions:?}", 
+                "Number of solutions ({}) does not match the number of test cases ({}). Falling back to no solutions. Solutions were: {solutions:?}",
                 solutions.len(),
                 self.example_test_case_list.len()
             );
@@ -145,7 +145,7 @@ mod tests {{
     }
 
     #[allow(clippy::unused_self, clippy::missing_const_for_fn)] // TODO Onè: implement question type from leetcode
-                                                                // see: https://leetcode.com/tag/design/
+    // see: https://leetcode.com/tag/design/
     fn get_test_cases_is_design(&self) -> String {
         String::new()
     }
