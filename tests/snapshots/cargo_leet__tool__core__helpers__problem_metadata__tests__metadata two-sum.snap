@@ -1,0 +1,13 @@
+---
+source: src/tool/core/helpers/problem_metadata.rs
+expression: get_problem_metadata(title_slug).unwrap()
+---
+ProblemMetadata {
+    id: 1,
+    title: "Two Sum",
+    example_test_case_list: [
+        "[2,7,11,15]\n9",
+        "[3,2,4]\n6",
+        "[3,3]\n6",
+    ],
+}

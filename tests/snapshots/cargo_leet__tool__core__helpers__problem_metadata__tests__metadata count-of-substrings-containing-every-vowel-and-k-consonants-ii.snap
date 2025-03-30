@@ -1,0 +1,13 @@
+---
+source: src/tool/core/helpers/problem_metadata.rs
+expression: get_problem_metadata(title_slug).unwrap()
+---
+ProblemMetadata {
+    id: 3306,
+    title: "Count of Substrings Containing Every Vowel and K Consonants II",
+    example_test_case_list: [
+        "\"aeioqq\"\n1",
+        "\"aeiou\"\n0",
+        "\"ieaouqqieaouqq\"\n1",
+    ],
+}

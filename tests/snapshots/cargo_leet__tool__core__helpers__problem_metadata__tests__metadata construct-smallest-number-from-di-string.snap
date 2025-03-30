@@ -1,0 +1,12 @@
+---
+source: src/tool/core/helpers/problem_metadata.rs
+expression: get_problem_metadata(title_slug).unwrap()
+---
+ProblemMetadata {
+    id: 2375,
+    title: "Construct Smallest Number From DI String",
+    example_test_case_list: [
+        "\"IIIDIDDD\"",
+        "\"DDD\"",
+    ],
+}

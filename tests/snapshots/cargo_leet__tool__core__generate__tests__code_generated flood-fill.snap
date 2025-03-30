@@ -1,0 +1,30 @@
+---
+source: src/tool/core/generate.rs
+expression: code_generated
+---
+//! Solution for https://leetcode.com/problems/flood-fill
+//! 733. Flood Fill
+
+impl Solution {
+    pub fn flood_fill(image: Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> { todo!("Fill in body") }
+}
+
+// << ---------------- Code below here is only for local use ---------------- >>
+
+pub struct Solution;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+
+    use rstest::rstest;
+
+    #[rstest]
+    #[case(vec![vec![1,1,1],vec![1,1,0],vec![1,0,1]], 1, 1, 2, vec![vec![2,2,2],vec![2,2,0],vec![2,0,1]])]
+    #[case(vec![vec![0,0,0],vec![0,0,0]], 0, 0, 0, vec![vec![0,0,0],vec![0,0,0]])]
+    fn case(#[case] image: Vec<Vec<i32>>, #[case]  sr: i32, #[case]  sc: i32, #[case]  color: i32, #[case] expected: Vec<Vec<i32>>) {
+        let actual = Solution::flood_fill(image, sr, sc, color);
+        assert_eq!(actual, expected);
+    }
+}

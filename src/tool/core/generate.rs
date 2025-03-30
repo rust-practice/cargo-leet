@@ -6,16 +6,21 @@ use std::borrow::Cow;
 use crate::tool::{
     cli,
     config::Config,
+    config_file::ConfigFile,
     core::helpers::{
         code_snippet::get_code_snippet_for_problem, daily_challenge,
-        problem_metadata::get_problem_metadata, write_to_disk,
+        problem_description::get_problem_description, problem_metadata::get_problem_metadata,
+        write_to_disk,
     },
 };
+
+pub(crate) const SEPARATOR: &str =
+    "// << ---------------- Code below here is only for local use ---------------- >>";
 
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
         get_slug_from_args(specific_problem)
-            .with_context(|| format!("Expected URL or slug but got {specific_problem}"))?
+            .with_context(|| format!("expected URL or slug but got {specific_problem}"))?
     } else {
         // Daily problem
         let slug = daily_challenge::get_daily_challenge_slug()?;
@@ -23,10 +28,16 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
         Cow::Owned(slug)
     };
 
-    let (module_name, module_code) = create_module_code(title_slug, args)
-        .context("Failed to generate the name and module code")?;
-    write_to_disk::write_file(&module_name, module_code).context("Failed to write to disk")?;
+    let (module_name, module_code) = create_module_code(&title_slug, args).with_context(|| {
+        format!("failed to generate the name and module code for {title_slug:?}")
+    })?;
+    write_to_disk::write_file(&module_name, &module_code).context("failed to write to disk")?;
     println!("Generated module: {module_name}");
+
+    let mut config = ConfigFile::load().context("failed to load config")?;
+    config.active = Some(module_name);
+    config.save().context("failed to save config")?;
+
     Ok(())
 }
 
@@ -51,13 +62,16 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
 /// NB: Did not return `Cow` because `module_name` is always a modified version
 /// of the input
 fn create_module_code(
-    title_slug: Cow<String>,
+    title_slug: &str,
     args: &cli::GenerateArgs,
 ) -> anyhow::Result<(String, String)> {
     info!("Building module contents for {title_slug}");
 
     let meta_data =
-        get_problem_metadata(&title_slug).context("Failed to retrieve problem meta data")?;
+        get_problem_metadata(title_slug).context("failed to retrieve problem meta data")?;
+
+    let description =
+        get_problem_description(title_slug).context("failed to retrieve problem description")?;
 
     // Add problem URL
     let mut code_snippet = format!(
@@ -66,27 +80,20 @@ fn create_module_code(
     );
 
     // Add problem number and title
-    code_snippet.push_str(&format!(
-        "//! {}\n",
-        meta_data
-            .get_num_and_title()
-            .context("Failed to get problem number and title")?
-    ));
+    code_snippet.push_str(&format!("//! {}\n", meta_data.get_num_and_title()));
 
     // Add blank line between docstring and code
     code_snippet.push('\n');
 
     // Get code snippet
-    let problem_code = get_code_snippet_for_problem(&title_slug)?;
+    let problem_code = get_code_snippet_for_problem(title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    code_snippet.push_str(
-        "\n\n// << ---------------- Code below here is only for local use ---------------- >>\n",
-    );
+    code_snippet.push_str(format!("\n\n{SEPARATOR}\n").as_str());
 
     // Add struct for non design questions
     if problem_code.type_.is_non_design() {
-        code_snippet.push_str("\npub struct Solution;\n")
+        code_snippet.push_str("\npub struct Solution;\n");
     }
 
     // Add leet code types
@@ -98,17 +105,13 @@ fn create_module_code(
     }
 
     // Add tests
-    let tests = meta_data.get_test_cases(&problem_code)?;
+    let tests = meta_data.get_test_cases(&problem_code, &description);
     code_snippet.push_str(&tests);
 
     // Set module name
     let module_name = if args.should_include_problem_number {
         info!("Including problem number in module name");
-        format!(
-            "_{}_{}",
-            meta_data.get_id()?,
-            title_slug.to_case(Case::Snake)
-        )
+        format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
         info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)
@@ -140,6 +143,11 @@ fn url_to_slug(url: &str) -> anyhow::Result<String> {
 
 #[cfg(test)]
 mod tests {
+    use cli::GenerateArgs;
+    use rstest::rstest;
+
+    use crate::tool::core::helpers::local_store::tests::{insta_settings, title_slugs, SlugList};
+
     use super::*;
 
     #[test]
@@ -163,5 +171,20 @@ mod tests {
         let url = "http://leetcode.com/problems/two-sum/".to_string();
         let actual = get_slug_from_args(&url);
         assert!(actual.is_err());
+    }
+
+    #[rstest]
+    fn extract_solutions_from_description(title_slugs: SlugList, insta_settings: insta::Settings) {
+        let args = GenerateArgs {
+            problem: None,
+            should_include_problem_number: false,
+        };
+
+        for title_slug in title_slugs {
+            insta_settings.bind(|| {
+                let (_, code_generated) = create_module_code(title_slug, &args).unwrap();
+                insta::assert_snapshot!(format!("code_generated {title_slug}"), code_generated);
+            });
+        }
     }
 }

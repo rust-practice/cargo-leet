@@ -1,4 +1,5 @@
 //! Leetcode Lists Support
+#![allow(clippy::module_name_repetitions)] // the type name is from leetcode, so we cannot modify it
 
 use std::fmt::{Debug, Formatter};
 
@@ -17,19 +18,19 @@ impl Debug for ListNode {
             f,
             "{} -> {}",
             self.val,
-            match self.next.as_ref() {
-                Some(next) => format!("{next:?}"),
-                None => "None".to_owned(),
-            }
+            self.next
+                .as_ref()
+                .map_or("None".to_owned(), |next| format!("{next:?}"))
         )
     }
 }
 
 impl ListNode {
     #[inline]
-    /// Creates a new unlinked [ListNode] with the value passed
-    pub fn new(val: i32) -> Self {
-        ListNode { next: None, val }
+    #[must_use]
+    /// Creates a new unlinked [`ListNode`] with the value passed
+    pub const fn new(val: i32) -> Self {
+        Self { next: None, val }
     }
 }
 
@@ -58,6 +59,9 @@ impl From<Option<Box<ListNode>>> for ListHead {
     }
 }
 
+#[allow(clippy::fallible_impl_from)] // Using TryFrom doesn't give us any additional benefits and just makes the code
+                                     // more verbose since this code is used in tests and for input.
+                                     // We need the function to fail if it doesn't match the expected format.
 impl From<Vec<i32>> for ListHead {
     fn from(values: Vec<i32>) -> Self {
         let mut result = Self { head: None };

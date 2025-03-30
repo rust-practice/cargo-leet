@@ -1,0 +1,9 @@
+---
+source: src/tool/core/helpers/problem_description.rs
+expression: problem_description.get_solutions()
+---
+[
+    "[7,0,8]",
+    "[0]",
+    "[8,9,9,9,0,0,0,1]",
+]

@@ -1,0 +1,22 @@
+name: Check Semver
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on: 
+  pull_request: 
+    branches:
+      - main
+env:
+  CARGO_TERM_COLOR: always
+
+  
+jobs:
+  semver-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Check semver
+        uses: obi1kenobi/cargo-semver-checks-action@v2

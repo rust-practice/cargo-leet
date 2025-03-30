@@ -4,17 +4,21 @@ use anyhow::Context;
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use log::{debug, info, LevelFilter};
 
-/// Top level entry point for command line arguments parsing
+// Based on example <https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/>
+// Top level entry point for command line arguments parsing
+/// cargo-leet
 ///
-/// Based on example <https://docs.rs/clap/latest/clap/_derive/_cookbook/cargo_example_derive/>
-#[derive(Parser)]
+/// cargo-leet is not meant to be used directly, please use `cargo leet` instead
+/// without the ` `
+#[derive(Parser, Debug)]
 #[command(name = "cargo")]
 #[command(bin_name = "cargo")]
-pub enum CargoCli {
-    /// This is necessary because it a cargo subcommand so the first argument
-    /// needs to be the command name
+pub enum TopLevel {
+    // This is necessary because it's a cargo subcommand so the first argument needs to be the command name
+    /// A program that given the link or slug to a leetcode problem, creates a local file where you can develop and test your solution before post it back to leetcode.
     Leet(Cli),
 }
+
 #[derive(Args, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
@@ -40,14 +44,14 @@ impl Cli {
         );
         if let Some(path) = &self.path {
             info!("Going to update working directory to to '{path}'");
-            std::env::set_current_dir(path)
+            env::set_current_dir(path)
                 .with_context(|| format!("Failed to set current dir to: '{path}'"))?;
             info!(
                 "After updating current dir, it is: '{}'",
                 env::current_dir()?.display()
             );
         } else {
-            debug!("No user supplied path found. No change")
+            debug!("No user supplied path found. No change");
         }
         Ok(())
     }
@@ -56,7 +60,15 @@ impl Cli {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
+    /// Generates the module for the problem
     Generate(GenerateArgs),
+    /// Either prints the active problem or sets it to the argument
+    Active(ActiveArgs),
+    /// Run tests on active problem
+    Test,
+    /// Creates a new pre-configured project from a template for use with
+    /// cargo-leet
+    New(NewArgs),
 }
 
 #[derive(Args, Debug)]
@@ -68,8 +80,19 @@ pub struct GenerateArgs {
     pub should_include_problem_number: bool,
 }
 
-/// Exists to provide better help messages variants copied from LevelFilter as
-/// that's the type that is actually needed
+#[derive(Args, Debug)]
+pub struct ActiveArgs {
+    pub problem_slug: Option<String>,
+}
+
+#[derive(Args, Debug)]
+pub struct NewArgs {
+    /// Name of the new project
+    pub name: Option<String>,
+}
+
+/// Exists to provide better help messages variants copied from [`LevelFilter`]
+/// as that's the type that is actually needed
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ValueEnum, Debug)]
 pub enum LogLevel {
     /// Nothing emitted in this mode
@@ -84,12 +107,12 @@ pub enum LogLevel {
 impl From<LogLevel> for LevelFilter {
     fn from(value: LogLevel) -> Self {
         match value {
-            LogLevel::Off => LevelFilter::Off,
-            LogLevel::Error => LevelFilter::Error,
-            LogLevel::Warn => LevelFilter::Warn,
-            LogLevel::Info => LevelFilter::Info,
-            LogLevel::Debug => LevelFilter::Debug,
-            LogLevel::Trace => LevelFilter::Trace,
+            LogLevel::Off => Self::Off,
+            LogLevel::Error => Self::Error,
+            LogLevel::Warn => Self::Warn,
+            LogLevel::Info => Self::Info,
+            LogLevel::Debug => Self::Debug,
+            LogLevel::Trace => Self::Trace,
         }
     }
 }
@@ -103,6 +126,6 @@ mod tests {
         // Source: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html#testing
         // My understanding it reports most development errors without additional effort
         use clap::CommandFactory;
-        CargoCli::command().debug_assert()
+        TopLevel::command().debug_assert();
     }
 }

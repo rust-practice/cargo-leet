@@ -1,144 +1,104 @@
-use crate::tool::{config::Config, core::helpers::problem_code::ProblemType};
+use crate::tool::config::Config;
 use anyhow::Context;
 use log::{debug, info};
-use serde::Deserialize;
-use serde_flat_path::flat_path;
 
-use super::problem_code::{FunctionInfo, ProblemCode};
+use super::{get_response, local_store::path_local_store_problem_metadata};
 
-/// This struct is only used because there are two fields that we are interested
-/// in that start with the same path and flat_path does not support that yet
-#[flat_path]
-#[derive(Deserialize, Debug)]
-struct QuestionWrapper {
-    #[flat_path("data.question")]
-    inner: ProblemMetadata,
+pub(crate) mod data_structure;
+
+pub(crate) fn get_problem_metadata(
+    title_slug: &str,
+) -> anyhow::Result<data_structure::ProblemMetadata> {
+    info!("Attempting to get problem metadata");
+    let result = get_problem_metadata_response(title_slug)?.into_problem_metadata()?;
+    debug!("ProblemMetadata built: {result:#?}");
+    Ok(result)
 }
 
-#[flat_path]
-#[derive(Deserialize, Debug)]
-pub(crate) struct ProblemMetadata {
-    #[serde(rename = "questionFrontendId")]
-    id: String,
-    #[serde(rename = "questionTitle")]
-    title: String,
-    #[serde(rename = "exampleTestcaseList")]
-    example_test_case_list: Vec<String>,
+fn get_problem_metadata_response(
+    title_slug: &str,
+) -> anyhow::Result<data_structure::ProblemMetaDataResponse> {
+    get_response(
+        title_slug,
+        local_store_request_problem_metadata,
+        external_request_problem_metadata,
+    )
 }
 
-impl ProblemMetadata {
-    /// Checks if the data is valid
-    fn validate(&self) -> anyhow::Result<()> {
-        let _: u16 = self.get_id()?;
-        Ok(())
-    }
-
-    pub(crate) fn get_id(&self) -> anyhow::Result<u16> {
-        let result = self
-            .id
-            .parse()
-            .with_context(|| format!("ID is not a valid u16. Got: {}", self.id))?;
-        Ok(result)
-    }
-
-    pub(crate) fn get_num_and_title(&self) -> anyhow::Result<String> {
-        Ok(format!("{}. {}", self.get_id()?, self.title))
-    }
-
-    pub(crate) fn get_test_cases(&self, problem_code: &ProblemCode) -> anyhow::Result<String> {
-        info!("Going to get tests");
-
-        let mut imports = String::new();
-
-        let tests = match &problem_code.type_ {
-            ProblemType::NonDesign(fn_info) => {
-                // Add imports
-                if problem_code.has_tree() {
-                    imports.push_str("use cargo_leet::TreeRoot;\n");
-                }
-                if problem_code.has_list() {
-                    imports.push_str("use cargo_leet::ListHead;\n");
-                }
-
-                // Add actual test cases
-                self.get_test_cases_is_not_design(fn_info)
-                    .context("Failed to get test cases for non-design problem")?
-            }
-            ProblemType::Design => self
-                .get_test_cases_is_design()
-                .context("Failed to get test cases for design problem")?,
-        };
-
-        Ok(format!(
-            r#"
-#[cfg(test)]
-mod tests {{
-    use super::*;
-    {imports}
-
-    {tests}
-}}
-"#
-        ))
-    }
-
-    fn get_test_cases_is_not_design(&self, fn_info: &FunctionInfo) -> anyhow::Result<String> {
-        let mut result = "use rstest::rstest;
-
-    #[rstest]
-"
-        .to_string();
-
-        // Add test cases
-        for example_test_case_raw in self.example_test_case_list.iter() {
-            let test_case = fn_info
-                .get_test_case(example_test_case_raw)
-                .context("Failed to convert downloaded test case into macro of input")?;
-            result.push_str(&format!("    #[case({})]\n", test_case))
-        }
-
-        // Add test case function body
-        let test_fn = format!(
-            "    fn case({}) {{
-        let actual = Solution::{}({});
-        {}
-    }}",
-            fn_info.get_args_with_case(),
-            fn_info.name,
-            fn_info.get_args_names(),
-            fn_info.get_solution_comparison_code(),
-        );
-        result.push_str(&test_fn);
-
-        Ok(result)
-    }
-
-    fn get_test_cases_is_design(&self) -> anyhow::Result<String> {
-        Ok("".to_string())
-    }
+fn local_store_request_problem_metadata(title_slug: &str) -> anyhow::Result<String> {
+    let path = path_local_store_problem_metadata(title_slug);
+    std::fs::read_to_string(&path).with_context(|| format!("failed to read string from {path:?}"))
 }
 
-pub(crate) fn get_problem_metadata(title_slug: &str) -> anyhow::Result<ProblemMetadata> {
-    info!("Going to get problem metadata");
-    let QuestionWrapper { inner: result } = ureq::get(Config::LEETCODE_GRAPH_QL)
-        .send_json(ureq::json!({
-            "query": r#"query consolePanelConfig($titleSlug: String!) {
+fn external_request_problem_metadata(title_slug: &str) -> anyhow::Result<String> {
+    info!("[External] Going to send request for problem meta data for problem with title: {title_slug}");
+    ureq::post(Config::LEETCODE_GRAPH_QL)
+        .send_json(serde_json::json!({
+            "query": r"query consolePanelConfig($titleSlug: String!) {
             question(titleSlug: $titleSlug) {
                 questionFrontendId
                 questionTitle
                 exampleTestcaseList
             }
-        }"#,
+        }",
             "variables":{"titleSlug": title_slug},
             "operationName":"consolePanelConfig"
         }))
-        .context("Get request for problem metadata failed")?
-        .into_json()
-        .context("Failed to convert response from json to problem metadata")?;
+        .context("failed to get request for meta data failed")?
+        .body_mut()
+        .read_to_string()
+        .context("failed to convert response into String")
+}
 
-    result
-        .validate()
-        .context("Failed to validate problem metadata")?;
-    debug!("ProblemMetadata built: {result:#?}");
-    Ok(result)
+#[cfg(test)]
+mod tests {
+    use std::io::Write as _;
+
+    use anyhow::Context;
+    use rstest::rstest;
+
+    use crate::tool::core::helpers::{
+        local_store::{
+            path_local_store_problem_metadata,
+            tests::{get_rnd_request_delay, insta_settings, title_slugs, SlugList},
+        },
+        problem_metadata::{external_request_problem_metadata, get_problem_metadata},
+    };
+
+    #[rstest]
+    #[ignore = "Only use for downloading responses"]
+    fn download_response_from_leetcode(title_slugs: SlugList) {
+        for title_slug in title_slugs {
+            let sleep_delay = std::time::Duration::from_millis(get_rnd_request_delay());
+            println!(
+            "Going to sleep for {} milliseconds before requesting and trying to save {title_slug}",
+            sleep_delay.as_millis()
+        );
+            std::thread::sleep(sleep_delay); // Sleep to not go too hard on leetcode API
+            let response_string = external_request_problem_metadata(title_slug).unwrap();
+            let path = path_local_store_problem_metadata(title_slug);
+            let mut file = std::fs::OpenOptions::new()
+                .write(true)
+                .create(true)
+                .truncate(true)
+                .open(&path)
+                .with_context(|| format!("failed to save response to {path:?}"))
+                .unwrap();
+            file.write_all(response_string.as_bytes()).unwrap();
+            println!("Save of {title_slug:?} completed\n");
+        }
+        println!("Successfully saved all responses");
+    }
+
+    #[rstest]
+    fn conversion_from_leetcode_response(title_slugs: SlugList, insta_settings: insta::Settings) {
+        for title_slug in title_slugs {
+            insta_settings.bind(|| {
+                insta::assert_debug_snapshot!(
+                    format!("metadata {title_slug}"),
+                    get_problem_metadata(title_slug).unwrap()
+                );
+            });
+        }
+    }
 }

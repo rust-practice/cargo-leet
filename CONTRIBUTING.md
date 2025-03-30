@@ -4,26 +4,45 @@
 
 All contributions, bug reports, bug fixes, documentation improvements, enhancements, and ideas are welcome.
 
-The best place to start is to check the [issues](https://github.com/rust-practice/cargo-leet)
-for something that interests you.
-There are also other options in [discussions](https://github.com/rust-practice/cargo-leet/discussions), so feel free to pick from there as well.
+There are lots of ways to get involved a few of them are:
+
+- Check the [issues](https://github.com/rust-practice/cargo-leet) for something that interests you.
+- Check the [discussions](https://github.com/rust-practice/cargo-leet/discussions) for other tasks
+- Reach out on [discord](https://discord.gg/pJAqJZsXp9) to discuss
 
 ## Bug Reports
 
 Please see the [issue templates](https://github.com/rust-practice/cargo-leet/issues/new/choose) that describe the types of information that we are looking for but no worries just fill it the best you can and we'll go from there.
 
-## Working on the code
+## Adding more problems to run snapshots on
+
+If we need a fix for a particular problem it's a good idea to add that problem to the list we keep snapshots for to ensure the problem stays fixed.
+It also makes it easier to iterate on testing your fix as you can just use the tests to get a new snapshot.
+
+Steps to add a new problem:
+
+1. Add the problem's slug to the `title_slugs` fixture in `src/tool/core/helpers/local_store.rs`
+2. Download local copies of the problem info from leetcode.
+   - See `.cargo/config.toml` for the list of commands that you can use with `cargo`
+   - Example of a command is `cargo update_local_code_snippets`
+3. Commit the information downloaded
+4. Generate and review snapshots
+   - `cargo insta_test` to generate snapshots
+   - `cargo insta review` to review the snapshots generated
+5. If snapshots are correct commit the snapshots otherwise repeat the previous step
+
+## General tips for beginners (Not strict rules just a suggested approach)
 
 ### Fork the project
 
-In order to work on the project you will need your own fork. To do this click the "Fork" button on
-this project.
+In order to work on the project you will need your own fork. To do this click the "Fork" button on this project (or see [GitHub docs](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) for more info).
 
 Once the project is forked you can work on it directly in github codespaces without needing to install anything by clicking the green button near the top and switching to code spaces.
 According to [github docs](https://docs.github.com/en/codespaces/overview#billing-for-codespaces) by default you can only use it up to the free amount so you don't need to worry about charges.
-Feel free to check some [notes collected](https://c-git.github.io/github/codespaces/) on how to use codespaces with rust (You don't need trunk for this project).
+Hopefully we'll setup a dev container at some point but until then feel free to check some [notes collected](https://c-git.github.io/github/codespaces/) on how to use codespaces with rust (You don't need trunk for this project).
 
-Alternatively you can clone it to your local machine. The following commands creates the directory cargo-leet and connects your repository to the upstream (main project) repository.
+Alternatively you can clone it to your local machine.
+The following commands creates the directory cargo-leet and connects your repository to the upstream (main project) repository.
 
 ```sh
 git clone https://github.com/your-user-name/cargo-leet.git
@@ -33,21 +52,19 @@ git remote add upstream git@github.com:rust-practice/cargo-leet.git
 
 ### Creating a branch
 
-You want your main branch to reflect only production-ready code.
-Please base your branch on the develop branch which is the default in cargo-leet repo so create a feature branch for
-making your changes.
+Please base your branch on the develop branch which is the default in cargo-leet repo so create a feature branch for making your changes.
 For example:
 
 ```sh
 git checkout -b my-new-feature
 ```
 
-This changes your working directory to the my-new-feature branch. Keep any changes in this branch
-specific to one bug or feature so the purpose is clear. You can have many my-new-features and switch
-in between them using the git checkout command.
+This changes your working branch to the my-new-feature branch.
+Keep any changes in this branch specific to one bug or feature so the purpose is clear.
+You can have many my-new-features and switch in between them using the git switch command.
 
-When creating this branch, make sure your develop branch is up to date with the latest upstream
-develop version. To update your local develop branch, you can do:
+When creating this branch, make sure your develop branch is up to date with the latest upstream develop version.
+To update your local develop branch, you can do:
 
 ```sh
 git checkout develop
@@ -103,13 +120,7 @@ git commit -am 'Some short helpful message to describe your changes'
 Once your changes are ready and all linting/tests are passing you can push your changes to your forked repository:
 
 ```sh
-git push origin my-new-feature
-```
-
-origin is the default name of your remote repository on GitHub. You can see all of your remote repositories by running:
-
-```sh
-git remote -v
+git push
 ```
 
 ## Making a Pull Request

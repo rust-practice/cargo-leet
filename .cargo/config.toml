@@ -2,3 +2,10 @@
 i = "install --path . --features=tool"
 g = "run --features=tool -- leet gen"
 t = "test --all-features"
+insta_test = "insta test --all-features" # Only really needed if snapshots need to be recreated to avoid needing to do the one at a time
+
+# Commands to download local copies of problem info
+update_local_code_snippets = "test --features=tool -- tool::core::helpers::code_snippet::tests::download_response_from_leetcode --exact --nocapture --ignored"
+update_local_daily_challenge = "test --features=tool -- tool::core::helpers::daily_challenge::tests::download_response_from_leetcode --exact --nocapture --ignored"
+update_local_problem_metadata = "test --features=tool -- tool::core::helpers::problem_metadata::tests::download_response_from_leetcode --exact --nocapture --ignored"
+update_local_problem_description = "test --features=tool -- tool::core::helpers::problem_description::tests::download_response_from_leetcode --exact --nocapture --ignored"

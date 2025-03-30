@@ -1,0 +1,14 @@
+---
+source: src/tool/core/helpers/problem_metadata.rs
+expression: get_problem_metadata(title_slug).unwrap()
+---
+ProblemMetadata {
+    id: 20,
+    title: "Valid Parentheses",
+    example_test_case_list: [
+        "\"()\"",
+        "\"()[]{}\"",
+        "\"(]\"",
+        "\"([])\"",
+    ],
+}

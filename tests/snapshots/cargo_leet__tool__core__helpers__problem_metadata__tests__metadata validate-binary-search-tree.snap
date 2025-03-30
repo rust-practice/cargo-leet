@@ -1,0 +1,12 @@
+---
+source: src/tool/core/helpers/problem_metadata.rs
+expression: get_problem_metadata(title_slug).unwrap()
+---
+ProblemMetadata {
+    id: 98,
+    title: "Validate Binary Search Tree",
+    example_test_case_list: [
+        "[2,1,3]",
+        "[5,1,4,null,null,3,6]",
+    ],
+}

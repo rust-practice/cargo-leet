@@ -1,0 +1,8 @@
+---
+source: src/tool/core/helpers/problem_description.rs
+expression: problem_description.get_solutions()
+---
+[
+    "true",
+    "false",
+]
