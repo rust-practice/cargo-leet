@@ -1,9 +1,13 @@
-use anyhow::Context;
-
 use crate::tool::cli::NewArgs;
+use crate::tool::config_file::ConfigFile;
+use anyhow::Context;
+use log::info;
+use std::env::current_dir;
+use std::io::{Write, stdin, stdout};
+use std::path::PathBuf;
 
 pub(crate) fn do_new(args: &NewArgs) -> anyhow::Result<()> {
-    cargo_generate::generate(cargo_generate::GenerateArgs {
+    let project_dir = cargo_generate::generate(cargo_generate::GenerateArgs {
         template_path: cargo_generate::TemplatePath {
             auto_path: None,
             subfolder: None,
@@ -39,6 +43,34 @@ pub(crate) fn do_new(args: &NewArgs) -> anyhow::Result<()> {
         gitconfig: None,
     })
     .context("failed to generate cargo project")?;
+
+    // interactively set config
+    /* todo set config in cargo_generate instead (using a template variable?).
+        I think by setting `GenerateArgs.define` or `GenerateArgs.other_args`.
+    */
+    std::env::set_current_dir(project_dir)?;
+
+    print!("would you like to include the number of each problem in it's name? [y/N]: ");
+    stdout().flush()?;
+    let mut response = String::new();
+    stdin().read_line(&mut response)?;
+
+    let parsed_response = match response.trim().to_ascii_lowercase().as_str() {
+        "y" => true,
+        "n" => false,
+        _ => todo!(),
+    };
+
+    let mut config = ConfigFile::default();
+
+    config.include_problem_number = parsed_response;
+    info!(
+        "input treated as {}. Saving...",
+        config.include_problem_number
+    );
+    config
+        .save()
+        .context("failed to save user preference in config file")?;
 
     Ok(())
 }

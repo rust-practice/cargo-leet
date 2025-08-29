@@ -28,13 +28,14 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
         Cow::Owned(slug)
     };
 
-    let (module_name, module_code) = create_module_code(&title_slug, args).with_context(|| {
-        format!("failed to generate the name and module code for {title_slug:?}")
-    })?;
+    let mut config = ConfigFile::load().context("failed to load config")?;
+    let (module_name, module_code) =
+        create_module_code(&title_slug, &config).with_context(|| {
+            format!("failed to generate the name and module code for {title_slug:?}")
+        })?;
     write_to_disk::write_file(&module_name, &module_code).context("failed to write to disk")?;
     println!("Generated module: {module_name}");
 
-    let mut config = ConfigFile::load().context("failed to load config")?;
     config.active = Some(module_name);
     config.save().context("failed to save config")?;
 
@@ -61,10 +62,7 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, Strin
 ///
 /// NB: Did not return `Cow` because `module_name` is always a modified version
 /// of the input
-fn create_module_code(
-    title_slug: &str,
-    args: &cli::GenerateArgs,
-) -> anyhow::Result<(String, String)> {
+fn create_module_code(title_slug: &str, config: &ConfigFile) -> anyhow::Result<(String, String)> {
     info!("Building module contents for {title_slug}");
 
     let meta_data =
@@ -109,7 +107,7 @@ fn create_module_code(
     code_snippet.push_str(&tests);
 
     // Set module name
-    let module_name = if args.should_include_problem_number {
+    let module_name = if config.include_problem_number {
         info!("Including problem number in module name");
         format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
@@ -143,7 +141,6 @@ fn url_to_slug(url: &str) -> anyhow::Result<String> {
 
 #[cfg(test)]
 mod tests {
-    use cli::GenerateArgs;
     use rstest::rstest;
 
     use crate::tool::core::helpers::local_store::tests::{SlugList, insta_settings, title_slugs};
@@ -175,14 +172,11 @@ mod tests {
 
     #[rstest]
     fn extract_solutions_from_description(title_slugs: SlugList, insta_settings: insta::Settings) {
-        let args = GenerateArgs {
-            problem: None,
-            should_include_problem_number: false,
-        };
+        let config = ConfigFile::load().unwrap();
 
         for title_slug in title_slugs {
             insta_settings.bind(|| {
-                let (_, code_generated) = create_module_code(title_slug, &args).unwrap();
+                let (_, code_generated) = create_module_code(title_slug, &config).unwrap();
                 insta::assert_snapshot!(format!("code_generated {title_slug}"), code_generated);
             });
         }
