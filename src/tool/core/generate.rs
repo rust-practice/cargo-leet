@@ -110,13 +110,18 @@ fn create_module_code(
     code_snippet.push_str(&tests);
 
     // Set module name
-    let module_name = if args.should_include_problem_number {
+    let mut module_name = if args.should_include_problem_number {
         info!("Including problem number in module name");
         format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
         info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)
     };
+
+    // Ensure module name does not start with a leading number
+    if module_name.starts_with(|first_char: char| first_char.is_ascii_digit()) {
+        module_name = format!("_{module_name}");
+    }
 
     Ok((module_name, code_snippet))
 }
