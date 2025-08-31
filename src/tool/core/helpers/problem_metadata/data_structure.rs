@@ -1,13 +1,10 @@
-use super::super::problem_code::FunctionInfo;
-
+use super::super::problem_code::{FunctionInfo, ProblemCode};
 use crate::tool::core::helpers::{
     problem_code::ProblemType, problem_description::data_structure::ProblemDescription,
 };
-
 use anyhow::Context;
 use log::{error, info};
-
-use super::super::problem_code::ProblemCode;
+use std::fmt::Write;
 
 #[derive(serde::Deserialize, Debug)]
 pub(crate) struct ProblemMetaDataResponse {
@@ -125,7 +122,7 @@ mod tests {{
         // Add test cases
         for (example_test_case_raw, solution) in self.example_test_case_list.iter().zip(solutions) {
             let test_case = fn_info.get_test_case(example_test_case_raw, &solution);
-            result.push_str(&format!("    #[case({test_case})]\n"));
+            writeln!(result, "    #[case({test_case})]").expect("write! macro failed");
         }
 
         // Add test case function body
