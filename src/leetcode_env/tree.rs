@@ -31,6 +31,7 @@ impl TreeNode {
         }
     }
 
+    #[allow(clippy::single_option_map)] // Allowed because inner type is annoying to type
     fn wrapped_node_maybe(val: Option<i32>) -> Option<Rc<RefCell<Self>>> {
         val.map(|x| Rc::new(RefCell::new(Self::new(x))))
     }
