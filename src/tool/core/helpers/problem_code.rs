@@ -218,7 +218,7 @@ impl FunctionArgs {
         Ok(Self { raw_str, args })
     }
 
-    fn len(&self) -> usize {
+    const fn len(&self) -> usize {
         self.args.len()
     }
 }
