@@ -1,3 +1,5 @@
+#![allow(clippy::unnecessary_debug_formatting)] // Allowed as we want the output quoted
+
 use std::{
     fmt::Display,
     io::{self, Write},
