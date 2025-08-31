@@ -18,7 +18,7 @@ pub(crate) const SEPARATOR: &str =
     "// << ---------------- Code below here is only for local use ---------------- >>";
 
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
-    let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
+    let title_slug: Cow<str> = if let Some(specific_problem) = &args.problem {
         get_slug_from_args(specific_problem)
             .with_context(|| format!("expected URL or slug but got {specific_problem}"))?
     } else {
@@ -41,7 +41,7 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, String>> {
+fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, str>> {
     Ok(if is_url(specific_problem) {
         // Working with a url
         info!("Using '{specific_problem}' as a url");
