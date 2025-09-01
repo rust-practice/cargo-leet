@@ -2,9 +2,7 @@ use crate::tool::cli::NewArgs;
 use crate::tool::config_file::ConfigFile;
 use anyhow::Context;
 use log::info;
-use std::env::current_dir;
 use std::io::{Write, stdin, stdout};
-use std::path::PathBuf;
 
 pub(crate) fn do_new(args: &NewArgs) -> anyhow::Result<()> {
     let project_dir = cargo_generate::generate(cargo_generate::GenerateArgs {
