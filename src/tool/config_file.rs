@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Serialize, Deserialize, Debug, Default)]
 pub(crate) struct ConfigFile {
     pub active: Option<String>,
-    pub include_problem_number: bool,
+    pub number_in_name: bool,
 }
 
 impl ConfigFile {

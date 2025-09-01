@@ -61,11 +61,8 @@ pub(crate) fn do_new(args: &NewArgs) -> anyhow::Result<()> {
 
     let mut config = ConfigFile::default();
 
-    config.include_problem_number = parsed_response;
-    info!(
-        "input treated as {}. Saving...",
-        config.include_problem_number
-    );
+    config.number_in_name = parsed_response;
+    info!("input treated as {}. Saving...", config.number_in_name);
     config
         .save()
         .context("failed to save user preference in config file")?;

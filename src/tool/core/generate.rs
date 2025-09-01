@@ -107,7 +107,7 @@ fn create_module_code(title_slug: &str, config: &ConfigFile) -> anyhow::Result<(
     code_snippet.push_str(&tests);
 
     // Set module name
-    let module_name = if config.include_problem_number {
+    let module_name = if config.number_in_name {
         info!("Including problem number in module name");
         format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
