@@ -31,7 +31,23 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
         Cow::Owned(slug)
     };
 
-    let should_include_problem_number_in_mod_name = args.should_include_problem_number_in_mod_name;
+    assert!(
+        !(args.should_include_problem_number_in_mod_name
+            && args.should_not_include_problem_number_in_mod_name),
+        "Both 'should include' and 'should not include' are true. Impossible to satisfy, was intended to be prevented by Clap group"
+    );
+
+    let should_include_problem_number_in_mod_name =
+        if args.should_include_problem_number_in_mod_name {
+            // User wants problem number so this takes precedence
+            true
+        } else if args.should_not_include_problem_number_in_mod_name {
+            // User does not want problem number so this takes precedence
+            false
+        } else {
+            // Use default from loaded preferences
+            config.should_include_problem_number_in_mod_name
+        };
 
     let (module_name, module_code) =
         create_module_code(&title_slug, should_include_problem_number_in_mod_name).with_context(
