@@ -73,6 +73,34 @@ need_stdout = true
 allow_warnings = true
 background = true
 
+[jobs.run-help-generate-short]
+command = [
+    "cargo",
+    "run",
+    "--features=tool",
+    "--",
+    "leet",
+    "generate",
+    "-h",
+]
+need_stdout = true
+allow_warnings = true
+background = true
+
+[jobs.run-help-generate-long]
+command = [
+    "cargo",
+    "run",
+    "--features=tool",
+    "--",
+    "leet",
+    "generate",
+    "--help",
+]
+need_stdout = true
+allow_warnings = true
+background = true
+
 # This parameterized job runs the example of your choice, as soon
 # as the code compiles.
 # Call it as
@@ -89,3 +117,5 @@ background = true
 [keybindings]
 alt-h = "job:run-help-short"
 ctrl-h = "job:run-help-long"
+g = "job:run-help-generate-long"
+alt-g = "job:run-help-generate-short"
