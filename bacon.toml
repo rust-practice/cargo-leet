@@ -47,24 +47,31 @@ command = ["cargo", "doc", "--color", "always", "--no-deps", "--open"]
 need_stdout = false
 on_success = "back" # so that we don't open the browser at each change
 
-# You can run your application and have the result displayed in bacon,
-# *if* it makes sense for this crate.
-# Don't forget the `--color always` part or the errors won't be
-# properly parsed.
-# If your program never stops (eg a server), you may set `background`
-# to false to have the cargo run output immediately displayed instead
-# of waiting for program's end.
-# [jobs.run]
-# command = [
-#   "cargo",
-#   "run",
-#   "--color",
-#   "always",
-#   # put launch parameters for your program behind a `--` separator
-# ]
-# need_stdout = true
-# allow_warnings = true
-# background = true
+[jobs.run-help-short]
+command = [
+    "cargo",
+    "run",
+    "--features=tool",
+    "--",
+    "leet",
+    "-h",
+]
+need_stdout = true
+allow_warnings = true
+background = true
+
+[jobs.run-help-long]
+command = [
+    "cargo",
+    "run",
+    "--features=tool",
+    "--",
+    "leet",
+    "--help",
+]
+need_stdout = true
+allow_warnings = true
+background = true
 
 # This parameterized job runs the example of your choice, as soon
 # as the code compiles.
@@ -80,4 +87,5 @@ on_success = "back" # so that we don't open the browser at each change
 # Shortcuts to internal functions (scrolling, toggling, etc.)
 # should go in your personal global prefs.toml file instead.
 [keybindings]
-# alt-m = "job:my-job"
+alt-h = "job:run-help-short"
+ctrl-h = "job:run-help-long"
