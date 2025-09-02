@@ -77,7 +77,7 @@ pub struct GenerateArgs {
     pub problem: Option<String>,
     /// If set the module name generated includes the number for the problem
     #[arg(short = 'n', long = "number_in_name", default_value_t = false)]
-    pub should_include_problem_number: bool,
+    pub should_include_problem_number_in_mod_name: bool,
 }
 
 #[derive(Args, Debug)]
