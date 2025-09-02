@@ -29,9 +29,12 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
         Cow::Owned(slug)
     };
 
-    let (module_name, module_code) = create_module_code(&title_slug, args).with_context(|| {
-        format!("failed to generate the name and module code for {title_slug:?}")
-    })?;
+    let should_include_problem_number_in_mod_name = args.should_include_problem_number_in_mod_name;
+
+    let (module_name, module_code) =
+        create_module_code(&title_slug, should_include_problem_number_in_mod_name).with_context(
+            || format!("failed to generate the name and module code for {title_slug:?}"),
+        )?;
     write_to_disk::write_file(&module_name, &module_code).context("failed to write to disk")?;
     println!("Generated module: {module_name}");
 
@@ -64,7 +67,7 @@ fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, str>>
 /// of the input
 fn create_module_code(
     title_slug: &str,
-    args: &cli::GenerateArgs,
+    should_include_problem_number_in_mod_name: bool,
 ) -> anyhow::Result<(String, String)> {
     info!("Building module contents for {title_slug}");
 
@@ -110,7 +113,7 @@ fn create_module_code(
     code_snippet.push_str(&tests);
 
     // Set module name
-    let mut module_name = if args.should_include_problem_number {
+    let mut module_name = if should_include_problem_number_in_mod_name {
         info!("Including problem number in module name");
         format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
@@ -149,7 +152,6 @@ fn url_to_slug(url: &str) -> anyhow::Result<String> {
 
 #[cfg(test)]
 mod tests {
-    use cli::GenerateArgs;
     use rstest::rstest;
 
     use crate::tool::core::helpers::local_store::tests::{SlugList, insta_settings, title_slugs};
@@ -181,14 +183,9 @@ mod tests {
 
     #[rstest]
     fn extract_solutions_from_description(title_slugs: SlugList, insta_settings: insta::Settings) {
-        let args = GenerateArgs {
-            problem: None,
-            should_include_problem_number: false,
-        };
-
         for title_slug in title_slugs {
             insta_settings.bind(|| {
-                let (_, code_generated) = create_module_code(title_slug, &args).unwrap();
+                let (_, code_generated) = create_module_code(title_slug, false).unwrap();
                 insta::assert_snapshot!(format!("code_generated {title_slug}"), code_generated);
             });
         }
