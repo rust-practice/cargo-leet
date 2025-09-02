@@ -19,6 +19,8 @@ pub(crate) const SEPARATOR: &str =
     "// << ---------------- Code below here is only for local use ---------------- >>";
 
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
+    let mut config = ConfigFile::load().context("failed to load config")?;
+
     let title_slug: Cow<str> = if let Some(specific_problem) = &args.problem {
         get_slug_from_args(specific_problem)
             .with_context(|| format!("expected URL or slug but got {specific_problem}"))?
@@ -38,7 +40,6 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     write_to_disk::write_file(&module_name, &module_code).context("failed to write to disk")?;
     println!("Generated module: {module_name}");
 
-    let mut config = ConfigFile::load().context("failed to load config")?;
     config.active = Some(module_name);
     config.save().context("failed to save config")?;
 
