@@ -5,8 +5,10 @@ use log::info;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize, Debug, Default)]
+#[serde(default, deny_unknown_fields)]
 pub(crate) struct ConfigFile {
     pub active: Option<String>,
+    pub should_include_problem_number_in_mod_name: bool,
 }
 
 impl ConfigFile {
