@@ -2,6 +2,7 @@ use anyhow::{Context, bail};
 use convert_case::{Case, Casing};
 use log::info;
 use std::borrow::Cow;
+use std::fmt::Write;
 
 use crate::tool::{
     cli,
@@ -18,7 +19,7 @@ pub(crate) const SEPARATOR: &str =
     "// << ---------------- Code below here is only for local use ---------------- >>";
 
 pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
-    let title_slug: Cow<String> = if let Some(specific_problem) = &args.problem {
+    let title_slug: Cow<str> = if let Some(specific_problem) = &args.problem {
         get_slug_from_args(specific_problem)
             .with_context(|| format!("expected URL or slug but got {specific_problem}"))?
     } else {
@@ -42,7 +43,7 @@ pub(crate) fn do_generate(args: &cli::GenerateArgs) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, String>> {
+fn get_slug_from_args(specific_problem: &String) -> anyhow::Result<Cow<'_, str>> {
     Ok(if is_url(specific_problem) {
         // Working with a url
         info!("Using '{specific_problem}' as a url");
@@ -78,7 +79,7 @@ fn create_module_code(title_slug: &str, config: &ConfigFile) -> anyhow::Result<(
     );
 
     // Add problem number and title
-    code_snippet.push_str(&format!("//! {}\n", meta_data.get_num_and_title()));
+    writeln!(code_snippet, "//! {}", meta_data.get_num_and_title()).expect("write! macro failed");
 
     // Add blank line between docstring and code
     code_snippet.push('\n');
@@ -87,7 +88,7 @@ fn create_module_code(title_slug: &str, config: &ConfigFile) -> anyhow::Result<(
     let problem_code = get_code_snippet_for_problem(title_slug)?;
     code_snippet.push_str(problem_code.as_ref());
 
-    code_snippet.push_str(format!("\n\n{SEPARATOR}\n").as_str());
+    writeln!(code_snippet, "\n\n{SEPARATOR}").expect("write! macro failed");
 
     // Add struct for non design questions
     if problem_code.type_.is_non_design() {
@@ -107,13 +108,19 @@ fn create_module_code(title_slug: &str, config: &ConfigFile) -> anyhow::Result<(
     code_snippet.push_str(&tests);
 
     // Set module name
-    let module_name = if config.number_in_name {
+    let mut module_name = if config.number_in_name {
+
         info!("Including problem number in module name");
         format!("_{}_{}", meta_data.id, title_slug.to_case(Case::Snake))
     } else {
         info!("Using snake case slug for module name");
         title_slug.to_case(Case::Snake)
     };
+
+    // Ensure module name does not start with a leading number
+    if module_name.starts_with(|first_char: char| first_char.is_ascii_digit()) {
+        module_name = format!("_{module_name}");
+    }
 
     Ok((module_name, code_snippet))
 }

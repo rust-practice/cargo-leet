@@ -1,6 +1,7 @@
 use anyhow::{Context, bail};
 use log::{debug, error, info, warn};
 use regex::Regex;
+use std::fmt::Write;
 use strum::IntoEnumIterator as _;
 
 #[derive(Debug)]
@@ -111,7 +112,8 @@ impl FunctionInfo {
         result.push_str(&self.fn_args.raw_str.replace(',', ", #[case] "));
 
         if let Some(return_type) = self.return_type.as_ref() {
-            result.push_str(&format!(", #[case] expected: {}", return_type.as_str()));
+            write!(result, ", #[case] expected: {}", return_type.as_str())
+                .expect("write! macro failed");
         }
         result
     }
@@ -218,7 +220,7 @@ impl FunctionArgs {
         Ok(Self { raw_str, args })
     }
 
-    fn len(&self) -> usize {
+    const fn len(&self) -> usize {
         self.args.len()
     }
 }
