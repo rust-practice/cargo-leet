@@ -22,7 +22,7 @@ cargo leet [OPTIONS] <COMMAND>
   ```
 
 - **generate, -g, gen**
-  Generates a module for the specified problem, allowing you to start working on the solution locally. You can provide a LeetCode problem slug or URL, or leave it blank to use the daily challenge. Pass `-n` or `--number_in_name` to include the problem number in the file name.
+  Generates a module for the specified problem, allowing you to start working on the solution locally. You can provide a LeetCode problem slug or URL, or leave it blank to use the daily challenge. See [Examples](#examples) for passing different options.
 
   ```sh
   cargo leet generate [OPTIONS] [PROBLEM]
@@ -75,13 +75,17 @@ cargo leet [OPTIONS] <COMMAND>
 
 - **Generate a module for a specific problem**:
 
-  Without the problem number:
+  Include problem numbers in the file name depending on the config:
   ```sh
   cargo leet generate two-sum
   ```
-  With the problem number:
+  Forcibly add the problem number (overriding the config):
   ```sh
   cargo leet generate -n two-sum
+  ```
+  Forcibly exclude the problem number (overriding the config):
+  ```sh
+  cargo leet generate -m two-sum
   ```
 
 - **Set the active problem (done automatically by `cargo leet gen`)**:
