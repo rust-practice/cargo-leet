@@ -2,62 +2,86 @@
 
 The `cargo leet` program helps you streamline your workflow with LeetCode problem local file where you can develop and test your solution before post it back to leetcode.
 
-## Usage
+## Help - Top level
 
-Below is a summary of how to use the various commands and options available in `cargo leet`.
+`cargo leet --help`
 
-### General Usage
+```
+A program that given the link or slug to a leetcode problem, creates a local file where you can
+develop and test your solution before posting it back to leetcode
 
-```sh
-cargo leet [OPTIONS] <COMMAND>
+Usage: cargo leet [OPTIONS] <COMMAND>
+
+Commands:
+  generate, -g  Generates the module for the problem [aliases: gen]
+  active        Either prints the active problem or sets it to the argument
+  test          Run tests on active problem
+  new           Creates a new pre-configured project from a template for use with cargo-leet
+  help          Print this message or the help of the given subcommand(s)
+
+Options:
+  -p, --path <FOLDER>
+          Specify the path to the project root (If not provided uses current working directory)
+
+  -l, --log-level <LOG_LEVEL>
+          Set logging level to use
+
+          Possible values:
+          - off:   Nothing emitted in this mode
+          - error
+          - warn
+          - info
+          - debug
+          - trace
+          
+          [default: warn]
+
+  -h, --help
+          Print help (see a summary with '-h')
+
+  -V, --version
+          Print version
 ```
 
-### Commands
+### Help - Generate
 
-- **new**
-  Creates a new pre-configured project based on a template, which can be used with `cargo-leet`.
+`cargo leet generate --help`
 
-  ```sh
-  cargo leet new [OPTIONS] [NAME]
-  ```
+```
+Generates the module for the problem
 
-- **generate, -g, gen**
-  Generates a module for the specified problem, allowing you to start working on the solution locally. You can provide a LeetCode problem slug or URL, or leave it blank to use the daily challenge. See [Examples](#examples) for passing different options.
+Usage: cargo leet {generate|-g} [OPTIONS] [PROBLEM]
 
-  ```sh
-  cargo leet generate [OPTIONS] [PROBLEM]
-  ```
+Arguments:
+  [PROBLEM]
+          Question slug or url (If none specified then daily challenge is used)
 
-- **active**
-  Prints the currently active problem or sets the active problem to the provided problem slug.
+Options:
+  -n, --number_in_name
+          If set the module name generated WILL include the number for the problem
 
-  ```sh
-  cargo leet active [OPTIONS] [PROBLEM_SLUG]
-  ```
+  -m, --number_not_in_name
+          If set the module name generated will NOT include the number for the problem
 
-- **test**
-  Runs tests on the currently active problem to verify your solution.
+  -p, --path <FOLDER>
+          Specify the path to the project root (If not provided uses current working directory)
 
-  ```sh
-  cargo leet test [OPTIONS]
-  ```
+  -l, --log-level <LOG_LEVEL>
+          Set logging level to use
 
-### Options
+          Possible values:
+          - off:   Nothing emitted in this mode
+          - error
+          - warn
+          - info
+          - debug
+          - trace
+          
+          [default: warn]
 
-- **-p, --path \<FOLDER\>**
-  Specify the path to the project root. If not provided, the current working directory is used.
-- **-l, --log-level \<LOG_LEVEL\>**
-  Set the logging level. Default is `warn`. Available levels:
-  - `off`: No logging
-  - `error`
-  - `warn`
-  - `info`
-  - `debug`
-  - `trace`
-- **-h, --help**
-  Displays help information.
-- **-V, --version**
-  Prints the version of `cargo leet`.
+  -h, --help
+          Print help (see a summary with '-h')
+```
 
 ### Examples
 
