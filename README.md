@@ -176,8 +176,6 @@ If you have an alias configured in `.cargo/config.toml`, you can simplify the co
 cargo g
 ```
 
-For additional options and usage details, refer to the generate help in [commands](#commands).
-
 ## Using as a Library
 
 You can use `cargo-leet` as a library to mimic the LeetCode environment in your own projects. To do so, add it as a dependency in your `Cargo.toml` file using
