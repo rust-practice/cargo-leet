@@ -60,7 +60,8 @@ impl Cli {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     #[clap(visible_alias = "gen", short_flag = 'g')]
-    /// Generates the module for the problem
+    /// Generates the module for the problem.
+    /// Module naming preference follows `.leet.toml` unless overridden.
     Generate(GenerateArgs),
     /// Either prints the active problem or sets it to the argument
     Active(ActiveArgs),
@@ -76,7 +77,7 @@ pub struct GenerateArgs {
     /// Question slug or url (If none specified then daily challenge is used)
     pub problem: Option<String>,
 
-    /// If set the module name generated WILL include the number for the problem
+    /// If set the module name generated WILL include the number for the problem, overriding `.leet.toml`
     #[arg(
         group = "mod_name",
         short = 'n',
@@ -85,7 +86,7 @@ pub struct GenerateArgs {
     )]
     pub should_include_problem_number_in_mod_name: bool,
 
-    /// If set the module name generated will NOT include the number for the problem
+    /// If set the module name generated will NOT include the number for the problem, overriding `.leet.toml`
     #[arg(
         group = "mod_name",
         short = 'm',
