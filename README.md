@@ -13,7 +13,7 @@ develop and test your solution before posting it back to leetcode
 Usage: cargo leet [OPTIONS] <COMMAND>
 
 Commands:
-  generate, -g  Generates the module for the problem [aliases: gen]
+  generate, -g  Generates the module for the problem. Module naming preference follows `.leet.toml` unless overridden [aliases: gen]
   active        Either prints the active problem or sets it to the argument
   test          Run tests on active problem
   new           Creates a new pre-configured project from a template for use with cargo-leet
@@ -48,7 +48,7 @@ Options:
 `cargo leet generate --help`
 
 ```
-Generates the module for the problem
+Generates the module for the problem. Module naming preference follows `.leet.toml` unless overridden
 
 Usage: cargo leet {generate|-g} [OPTIONS] [PROBLEM]
 
@@ -58,10 +58,10 @@ Arguments:
 
 Options:
   -n, --number_in_name
-          If set the module name generated WILL include the number for the problem
+          If set the module name generated WILL include the number for the problem, overriding `.leet.toml`
 
   -m, --number_not_in_name
-          If set the module name generated will NOT include the number for the problem
+          If set the module name generated will NOT include the number for the problem, overriding `.leet.toml`
 
   -p, --path <FOLDER>
           Specify the path to the project root (If not provided uses current working directory)
