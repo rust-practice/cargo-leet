@@ -14,9 +14,9 @@ pub struct TreeNode {
     /// The value stored at this node
     pub val: i32,
     /// Link to the left child if one exists
-    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub left: Option<Rc<RefCell<Self>>>,
     /// Link to the right child if one exists
-    pub right: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<Self>>>,
 }
 
 impl TreeNode {
@@ -56,7 +56,10 @@ impl Debug for TreeRoot {
 
         let vec: Vec<String> = vec
             .iter()
-            .map(|x| x.as_ref().map_or("None".to_string(), |x| format!("{x}")))
+            .map(|x| {
+                x.as_ref()
+                    .map_or_else(|| "None".to_string(), |x| format!("{x}"))
+            })
             .collect();
         write!(f, "{vec:?}")
     }
@@ -146,12 +149,14 @@ impl From<&str> for TreeRoot {
 
 impl Debug for TreeNode {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let left = self.left.as_ref().map_or("None".to_string(), |left| {
-            format!("{:?}", left.as_ref().borrow())
-        });
-        let right = self.right.as_ref().map_or("None".to_string(), |right| {
-            format!("{:?}", right.as_ref().borrow())
-        });
+        let left = self.left.as_ref().map_or_else(
+            || "None".to_string(),
+            |left| format!("{:?}", left.as_ref().borrow()),
+        );
+        let right = self.right.as_ref().map_or_else(
+            || "None".to_string(),
+            |right| format!("{:?}", right.as_ref().borrow()),
+        );
         write!(f, "{{val:{} left:{} right:{}}}", self.val, left, right)
     }
 }

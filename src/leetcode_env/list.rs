@@ -9,7 +9,7 @@ pub struct ListNode {
     /// The value stored at this node
     pub val: i32,
     /// Links to the next node if it exists
-    pub next: Option<Box<ListNode>>,
+    pub next: Option<Box<Self>>,
 }
 
 impl Debug for ListNode {
@@ -20,7 +20,7 @@ impl Debug for ListNode {
             self.val,
             self.next
                 .as_ref()
-                .map_or("None".to_owned(), |next| format!("{next:?}"))
+                .map_or_else(|| "None".to_owned(), |next| format!("{next:?}"))
         )
     }
 }
