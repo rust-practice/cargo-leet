@@ -14,15 +14,15 @@ description = "Utility program to help with working on leetcode locally"
 anyhow = { version = "1.0.99", optional = true }
 cargo-generate = { version = "0.23.5", optional = true }
 clap = { version = "4.5.47", features = ["derive", "cargo"], optional = true }
-convert_case = { version = "0.8.0", optional = true }
+convert_case = { version = "0.12.0", optional = true }
 env_logger = { version = "0.11.8", optional = true }
-itertools = { version = "0.14.0", optional = true }
+itertools = { version = "0.15", optional = true }
 log = { version = "0.4.28", optional = true }
 regex = { version = "1.11.2", optional = true }
 serde = { version = "1.0.219", features = ["derive"], optional = true }
 serde_json = { version = "1.0.143", optional = true }
 strum = { version = "0.27.2", features = ["derive"], optional = true }
-toml = { version = "0.9.5", optional = true }
+toml = { version = "1", optional = true }
 ureq = { version = "3.1.2", features = ["json"], optional = true }
 
 [[bin]]
