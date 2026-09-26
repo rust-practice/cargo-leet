@@ -135,14 +135,14 @@ You can build `cargo-leet` from source using two different channels:
 - **Stable (main)**
 
   ```sh
-  cargo install --git https://github.com/rust-practice/cargo-leet.git --branch main -F tool
+  cargo install --git https://github.com/rust-practice/cargo-leet.git --branch main -F tool --locked
   ```
 
   This installs the stable version of `cargo-leet` from the `main` branch.
 
 - **Development (develop)**
   ```sh
-  cargo install --git https://github.com/rust-practice/cargo-leet.git --branch develop -F tool
+  cargo install --git https://github.com/rust-practice/cargo-leet.git --branch develop -F tool --locked
   ```
   This installs the latest development version from the `develop` branch, which may include new features or changes that are still being tested.
 
@@ -151,7 +151,7 @@ You can build `cargo-leet` from source using two different channels:
 You can also install `cargo-leet` directly from crates.io. However, please note that the crates.io release may not always reflect the latest updates.
 
 ```sh
-cargo install cargo-leet -F tool
+cargo install cargo-leet -F tool --locked
 ```
 
 ### Running Directly from Source without Installation (For Development)
