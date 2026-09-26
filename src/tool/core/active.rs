@@ -15,7 +15,7 @@ pub(crate) fn do_active(args: &cli::ActiveArgs) -> anyhow::Result<()> {
                 bail!("cannot set active problem to lib.rs");
             }
 
-            config.active = Some(slug.to_string());
+            config.active = Some(slug.clone());
             config.save().context("failed to save config")?;
             println!("Set active problem to {slug}");
         }
